@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#090d18"><title>Симулятор Быстрого Потока — ⭐ VIP</title>
+<style>
+:root{color-scheme:dark;--bg:#080c14;--panel:#111a28;--line:#26354a;--text:#edf3ff;--muted:#8b9bb3;--blue:#70a7ff;--cyan:#70e0d1;--orange:#ffb45e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 95% 0,#17324b 0,transparent 38%),radial-gradient(ellipse at 0 20%,#202044 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1020px;margin:auto;padding:24px 16px 55px}.hero{border:1px solid #304862;border-radius:25px;padding:26px;background:linear-gradient(120deg,#142b43,#111a2b 70%,#172338);box-shadow:0 20px 55px #0004}.eyebrow{color:var(--cyan);font-weight:800;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.13;margin:10px 0}.hero p{color:#b8c7dc;margin:0}.layout{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:17px}@media(max-width:740px){.layout{grid-template-columns:1fr}.hero{padding:21px}}.card{background:linear-gradient(155deg,#141f30,#101723);border:1px solid var(--line);border-radius:21px;padding:19px;margin-top:15px;box-shadow:0 12px 30px #0002}.card h2{font-size:1.12rem;margin:0 0 15px}.field{margin-bottom:15px}label{display:block;font-weight:650;margin-bottom:7px;color:#dbe5f6}.hint,.muted{color:var(--muted);font-size:.86rem}input,select{width:100%;padding:12px 13px;border:1px solid #34445d;border-radius:12px;background:#0a1220;color:var(--text);font:inherit;outline:none}input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #70a7ff20}.platforms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.platform{padding:12px;border:1px solid #2b3a50;border-radius:14px;background:#0d1522;color:var(--text);font:inherit;text-align:left;cursor:pointer}.platform small{display:block;color:var(--muted);margin-top:3px}.platform.active{border-color:var(--blue);background:#172942;box-shadow:inset 0 0 0 1px #70a7ff33}.ratebox{background:#0b1320;border:1px solid #27374d;border-radius:13px;padding:13px;margin-bottom:15px}.ratebox strong{color:var(--cyan);font-size:1.2rem}.tariff{background:linear-gradient(120deg,#16352f,#12251f);border:1px solid #2a554a;border-radius:16px;padding:16px;margin-bottom:12px}.tariff span,.metric span{color:#a9b9ce;font-size:.84rem;display:block}.tariff strong{display:block;font-size:2.2rem;color:var(--cyan)}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#0b1320;border:1px solid #27364b;border-radius:14px;padding:13px;min-width:0}.metric strong{display:block;font-size:clamp(1.05rem,3vw,1.4rem);margin-top:5px;overflow-wrap:anywhere}.metric.primary{background:#192a40;border-color:#34557c}.metric.primary strong{color:#a6c8ff}.wide{grid-column:1/-1}.btn{width:100%;border:0;border-radius:12px;background:linear-gradient(100deg,#6ea7ff,#79dcd5);color:#071320;font:inherit;font-weight:800;padding:13px;margin-top:13px;cursor:pointer}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px}table{border-collapse:collapse;width:100%;min-width:280px;background:#0b1320}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #263448}th{color:var(--muted);font-size:.84rem;background:#141f30}.active-row{background:#1b2b40;color:#a6c8ff}.note{margin-top:15px;background:#181b27;border:1px solid #35384a;color:#b4bfd0;padding:13px;border-radius:14px;font-size:.86rem}.foot{font-size:.8rem;color:#6e7c94;margin-top:18px}
+.notice{margin:16px 0;padding:14px 16px;border:1px solid #c99b45;border-radius:12px;background:rgba(201,155,69,.09);color:inherit}.notice strong{display:block;margin-bottom:8px;color:#e8bd67}.notice p{margin:6px 0;line-height:1.45}
+/* Адаптивная вёрстка: телефон, планшет, ноутбук и большой экран */
+html{width:100%;min-width:0;scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-width:0;width:100%;overflow-x:hidden}
+main{width:min(100%,1280px);min-width:0;margin-inline:auto;padding-left:clamp(12px,2.2vw,30px);padding-right:clamp(12px,2.2vw,30px)}
+.layout>* , .card, .hero, .result, .field{min-width:0}
+img,svg,canvas,video{max-width:100%;height:auto}
+input,select,button,textarea{max-width:100%;min-width:0}
+input,select,textarea{font-size:16px}
+button, .platform{touch-action:manipulation}
+table{width:100%;max-width:100%;border-collapse:collapse}
+.table-wrap,.tiers-wrap,.overflow-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+pre,code{white-space:pre-wrap;overflow-wrap:anywhere}
+*{overflow-wrap:break-word}
+@media(min-width:761px) and (max-width:1100px){
+  main{max-width:1000px;padding-top:20px}
+  .layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  .card{padding:17px}
+  .hero{padding:24px}
+}
+@media(min-width:1101px){
+  main{max-width:1280px}
+  .layout{gap:20px}
+}
+@media(max-width:760px){
+  main{padding-top:12px;padding-bottom:28px}
+  .layout{grid-template-columns:minmax(0,1fr)!important;gap:12px}
+  .hero{padding:clamp(16px,4vw,22px);border-radius:18px}
+  .card{padding:clamp(14px,3.8vw,19px);border-radius:17px}
+  h1,.hero h1{font-size:clamp(1.55rem,6vw,2.15rem);overflow-wrap:anywhere}
+  .card h2{font-size:1.05rem}
+  button{min-height:44px}
+  .platform{min-height:44px}
+}
+@media(max-width:420px){
+  body{font-size:14px}
+  main{padding-left:10px;padding-right:10px}
+  .hero{padding:15px}
+  .card{padding:13px}
+  .pill{font-size:.74rem}
+}
+@media(orientation:landscape) and (max-height:520px){
+  main{padding-top:10px;padding-bottom:18px}
+  .hero{padding:15px 20px}
+}
+
+#dailyPayoutMetric[hidden]{display:none!important}
+
+/* VIP Fast Flow: preserve VIP content while matching Growing Flow styling */
+.hero{position:relative;overflow:hidden}
+.hero:after{content:"";display:none}
+.hero .pill{border-color:#304862;background:rgba(112,224,209,.06);color:#70e0d1}
+.notice{margin:16px 0;padding:14px 16px;border:1px solid #c99b45;border-radius:14px;background:rgba(201,155,69,.09);color:inherit}
+.notice strong{display:block;margin-bottom:8px;color:#e8bd67}
+.notice p{margin:6px 0;line-height:1.45}
+.result{align-self:start}
+
+
+/* === ЕДИНЫЙ ДИЗАЙН FAST FLOW / SUPER FAST FLOW / YEAR FLOW === */
+:root{
+  color-scheme:dark;
+  --bg:#080c14;--panel:#111a28;--line:#26354a;
+  --text:#edf3ff;--muted:#8b9bb3;--blue:#70a7ff;
+  --cyan:#70e0d1;--orange:#ffb45e;
+  --ff-font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+html{width:100%;min-width:0;scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{width:100%;min-width:0;overflow-x:hidden;background:radial-gradient(ellipse at 95% 0,#17324b 0,transparent 38%),radial-gradient(ellipse at 0 20%,#202044 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.55 var(--ff-font);font-feature-settings:"cv11","ss01";-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+main{width:min(100%,1280px);max-width:1280px;min-width:0;margin-inline:auto;padding:24px clamp(12px,2.2vw,30px) 55px}
+*{box-sizing:border-box;overflow-wrap:break-word}
+.hero{position:relative;overflow:hidden;min-height:172px;padding:30px 36px;margin:0 0 12px;border:1px solid #344a68;border-radius:25px;background:radial-gradient(circle at 88% 18%,rgba(91,190,181,.13),transparent 25%),linear-gradient(112deg,#142b43 0%,#101d30 58%,#123039 100%);box-shadow:none}
+.hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.025),transparent 70%)}
+.hero>p:first-child,.eyebrow{position:relative;color:#63d4c0!important;font-size:.75rem;font-weight:850!important;letter-spacing:.14em!important;text-transform:uppercase}
+.hero h1{position:relative;max-width:980px;margin:8px 0 10px!important;color:#f3f6ff!important;font-size:clamp(1.7rem,4.2vw,2.75rem);line-height:1.12;font-weight:850;letter-spacing:-.035em;text-shadow:0 2px 18px #0003}
+.hero p:not(:first-child){position:relative;max-width:780px;margin:0;color:#b8c7dc!important;font-size:clamp(.9rem,1.5vw,1.05rem);line-height:1.6}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;margin-top:17px}
+.layout>*,.card,.hero,.result,.field{min-width:0}
+.card{min-width:0;margin-top:15px;padding:19px;border:1px solid #26354a;border-radius:21px;background:linear-gradient(155deg,#141f30,#101723);box-shadow:0 12px 30px #0002}
+.card h2{margin:0 0 15px;color:#f0f5ff;font-size:1.12rem;font-weight:800;letter-spacing:-.018em}
+.field{margin-bottom:15px}label{display:block;margin-bottom:7px;color:#dbe5f6;font-weight:700;letter-spacing:.005em}
+.hint,.muted{color:#91a2ba;font-size:.86rem}
+input,select,textarea{display:block;width:100%;max-width:100%;min-width:0;min-height:48px;padding:12px 13px;border:1px solid #34465f;border-radius:13px;background:linear-gradient(180deg,#0b1423,#09111d);color:#edf3ff;font:550 16px/1.4 var(--ff-font);outline:none;box-shadow:inset 0 1px 2px #0005;transition:border-color .16s,box-shadow .16s,background .16s}
+input:hover,select:hover,textarea:hover{border-color:#526987}input:focus,select:focus,textarea:focus{border-color:#70a7ff;box-shadow:0 0 0 3px #70a7ff24,inset 0 1px 2px #0004}input::placeholder,textarea::placeholder{color:#71829b}select option{background:#111a28;color:#edf3ff}
+.metric{min-width:0;padding:13px;border:1px solid #27364b;border-radius:14px;background:#0b1320}
+.metric span{display:block;color:#a9b9ce;font-size:.84rem;font-weight:600}.metric strong{display:block;margin-top:5px;color:#f1f6ff;font-size:clamp(1.05rem,3vw,1.4rem);font-weight:850;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.metric.primary{border-color:#34557c;background:#192a40}.metric.primary strong{color:#a6c8ff}
+.tariff{margin-bottom:12px;padding:16px;border:1px solid #2a554a;border-radius:16px;background:linear-gradient(120deg,#16352f,#12251f)}.tariff span{display:block;color:#a9b9ce;font-size:.84rem}.tariff strong{display:block;color:#70e0d1;font-size:2.2rem;font-variant-numeric:tabular-nums}
+.btn,button.btn{display:flex;align-items:center;justify-content:center;width:100%;max-width:100%;min-height:54px;margin-top:13px;padding:10px 20px;border:0;border-radius:999px;background:linear-gradient(180deg,#ff555d 0%,#f02a32 34%,#d90e19 72%,#f3262d 100%);color:#fff;font:850 1rem/1.3 var(--ff-font);letter-spacing:.015em;text-align:center;text-shadow:0 1px 1px #8b000055;box-shadow:0 7px 17px #0007,0 3px 9px #e3131b35,inset 0 2px 3px #ffffff45,inset 0 -4px 7px #8b000066;cursor:pointer;touch-action:manipulation;transition:transform .16s ease,filter .16s ease,box-shadow .16s ease}
+.btn:hover:not(:disabled),button.btn:hover:not(:disabled){filter:brightness(1.09);box-shadow:0 9px 21px #0008,0 4px 12px #e3131b45,inset 0 2px 3px #ffffff55,inset 0 -4px 7px #8b000066}.btn:active:not(:disabled),button.btn:active:not(:disabled){transform:translateY(1px) scale(.995);filter:brightness(.97)}.btn:disabled,button.btn:disabled{opacity:.52;cursor:not-allowed}.btn:focus-visible,button.btn:focus-visible{outline:3px solid #a6c8ff;outline-offset:4px}
+.notice{margin:16px 0;padding:14px 16px;border:1px solid #c99b45;border-radius:14px;background:rgba(201,155,69,.09);color:#e5d7b9;line-height:1.55}.notice strong{display:block;margin-bottom:8px;color:#e8bd67}.notice p{margin:6px 0;line-height:1.5}
+.note{margin-top:15px;padding:13px;border:1px solid #35384a;border-radius:14px;background:#181b27;color:#b4bfd0;font-size:.86rem;line-height:1.55}.foot{margin-top:18px;color:#6e7c94;font-size:.8rem}
+::selection{background:#70a7ff55;color:#fff}
+@media(min-width:761px) and (max-width:1100px){main{max-width:1000px;padding-top:20px}.layout{gap:14px}.card{padding:17px}.hero{padding:24px}}
+@media(max-width:760px){main{padding-top:12px;padding-bottom:28px}.layout{grid-template-columns:minmax(0,1fr)!important;gap:12px}.hero{min-height:0;padding:22px 20px;border-radius:20px}.hero h1{font-size:clamp(1.7rem,7.5vw,2.3rem);line-height:1.12}.hero p:not(:first-child){font-size:.9rem;line-height:1.5}.card{padding:clamp(14px,3.8vw,19px);border-radius:17px}.card h2{font-size:1.05rem}.btn,button.btn{min-height:48px;font-size:.96rem}}
+@media(max-width:420px){body{font-size:14px}main{padding-left:10px;padding-right:10px}.hero{padding:15px}.card{padding:13px}.metrics{gap:8px}.metric{padding:11px}.metric span{font-size:.78rem}.metric strong{font-size:clamp(.98rem,4.3vw,1.2rem)}}
+@media(orientation:landscape) and (max-height:520px){main{padding-top:10px;padding-bottom:18px}.hero{padding:15px 20px}}
+
+</style>
+<style id="fast-flow-unified-design">
+/* VIP Fast Flow — shared design system with the main Fast Flow simulator */
+:root{
+ --bg:#070d18;--panel:#101b2b;--line:#263a52;--text:#edf4ff;--muted:#9aabc1;
+ --blue:#83b8ff;--cyan:#68dfce;--orange:#f2b866;--surface:#0c1523;
+ --radius-xl:26px;--radius-lg:20px;--radius-md:14px;
+ --font-ui:Inter,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
+ --type-main:#edf4ff;--type-soft:#c4d1e3;--type-muted:#91a2ba;--type-accent:#8fe2d2;
+}
+html{width:100%;min-width:0;scroll-behavior:smooth;text-size-adjust:100%;font-synthesis:none;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+*{box-sizing:border-box;overflow-wrap:break-word}
+body,button,input,select,textarea{font-family:var(--font-ui)!important;font-feature-settings:"kern" 1,"liga" 1}
+body{width:100%;min-width:0;margin:0;overflow-x:hidden;background:radial-gradient(ellipse at 12% -8%,rgba(48,104,151,.28),transparent 34%),radial-gradient(ellipse at 92% 12%,rgba(36,112,105,.16),transparent 30%),linear-gradient(180deg,#080f1b 0%,#070c15 55%,#0a1220 100%);color:var(--type-main);font-size:15px;line-height:1.58;letter-spacing:.005em}
+main{width:min(100%,1440px);max-width:1440px;min-width:0;margin-inline:auto;padding:28px clamp(12px,2.2vw,30px) 64px}
+.hero{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:center;min-height:190px;padding:34px 38px!important;margin:0 0 14px!important;border:1px solid rgba(117,164,207,.28)!important;border-radius:28px!important;background:linear-gradient(112deg,rgba(20,48,75,.98),rgba(14,29,48,.97) 58%,rgba(15,42,47,.96))!important;box-shadow:0 22px 60px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.06)!important}
+.hero:after{content:"";position:absolute;z-index:-1;width:340px;height:340px;right:-90px;top:-170px;border:1px solid #80c9d02b;border-radius:50%;box-shadow:0 0 0 34px #80c9d00a,0 0 0 72px #80c9d008;pointer-events:none}
+.hero>p:first-child{color:#8fe2d2!important;font-size:.72rem!important;line-height:1.35;font-weight:800!important;letter-spacing:.16em!important;text-transform:uppercase}
+.hero h1{max-width:900px!important;margin:8px 0 10px!important;color:#f3f7ff!important;font-size:clamp(2rem,3.3vw,2.85rem)!important;line-height:1.12!important;letter-spacing:-.045em!important;font-weight:820!important;text-wrap:balance}
+.hero p:not(:first-child){max-width:850px;color:#c1cfe1!important;font-size:1rem!important;line-height:1.65!important}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:18px!important;margin-top:0!important;align-items:stretch}
+.layout>*{min-width:0}
+.card{min-width:0;margin:18px 0 0!important;padding:24px!important;border:1px solid rgba(111,145,180,.22)!important;border-radius:var(--radius-xl)!important;background:linear-gradient(155deg,rgba(19,32,49,.98),rgba(12,21,34,.98))!important;box-shadow:0 16px 38px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.035)!important}
+.layout>.card{margin-top:0!important}
+.card h2{margin:0 0 19px!important;color:#f1f6ff!important;font-size:1.22rem!important;line-height:1.3!important;letter-spacing:-.022em!important;font-weight:780!important;text-wrap:balance}
+.field{min-width:0;margin-bottom:17px}
+label{display:block;margin-bottom:7px;color:#dce7f6!important;font-size:.91rem!important;line-height:1.4!important;font-weight:700!important;letter-spacing:.005em}
+.hint,.muted,.foot{color:var(--type-muted)!important;font-size:.82rem!important;line-height:1.55!important}
+input,select,textarea{display:block;width:100%;max-width:100%;min-width:0;min-height:49px!important;padding:12px 13px;border:1px solid #30445d!important;border-radius:13px!important;background:linear-gradient(180deg,#0a1422,#0c1726)!important;color:#f1f6ff!important;box-shadow:inset 0 1px 3px #0004;outline:none;font-size:1rem!important;line-height:1.4!important;font-weight:550;transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus,textarea:focus{border-color:#6bd8ca!important;box-shadow:0 0 0 3px #68dfce20!important}
+select option{background:#101b2b;color:#edf4ff}
+.metrics{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.metric,.ratebox{min-width:0;padding:16px!important;border:1px solid #2a4058!important;border-radius:16px!important;background:linear-gradient(145deg,#101e30,#0b1523)!important}
+.metric span,.tariff span{display:block;color:#aebed2!important;font-size:.79rem!important;line-height:1.4!important;font-weight:650;letter-spacing:.025em}
+.metric strong{display:block;margin-top:5px;color:#edf4ff!important;font-size:clamp(1.16rem,1.55vw,1.48rem)!important;line-height:1.25!important;font-weight:820!important;letter-spacing:-.025em!important;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.metric.primary{background:linear-gradient(135deg,#17364a,#102c35)!important;border-color:#39766f!important}
+.metric.primary strong{color:#8ce8d7!important;font-size:clamp(1.35rem,1.8vw,1.75rem)!important}
+.wide{grid-column:1/-1}
+.tariff{margin-bottom:12px;padding:18px!important;border:1px solid #34766b!important;border-radius:19px!important;background:linear-gradient(125deg,#123b37,#102c31)!important}
+.tariff strong{display:block;margin:5px 0;font-size:2.35rem!important;line-height:1.05!important;font-weight:850!important;letter-spacing:-.04em!important;color:#8de8d7!important;font-variant-numeric:tabular-nums}
+.btn,.btn:visited{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px!important;margin-top:13px;padding:12px 18px;border:1px solid rgba(117,220,207,.28)!important;border-radius:14px!important;background:linear-gradient(135deg,#168f88,#176d78 60%,#225a79)!important;color:#fff!important;box-shadow:0 8px 20px #0004,inset 0 1px #ffffff2c!important;font:inherit;font-size:.91rem!important;line-height:1.3!important;font-weight:740!important;letter-spacing:.005em!important;text-align:center;cursor:pointer;touch-action:manipulation;transition:filter .18s,transform .18s,box-shadow .18s}
+.btn:hover:not(:disabled){filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 10px 24px #0005,inset 0 1px #ffffff35!important}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:focus-visible{outline:3px solid #8fe2d2;outline-offset:3px}
+.notice{margin:16px 0;padding:15px 17px;border:1px solid #8c713f!important;border-radius:15px!important;background:#2b2418!important;color:#e5d7b9!important;font-size:.86rem!important;line-height:1.58!important}
+.notice strong{display:block;margin-bottom:8px;color:#e8bd67!important;font-size:.82rem!important;line-height:1.35!important;letter-spacing:.09em;font-weight:850!important}
+.notice p{margin:6px 0;line-height:1.55}
+.note{margin-top:15px;padding:14px 16px;border:1px solid #30445d!important;border-radius:15px!important;background:linear-gradient(145deg,#101e30,#0b1523)!important;color:#b8c8dc!important;font-size:.86rem;line-height:1.58}
+.foot{margin-top:18px;color:#91a2ba!important}
+#daily{margin-top:8px}
+::selection{background:#68dfce55;color:#fff}
+@media(min-width:761px){body{font-size:15.5px;line-height:1.62}.card h2{font-size:1.27rem!important;margin-bottom:19px!important}.layout{gap:20px!important}}
+@media(max-width:760px){main{padding-top:12px;padding-bottom:28px}.layout{grid-template-columns:minmax(0,1fr)!important;gap:12px!important}.hero{min-height:0;padding:22px 20px!important;margin-bottom:10px!important;border-radius:20px!important}.hero h1{font-size:clamp(1.7rem,7.5vw,2.3rem)!important;line-height:1.12!important}.hero p:not(:first-child){font-size:.9rem!important;line-height:1.5!important}.card{padding:17px!important;border-radius:19px!important;margin-top:13px!important}.layout>.card{margin-top:0!important}.card h2{font-size:1.08rem!important;margin-bottom:15px!important}.metrics{gap:9px!important}.metric{padding:13px!important;border-radius:14px!important}.metric strong{font-size:1.12rem!important}.tariff strong{font-size:2.2rem!important}.btn{min-height:48px!important;font-size:.91rem!important}}
+@media(max-width:420px){body{font-size:14px}main{padding-left:10px;padding-right:10px}.hero{padding:16px!important}.card{padding:14px!important}.metrics{gap:8px!important}.metric{padding:11px!important}.metric span{font-size:.76rem!important}.metric strong{font-size:1.02rem!important}.metric.primary strong{font-size:1.2rem!important}}
+@media(orientation:landscape) and (max-height:520px){main{padding-top:10px;padding-bottom:18px}.hero{padding:15px 20px!important}}
+</style>
+
+</head><body><main>
+<header class="hero"><p style="color:#55d6be;font-weight:700;letter-spacing:.08em;margin:0 0 8px">FAST FLOW · FF</p><h1 style="margin:.1em 0 .35em">Симулятор Быстрого Потока — ⭐ VIP</h1><p>Выберите фиксированный номинал VIP и рассчитайте результат Fast Flow за 30 дней с учётом курса подтяжки ECR.</p></header>
+<div class="layout">
+<section class="card"><h2>⚙️ Параметры потока</h2>
+
+<div class="field"><label for="amount">Фиксированный номинал · USDT</label><select id="amount"><option value="100">100 USDT</option><option value="250">250 USDT</option><option value="500">500 USDT</option><option value="750">750 USDT</option><option value="1000">1 000 USDT</option><option value="2500">2 500 USDT</option><option value="5000">5 000 USDT</option><option value="7500">7 500 USDT</option><option value="10000">10 000 USDT</option><option value="25000">25 000 USDT</option><option value="50000">50 000 USDT</option><option value="75000">75 000 USDT</option><option value="100000">100 000 USDT</option></select><div class="hint">Можно выбрать только номинал из фиксированного списка.</div></div>
+<div class="field"><label for="rate">Курс подтяжки · USDT за 1 ECR</label><input id="rate" type="number" min="0.00000001" step="any" value="275"></div>
+<div class="field"><label>Срок и выплата</label><div class="metric"><strong>30 дней</strong><span>Выплата единой суммой в конце 30-го начисления</span></div></div>
+<div class="hint" id="daily">Количество подтяжки ECR рассчитывается исходя из номинала потока и курса ECR.</div></section>
+<section class="card result"><h2>✧ Твой расчёт</h2><div class="tariff"><span>Применённый процент</span><strong id="pct">+10,1%</strong><span id="threshold">Порог тарифа: 100 USDT</span></div><div class="metrics">
+<div class="metric"><span>Начальный номинал</span><strong id="principal">100 USDT</strong></div>
+<div class="metric"><span>Результат за 30 дней</span><strong id="profit">10,10 USDT</strong></div>
+<div class="metric primary wide"><span>Выплата в конце 30-го начисления</span><strong id="total">110,10 USDT</strong></div>
+<div class="metric wide"><span>Количество подтяжки ECR</span><strong id="ecr">0,03672727 ECR</strong></div></div><div class="notice">
+  <strong>ВНИМАНИЕ!</strong>
+  <p>Срок работы потока — 30 дней. Выплата по потоку производится одной суммой по окончании срока.</p>
+  <p>Для каждого номинала можно создать только один поток одновременно. После завершения его работы можно повторно запустить поток с тем же номиналом.</p>
+  <p>Среднее значение в день отображается только для справки и не является отдельной ежедневной выплатой.</p>
+  <p id="daily" aria-live="polite">Средний результат в день будет рассчитан автоматически.</p>
+</div><button class="btn" id="copy">⧉ Скопировать расчёт</button></section>
+</div>
+
+<p class="note">Расчёт основан на введённых условиях и не гарантирует фактические выплаты, доходность или возможность вывода средств. Проверь условия площадки самостоятельно.</p><div class="foot">Fast Flow Симулятор потоков · VIP · тёмная тема</div>
+</main><script>
+(() => {
+  const rates = [
+    [100,10.1],[250,7.1],[500,5.9],[750,5.6],[1000,5.3],
+    [2500,5],[5000,4.7],[7500,4.4],[10000,4.1],
+    [25000,3.5],[50000,3.2],[75000,2.9],[100000,2.6]
+  ];
+  const amount = document.getElementById('amount');
+  
+  const rate = document.getElementById('rate');
+  const $ = id => document.getElementById(id);
+  const fmt = (n, digits=2) => Number.isFinite(n)
+    ? n.toLocaleString('ru-RU',{minimumFractionDigits:digits,maximumFractionDigits:digits})
+    : '—';
+
+  function render() {
+    const nominal = Number(amount.value);
+    const ecrRate = Number(rate.value);
+    const tariff = rates.find(([n]) => n === nominal);
+    const percent = tariff ? tariff[1] : null;
+    const profit = percent === null ? NaN : nominal * percent / 100;
+    const total = nominal + profit;
+    const validRate = rate.value.trim() !== '' && Number.isFinite(ecrRate) && ecrRate > 0;
+
+    $('pct').textContent = percent === null ? 'Нет тарифа' : `+${fmt(percent,1)}%`;
+    $('threshold').textContent = tariff
+      ? `Фиксированный номинал: ${tariff[0].toLocaleString('ru-RU')} USDT`
+      : 'Выбери номинал из списка';
+    $('principal').textContent = `${fmt(nominal)} USDT`;
+    $('profit').textContent = Number.isFinite(profit) ? `${fmt(profit)} USDT` : '—';
+    $('total').textContent = Number.isFinite(profit) ? `${fmt(total)} USDT` : '—';
+    $('ecr').textContent = validRate && Number.isFinite(profit)
+      ? `${fmt(profit / ecrRate,8)} ECR`
+      : 'Укажи курс больше 0';
+    $('daily').textContent = Number.isFinite(profit)
+      ? `Средний результат для справки: ${fmt(profit/30)} USDT в день. Это не отдельная ежедневная выплата.`
+      : 'Проверь выбранный номинал и курс ECR.';
+    $('rate').setAttribute('aria-invalid', String(!validRate));
+  }
+
+  document.querySelectorAll('input,select').forEach(el => {
+    el.addEventListener('input', render);
+    el.addEventListener('change', render);
+  });
+
+  $('copy').addEventListener('click', async () => {
+    const text = [
+      'VIP Fast Flow · 30 дней',
+      `Фиксированный номинал: ${amount.value} USDT`,
+      `Курс ECR: ${rate.value || 'не указан'} USDT за 1 ECR`,
+      `Тариф: ${$('pct').textContent}`,
+      `Результат за 30 дней: ${$('profit').textContent}`,
+      `Выплата в конце 30-го начисления: ${$('total').textContent}`,
+      `Количество подтяжки ECR: ${$('ecr').textContent}`
+    ].join('\\n');
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        alert('Расчёт скопирован');
+      } else {
+        const area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly','');
+        area.style.position = 'fixed';
+        area.style.opacity = '0';
+        document.body.appendChild(area);
+        area.select();
+        const copied = document.execCommand('copy');
+        area.remove();
+        if (copied) alert('Расчёт скопирован');
+        else window.prompt('Скопируй расчёт:', text);
+      }
+    } catch (_) {
+      window.prompt('Скопируй расчёт:', text);
+    }
+  });
+
+  render();
+})();
+</script></body></html>

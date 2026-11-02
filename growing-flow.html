@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0b1020"><title>Симулятор Растущего Потока — 🇪🇺 Европа</title><style>
+:root{color-scheme:dark;--bg:#080c14;--panel:#111a28;--line:#26354a;--text:#edf3ff;--muted:#8b9bb3;--blue:#70a7ff;--cyan:#70e0d1;--orange:#ffb45e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 95% 0,#17324b 0,transparent 38%),radial-gradient(ellipse at 0 20%,#202044 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1020px;margin:auto;padding:24px 16px 55px}.hero{border:1px solid #304862;border-radius:25px;padding:26px;background:linear-gradient(120deg,#142b43,#111a2b 70%,#172338);box-shadow:0 20px 55px #0004}.eyebrow{color:var(--cyan);font-weight:800;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase}.hero h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.13;margin:10px 0}.hero p{color:#b8c7dc;margin:0}.layout{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:17px}@media(max-width:740px){.layout{grid-template-columns:1fr}.hero{padding:21px}}.card{background:linear-gradient(155deg,#141f30,#101723);border:1px solid var(--line);border-radius:21px;padding:19px;margin-top:15px;box-shadow:0 12px 30px #0002}.card h2{font-size:1.12rem;margin:0 0 15px}.field{margin-bottom:15px}label{display:block;font-weight:650;margin-bottom:7px;color:#dbe5f6}.hint,.muted{color:var(--muted);font-size:.86rem}input,select{width:100%;padding:12px 13px;border:1px solid #34445d;border-radius:12px;background:#0a1220;color:var(--text);font:inherit;outline:none}input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #70a7ff20}.platforms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.platform{padding:12px;border:1px solid #2b3a50;border-radius:14px;background:#0d1522;color:var(--text);font:inherit;text-align:left;cursor:pointer}.platform small{display:block;color:var(--muted);margin-top:3px}.platform.active{border-color:var(--blue);background:#172942;box-shadow:inset 0 0 0 1px #70a7ff33}.ratebox{background:#0b1320;border:1px solid #27374d;border-radius:13px;padding:13px;margin-bottom:15px}.ratebox strong{color:var(--cyan);font-size:1.2rem}.tariff{background:linear-gradient(120deg,#16352f,#12251f);border:1px solid #2a554a;border-radius:16px;padding:16px;margin-bottom:12px}.tariff span,.metric span{color:#a9b9ce;font-size:.84rem;display:block}.tariff strong{display:block;font-size:2.2rem;color:var(--cyan)}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#0b1320;border:1px solid #27364b;border-radius:14px;padding:13px;min-width:0}.metric strong{display:block;font-size:clamp(1.05rem,3vw,1.4rem);margin-top:5px;overflow-wrap:anywhere}.metric.primary{background:#192a40;border-color:#34557c}.metric.primary strong{color:#a6c8ff}.wide{grid-column:1/-1}.btn{width:100%;border:0;border-radius:12px;background:linear-gradient(100deg,#6ea7ff,#79dcd5);color:#071320;font:inherit;font-weight:800;padding:13px;margin-top:13px;cursor:pointer}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px}table{border-collapse:collapse;width:100%;min-width:280px;background:#0b1320}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #263448}th{color:var(--muted);font-size:.84rem;background:#141f30}.active-row{background:#1b2b40;color:#a6c8ff}.note{margin-top:15px;background:#181b27;border:1px solid #35384a;color:#b4bfd0;padding:13px;border-radius:14px;font-size:.86rem}.foot{font-size:.8rem;color:#6e7c94;margin-top:18px}
+.notice{margin:16px 0;padding:14px 16px;border:1px solid #c99b45;border-radius:12px;background:rgba(201,155,69,.09);color:inherit}.notice strong{display:block;margin-bottom:8px;color:#e8bd67}.notice p{margin:6px 0;line-height:1.45}
+/* Адаптивная вёрстка: телефон, планшет, ноутбук и большой экран */
+html{width:100%;min-width:0;scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-width:0;width:100%;overflow-x:hidden}
+main{width:min(100%,1280px);min-width:0;margin-inline:auto;padding-left:clamp(12px,2.2vw,30px);padding-right:clamp(12px,2.2vw,30px)}
+.layout>* , .card, .hero, .result, .field{min-width:0}
+img,svg,canvas,video{max-width:100%;height:auto}
+input,select,button,textarea{max-width:100%;min-width:0}
+input,select,textarea{font-size:16px}
+button, .platform{touch-action:manipulation}
+table{width:100%;max-width:100%;border-collapse:collapse}
+.table-wrap,.tiers-wrap,.overflow-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+pre,code{white-space:pre-wrap;overflow-wrap:anywhere}
+*{overflow-wrap:break-word}
+@media(min-width:761px) and (max-width:1100px){
+  main{max-width:1000px;padding-top:20px}
+  .layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  .card{padding:17px}
+  .hero{padding:24px}
+}
+@media(min-width:1101px){
+  main{max-width:1280px}
+  .layout{gap:20px}
+}
+@media(max-width:760px){
+  main{padding-top:12px;padding-bottom:28px}
+  .layout{grid-template-columns:minmax(0,1fr)!important;gap:12px}
+  .hero{padding:clamp(16px,4vw,22px);border-radius:18px}
+  .card{padding:clamp(14px,3.8vw,19px);border-radius:17px}
+  h1,.hero h1{font-size:clamp(1.55rem,6vw,2.15rem);overflow-wrap:anywhere}
+  .card h2{font-size:1.05rem}
+  button{min-height:44px}
+  .platform{min-height:44px}
+}
+@media(max-width:420px){
+  body{font-size:14px}
+  main{padding-left:10px;padding-right:10px}
+  .hero{padding:15px}
+  .card{padding:13px}
+  .pill{font-size:.74rem}
+}
+@media(orientation:landscape) and (max-height:520px){
+  main{padding-top:10px;padding-bottom:18px}
+  .hero{padding:15px 20px}
+}
+
+#dailyPayoutMetric[hidden]{display:none!important}
+</style><style id="fast-flow-unified-design">
+
+/* Единая дизайн-система Fast Flow */
+:root{
+  color-scheme:dark;
+  --bg:#070d18;
+  --panel:#101b2b;
+  --line:rgba(137,166,197,.18);
+  --text:#edf5ff;
+  --muted:#91a3ba;
+  --blue:#68dfce;
+  --cyan:#8fe2d7;
+  --orange:#68dfce;
+  --accent:#68dfce;
+}
+html{background:#070d18;scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(ellipse at 92% 0%,rgba(31,91,105,.22),transparent 36%),
+    radial-gradient(ellipse at 4% 12%,rgba(29,58,91,.22),transparent 34%),
+    #070d18;
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  font-size:15px;line-height:1.55;
+}
+main{width:min(100%,1280px);max-width:1280px;padding:24px clamp(14px,2.2vw,30px) 56px}
+.hero{
+  position:relative;isolation:isolate;overflow:hidden;
+  border:1px solid rgba(111,180,190,.22);
+  border-radius:28px;padding:30px;
+  background:linear-gradient(118deg,#142b43 0%,#101d2e 58%,#102b30 100%);
+  box-shadow:0 22px 60px rgba(0,0,0,.28);
+}
+.hero:after{
+  content:"";position:absolute;z-index:-1;width:310px;height:310px;
+  right:-105px;top:-175px;border-radius:50%;
+  border:1px solid rgba(104,223,206,.13);
+  box-shadow:0 0 0 28px rgba(104,223,206,.025),0 0 0 58px rgba(104,223,206,.02);
+}
+.hero>p:first-child{
+  color:var(--cyan)!important;font-size:.75rem;font-weight:800;
+  letter-spacing:.16em;text-transform:uppercase;
+}
+.hero h1{font-size:clamp(1.8rem,4vw,2.65rem);line-height:1.12;letter-spacing:-.035em;margin:9px 0 12px}
+.hero p{color:#b8c8da}
+.layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;margin-top:18px}
+.card{
+  min-width:0;margin-top:17px;padding:21px;
+  border:1px solid var(--line);border-radius:24px;
+  background:linear-gradient(155deg,rgba(20,32,49,.98),rgba(13,22,35,.98));
+  box-shadow:0 14px 36px rgba(0,0,0,.2);
+}
+.layout .card{margin-top:0}
+.card h2{font-size:1.08rem;font-weight:750;letter-spacing:-.015em;margin:0 0 18px;color:#f0f6ff}
+.field{margin-bottom:17px}
+label{color:#dce8f6;font-size:.91rem;font-weight:650;margin-bottom:8px}
+.hint,.muted{color:var(--muted)}
+input,select{
+  width:100%;min-height:48px;padding:12px 14px;
+  border:1px solid rgba(133,161,190,.24);border-radius:13px;
+  background:#091321;color:var(--text);font:inherit;
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+input:hover,select:hover{border-color:rgba(104,223,206,.38)}
+input:focus,select:focus{
+  border-color:#68dfce;outline:none;
+  box-shadow:0 0 0 3px rgba(104,223,206,.13);
+  background:#0b1825;
+}
+input::placeholder{color:#71849b}
+.platforms{gap:10px}
+.platform{
+  min-width:0;padding:13px 14px;border:1px solid var(--line);
+  border-radius:15px;background:#0c1725;color:var(--text);
+  transition:.18s ease;
+}
+.platform:hover{border-color:rgba(104,223,206,.4);transform:translateY(-1px)}
+.platform.active{
+  border-color:rgba(104,223,206,.72);
+  background:linear-gradient(135deg,rgba(30,83,83,.45),rgba(18,43,58,.72));
+  box-shadow:inset 0 0 0 1px rgba(104,223,206,.14);
+}
+.platform small{color:var(--muted)}
+.ratebox,.metric{
+  border:1px solid rgba(137,166,197,.16);
+  border-radius:16px;background:linear-gradient(145deg,#0d1928,#0a1421);
+}
+.ratebox{padding:15px;margin-bottom:16px}
+.ratebox strong{color:var(--cyan)}
+.tariff{
+  border:1px solid rgba(104,223,206,.25);border-radius:18px;
+  background:linear-gradient(125deg,rgba(24,70,65,.5),rgba(15,35,43,.8));
+}
+.tariff span,.metric span{color:#9eafc4;font-size:.82rem;line-height:1.4}
+.tariff strong{color:var(--cyan);font-size:clamp(1.8rem,4vw,2.25rem);letter-spacing:-.03em}
+.metrics{gap:11px}
+.metric{padding:15px;min-width:0}
+.metric strong{font-size:clamp(1.05rem,2.5vw,1.4rem);font-weight:750;letter-spacing:-.02em;overflow-wrap:anywhere}
+.metric.primary{
+  border-color:rgba(104,223,206,.35);
+  background:linear-gradient(135deg,rgba(25,76,75,.7),rgba(15,43,53,.9));
+}
+.metric.primary strong{color:#8fe2d7}
+button,.btn,#copy{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:48px;padding:13px 18px;border:0;border-radius:14px;
+  background:linear-gradient(135deg,#168f88,#176d78 60%,#225a79);
+  color:#f2fffd;font:inherit;font-weight:750;letter-spacing:.005em;
+  box-shadow:0 8px 20px rgba(12,104,105,.18);
+  cursor:pointer;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease;
+}
+button:hover,.btn:hover,#copy:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 11px 25px rgba(12,104,105,.25)}
+button:active,.btn:active,#copy:active{transform:translateY(0)}
+button:focus-visible,.btn:focus-visible,#copy:focus-visible,.platform:focus-visible{
+  outline:2px solid #8fe2d7;outline-offset:3px
+}
+#copy{width:100%;margin-top:14px}
+.tablewrap,.table-wrap,.tiers-wrap,.overflow-wrap{
+  max-width:100%;overflow:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--line);border-radius:16px;
+}
+table{width:100%;border-collapse:collapse;background:#0b1522}
+th,td{padding:12px 14px;border-bottom:1px solid rgba(137,166,197,.13);text-align:left}
+th{background:#142235;color:#9fb2c9;font-size:.82rem;font-weight:700;white-space:nowrap}
+td{color:#dce7f4}
+tbody tr:last-child td{border-bottom:0}
+tbody tr{transition:background .15s ease}
+tbody tr:hover{background:rgba(104,223,206,.045)}
+.active-row{background:rgba(104,223,206,.09);color:#9be8dc}
+.active-row td{color:#9be8dc;font-weight:700}
+.note{
+  border:1px solid rgba(137,166,197,.17);border-radius:15px;
+  background:rgba(9,19,32,.76);color:#aebed0;
+  padding:14px 16px;font-size:.86rem;
+}
+.notice{
+  border:1px solid rgba(104,223,206,.28);
+  border-radius:15px;background:rgba(104,223,206,.07);
+}
+.notice strong{color:var(--cyan)}
+ol{padding-left:22px;color:#c7d4e3}
+ol li{padding-left:4px;margin:7px 0}
+.foot{color:#71839a}
+[hidden]{display:none!important}
+@media(min-width:1100px){.layout{gap:20px}.card{padding:23px}}
+@media(max-width:760px){
+  main{padding:14px 12px 30px}
+  .layout{grid-template-columns:minmax(0,1fr)!important;gap:12px}
+  .hero{padding:22px 19px;border-radius:21px}
+  .card{padding:17px;border-radius:19px;margin-top:12px}
+  .layout .card{margin-top:0}
+  .metrics{gap:9px}
+  .metric{padding:12px}
+  th,td{padding:10px 11px}
+  button,#copy{min-height:46px}
+}
+@media(max-width:420px){
+  body{font-size:14px}
+  main{padding-left:10px;padding-right:10px}
+  .hero{padding:18px 15px}
+  .card{padding:14px}
+  .metrics{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .metric strong{font-size:1.02rem}
+  .platforms{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;transition:none!important}
+}
+
+</style>
+<style id="growing-flow-typography-polish">
+/* Единая типографика и цветовая иерархия */
+:root{
+  --text:#F1F6FC;
+  --muted:#91A4BA;
+  --accent:#70DCCB;
+  --accent-soft:#A1E9DD;
+  --line:rgba(143,171,199,.17);
+}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px;line-height:1.58;font-weight:400;color:#F1F6FC;letter-spacing:0}
+.hero>p:first-child{font-size:11px!important;line-height:1.4;letter-spacing:.17em!important;font-weight:800!important;color:#8DE5D7!important}
+.hero h1{font-size:clamp(25px,3.5vw,39px);line-height:1.14;font-weight:780;letter-spacing:-.045em;color:#F5F8FD;margin:10px 0 12px!important}
+.hero p:not(:first-child){font-size:14px;line-height:1.6;color:#B4C4D6;max-width:720px}
+.card h2{font-size:16px;line-height:1.35;font-weight:750;letter-spacing:-.025em;color:#F0F5FC;margin-bottom:17px}
+label{font-size:13px;line-height:1.4;font-weight:650;letter-spacing:.005em;color:#D7E2EF}
+input,select{font-size:15px;line-height:1.4;font-weight:500;color:#F0F6FC}
+input::placeholder{color:#71849A}
+.hint,.muted{font-size:12px;line-height:1.5;color:#91A4BA}
+.note{font-size:12.5px;line-height:1.55;color:#AEBED0}
+.metric span,.tariff span{font-size:11px;line-height:1.45;font-weight:600;letter-spacing:.025em;color:#9FB1C6}
+.metric strong{font-size:clamp(17px,2vw,21px);line-height:1.25;font-weight:760;letter-spacing:-.035em;color:#EAF2FA;font-variant-numeric:tabular-nums}
+.metric.primary strong{color:#9CEBDD}
+.ratebox{font-size:13px;line-height:1.5;color:#C3D0DE}
+.ratebox strong{font-size:19px;line-height:1.25;font-weight:750;color:#8FE4D7}
+.tariff strong{font-size:clamp(29px,4vw,36px);line-height:1.1;font-weight:800;letter-spacing:-.045em;color:#8FE4D7;font-variant-numeric:tabular-nums}
+button,#copy,.btn{font-size:14px;font-weight:750;letter-spacing:.005em;color:#F3FFFD}
+table{font-size:13px;line-height:1.45}
+th{font-size:11px;font-weight:750;letter-spacing:.045em;text-transform:uppercase;color:#9EB2C9}
+td{font-size:13px;font-weight:500;color:#DCE7F3;font-variant-numeric:tabular-nums}
+.active-row td{color:#9BE8DC;font-weight:750}
+ol{font-size:13px;line-height:1.6;color:#C6D3E1}
+ol li{margin:8px 0}
+#status{color:#B9C9D9}
+#thresholdHint{color:#AABBCD}
+:focus-visible{outline-color:#8FE2D7}
+@media(max-width:760px){
+ body{font-size:14px}
+ .hero h1{font-size:clamp(24px,6vw,31px)}
+ .hero p:not(:first-child){font-size:13px}
+ .card h2{font-size:15px}
+ label{font-size:12.5px}
+ .metric span,.tariff span{font-size:10.5px}
+ .metric strong{font-size:clamp(15px,4vw,19px)}
+ th{font-size:10px}
+ td{font-size:12px}
+}
+@media(max-width:380px){
+ .metric{padding:10px}
+ .metric strong{font-size:14px}
+ .metric span{font-size:10px}
+}
+</style>
+
+</head>
+<body><main>
+<section class="hero"><p style="color:#55d6be;font-weight:700;letter-spacing:.08em;margin:0 0 8px">GROWING FLOW · GF</p><h1 id="pageTitle" style="margin:.1em 0 .35em">Симулятор Растущего Потока — 🇪🇺 Европа</h1><p>Выберите площадку и рассчитайте подтяжку ECR или ERUB в зависимости от суммы пополнения и курса.</p></section>
+<div class="layout">
+<section class="card"><h2>⚙️ Параметры расчёта</h2>
+<div class="field"><label for="market">Площадка</label><select id="market"><option value="EU" selected>🇪🇺 Европа</option><option value="ES">🇪🇸 Испания</option><option value="GB">🇬🇧 Британия</option><option value="PL">🇵🇱 Польша</option><option value="CN">🇨🇳 Китай</option><option value="KG">🇰🇬 Кыргызстан</option><option value="RU">🇷🇺 Россия</option></select></div>
+  <div class="field"><label for="amount">Сумма пополнения</label><input id="amount" type="number" min="50" step="any" value="50" inputmode="decimal"></div>
+<div class="field"><label for="currency">Валюта суммы</label><input id="currency" type="text" value="EUR" maxlength="12" autocomplete="off"></div>
+<div class="field"><label for="rate" id="rateLabel">Курс подтяжки (стоимость 1 ECR в выбранной валюте)</label><input id="rate" type="number" min="0.00000001" step="any" value="250" inputmode="decimal"></div>
+<p class="note" id="thresholdHint">Минимальная сумма входа для выбранной площадки: 50 EUR. Процент подтяжки выбирается по минимальному порогу из таблицы ниже.</p></section>
+<section class="card"><h2>📊 Результат расчёта</h2><div class="metrics">
+<div class="metric"><span>Сумма пополнения</span><strong id="outAmount">250,00 EUR</strong></div><div class="metric"><span>Процент подтяжки</span><strong id="outPct">+70%</strong></div>
+<div class="metric"><span>Сумма подтяжки</span><strong id="outBonus">175,00 EUR</strong></div><div class="metric primary"><span>Сумма после подтяжки</span><strong id="outTotal">425,00 EUR</strong></div>
+<div class="metric"><span id="tokenLabel">Количество подтяжки ECR</span><strong id="outEcr">0,70000000 ECR</strong></div></div>
+<p class="note" id="status" style="margin-top:16px"></p><button id="copy" type="button">⧉ Скопировать расчёт</button></section></div>
+<section class="card"><h2>📈 Таблица процентов подтяжки</h2><div class="tablewrap"><table><thead><tr><th>Сумма пополнения — от</th><th>Подтяжка</th></tr></thead><tbody id="tiers"></tbody></table></div></section>
+<section class="card"><h2>ℹ️ Как пользоваться</h2><ol><li>Введите сумму пополнения.</li><li>Укажите валюту суммы.</li><li>Введите курс 1 ECR или ERUB в валюте выбранной площадки.</li><li>Посмотрите процент, сумму подтяжки и расчётное количество ECR.</li></ol><p class="note">Расчёт справочный и основан на предоставленной таблице. Он не подтверждает фактические условия площадки и не гарантирует доход или выплату.</p></section>
+</main>
+<script>
+const tiersByMarket = {
+ ES: [[50,50],[100,60],[250,70],[500,80],[1000,100],[2000,110],[3000,120],[5000,130],[10000,150]],
+ EU: [[50,50],[100,60],[250,70],[500,80],[1000,100],[2000,110],[3000,120],[5000,130],[10000,150]],
+ GB: [[50,50],[100,60],[250,70],[500,80],[1000,100],[2000,110],[3000,120],[5000,130],[10000,150]],
+ PL: [[250,60],[500,70],[1000,80],[2500,100],[5000,110],[10000,120],[15000,130],[25000,150],[50000,160],[100000,170]],
+ CN: [[500,50],[1000,60],[2500,70],[5000,80],[10000,100],[20000,110],[30000,120],[50000,130],[100000,150]],
+ KG: [[1000,50],[5000,60],[10000,80],[50000,100],[100000,120],[500000,150],[1000000,170]],
+ RU: [[1000,50],[5000,75],[10000,100],[50000,125],[100000,150],[500000,175],[1000000,200]]
+};
+function getTiers(){ return tiersByMarket[document.querySelector('#market').value] || tiersByMarket.ES; }
+const marketNames = {ES:'🇪🇸 Испания',EU:'🇪🇺 Европа',GB:'🇬🇧 Британия',PL:'🇵🇱 Польша',CN:'🇨🇳 Китай',KG:'🇰🇬 Кыргызстан',RU:'🇷🇺 Россия'};
+const marketCurrency = {ES:'EUR',EU:'EUR',GB:'GBP',PL:'PLN',CN:'CNY',KG:'KGS',RU:'RUB'};
+const marketRate = {ES:250,EU:250,GB:225,PL:1010,CN:1800,KG:25000,RU:28};
+function getMinThreshold(market=document.querySelector('#market').value){ const tiers=tiersByMarket[market]||tiersByMarket.ES; return tiers[0][0]; }
+const fmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+function render(){
+ const market=document.querySelector('#market').value;
+ document.querySelector('#pageTitle').textContent=`Симулятор Растущего Потока — ${marketNames[market]}`;
+ const amountRaw=document.querySelector('#amount').value;
+ const amount=amountRaw===''?NaN:Number(amountRaw);
+ const currency=(document.querySelector('#currency').value.trim()||marketCurrency[market]||'валюта').toUpperCase();
+ const rateRaw=document.querySelector('#rate').value;
+ const rate=rateRaw===''?NaN:Number(rateRaw);
+ const minThreshold=getMinThreshold(market);
+ document.querySelector('#amount').min=String(minThreshold);
+ document.querySelector('#thresholdHint').textContent=`Минимальная сумма входа для ${marketNames[market]}: ${fmt(minThreshold,0)} ${currency}. Процент подтяжки выбирается по минимальному порогу из таблицы ниже.`;
+ const token=market==='RU'?'ERUB':'ECR';
+ document.querySelector('#tokenLabel').textContent=`Количество подтяжки ${token}`;
+ document.querySelector('#rateLabel').textContent=`Курс подтяжки (стоимость 1 ${token} в выбранной валюте)`;
+ const tiers=getTiers(); let chosen=null; for(const tier of tiers) if(amount>=tier[0]) chosen=tier;
+ const pct=chosen?chosen[1]:null,bonus=(pct===null||!Number.isFinite(amount))?0:amount*pct/100,total=(pct===null||!Number.isFinite(amount))?NaN:amount+bonus,ecr=(Number.isFinite(rate)&&rate>0)?bonus/rate:NaN;
+ document.querySelector('#outAmount').textContent=Number.isFinite(amount)&&amount>0?`${fmt(amount)} ${currency}`:'—';
+ document.querySelector('#outPct').textContent=pct===null?'Нет тарифа':`+${fmt(pct,0)}%`;
+ document.querySelector('#outBonus').textContent=pct===null||!Number.isFinite(amount)?'—':`${fmt(bonus)} ${currency}`;
+ document.querySelector('#outTotal').textContent=pct===null||!Number.isFinite(total)?'—':`${fmt(total)} ${currency}`;
+ document.querySelector('#outEcr').textContent=pct===null||!Number.isFinite(ecr)||!(rate>0)?'—':`${fmt(ecr,8)} ${token}`;
+ document.querySelector('#status').textContent=!Number.isFinite(amount)||amount<=0?`Введите сумму не меньше ${fmt(minThreshold,0)} ${currency}.`:pct===null?`Сумма ниже минимального порога ${fmt(minThreshold,0)} ${currency}. Укажите сумму не меньше минимального порога для выбранной площадки.`:`Применён порог: от ${fmt(chosen[0],0)} ${currency} — подтяжка +${fmt(pct,0)}%. Количество ${token} = сумма подтяжки ÷ курс.`;
+ document.querySelector('#tiers').innerHTML=tiers.map(t=>`<tr class="${chosen&&chosen[0]===t[0]?'active-row':''}"><td>от ${fmt(t[0],0)} ${currency}</td><td>+${fmt(t[1],0)}%</td></tr>`).join('');
+}
+document.querySelectorAll('#amount,#currency,#rate').forEach(el=>el.addEventListener('input',render));
+document.querySelector('#market').addEventListener('change',()=>{
+ const market=document.querySelector('#market').value;
+ const currency=marketCurrency[market]||'EUR';
+ document.querySelector('#currency').value=currency;
+ document.querySelector('#rate').value=String(marketRate[market]||250);
+ const amountInput=document.querySelector('#amount');
+ const minThreshold=getMinThreshold(market);
+ amountInput.min=String(minThreshold);
+ // При каждом переключении площадки сразу устанавливаем её минимальный порог входа.
+ amountInput.value=String(minThreshold);
+ render();
+});
+document.querySelector('#copy').addEventListener('click',()=>{
+ const txt=`Симулятор Растущего Потока — ${marketNames[document.querySelector('#market').value]}\nСумма пополнения: ${document.querySelector('#outAmount').textContent}\nПодтяжка: ${document.querySelector('#outPct').textContent}\nСумма подтяжки: ${document.querySelector('#outBonus').textContent}\nСумма после подтяжки: ${document.querySelector('#outTotal').textContent}\nКоличество подтяжки ${document.querySelector('#market').value==='RU'?'ERUB':'ECR'}: ${document.querySelector('#outEcr').textContent}\nКурс ${document.querySelector('#market').value==='RU'?'ERUB':'ECR'}: ${document.querySelector('#rate').value} ${document.querySelector('#currency').value}`;
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>alert('Расчёт скопирован')).catch(()=>alert(txt));else alert(txt);
+});
+render();
+</script></body></html>
