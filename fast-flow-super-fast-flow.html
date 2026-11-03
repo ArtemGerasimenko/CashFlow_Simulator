@@ -973,6 +973,44 @@ pre,code{white-space:pre-wrap;overflow-wrap:anywhere}
   .reset-cascade-trigger{width:100%!important;min-height:42px!important}
 }
 
+
+/* Модальное окно создания потока */
+body.create-flow-modal-open{overflow:hidden}
+body.create-flow-modal-open::before{
+  content:"";position:fixed;inset:0;z-index:9998;
+  background:rgba(3,8,16,.78);backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+}
+#newFlowEditor.create-flow-modal{
+  position:fixed!important;z-index:9999!important;
+  left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;
+  width:min(560px,calc(100vw - 28px))!important;
+  max-width:560px!important;max-height:calc(100dvh - 32px)!important;
+  margin:0!important;padding:22px!important;overflow-y:auto!important;
+  border:1px solid #45617e!important;border-radius:22px!important;
+  background:linear-gradient(155deg,#17263b,#101a29 72%,#172238)!important;
+  box-shadow:0 24px 80px rgba(0,0,0,.65)!important;
+}
+#newFlowEditor .create-flow-modal-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin:0 0 16px;
+}
+#newFlowEditor .create-flow-modal-title{
+  margin:0;color:#edf3ff;font-size:1.12rem;font-weight:850;
+}
+#newFlowEditor #closeCreateFlow{
+  flex:0 0 38px;width:38px;height:38px;min-height:38px;margin:0;padding:0;
+  border:1px solid #405873;border-radius:11px;background:#0b1422;
+  color:#dce8f7;font-size:1.35rem;line-height:1;cursor:pointer;
+}
+#newFlowEditor #closeCreateFlow:hover{background:#263a52}
+@media(max-width:560px){
+  #newFlowEditor.create-flow-modal{
+    width:calc(100vw - 20px)!important;max-height:calc(100dvh - 20px)!important;
+    padding:16px!important;border-radius:18px!important;
+  }
+}
+
 </style>
 
 <style>
@@ -1345,6 +1383,10 @@ td{font-size:.86rem!important;line-height:1.45!important;font-weight:550;font-va
 <button class="btn action-pill" disabled="" id="openCreateFlow" type="button">Создать поток</button>
 </div>
 <div class="ratebox" hidden="" id="newFlowEditor" style="margin-top:10px">
+<div class="create-flow-modal-head">
+<h3 class="create-flow-modal-title">Создание нового потока</h3>
+<button aria-label="Закрыть окно создания потока" id="closeCreateFlow" type="button">×</button>
+</div>
 <div class="field" hidden="" id="walletFlowTypeField">
 <label>Тип нового кошелька</label>
 <div aria-label="Выбор типа кошелька" class="wallet-type-switch" role="group">
@@ -2651,6 +2693,11 @@ if (platformSelect) {
    $('cascadeMinimum').textContent=money(minimum(),currency());
    $('openReinvestFlow').disabled=!started || piggy+1e-8<minimum() || isSunday(simDate) || wallets.length>=walletLimit();
  }
+ function closeCreateFlowEditor(){
+   $('newFlowEditor').hidden=true;
+   $('newFlowEditor').classList.remove('create-flow-modal');
+   document.body.classList.remove('create-flow-modal-open');
+ }
  function openEditor(mode='external'){
    if(wallets.length>=walletLimit()){status('Достигнут лимит каскада: '+walletLimit()+' кошельков.');return;}
    skipSunday();
@@ -2664,6 +2711,8 @@ if (platformSelect) {
      return;
    }
    $('newFlowEditor').hidden=false;
+   $('newFlowEditor').classList.add('create-flow-modal');
+   document.body.classList.add('create-flow-modal-open');
    $('newFlowAmountLabel').textContent=mode==='reinvest'?'Сумма реинвестирования':'Номинал нового кошелька';
    $('newFlowAmount').value='';
    $('newFlowAmount').min=String(min);
@@ -2682,7 +2731,7 @@ if (platformSelect) {
  }
  function fmt(n){return Number(n).toLocaleString('ru-RU',{maximumFractionDigits:2});}
  function confirmCreate(){
-   if(wallets.length>=walletLimit()){status('Достигнут лимит каскада: '+walletLimit()+' кошельков.');$('newFlowEditor').hidden=true;render();return;}
+   if(wallets.length>=walletLimit()){status('Достигнут лимит каскада: '+walletLimit()+' кошельков.');closeCreateFlowEditor();render();return;}
    skipSunday();
    if(isSunday(simDate)){status('Воскресенье — выходной. Новый кошелёк создать нельзя.');return;}
    const type=editorFlowType(), min=minimumFor(type);
@@ -2703,7 +2752,7 @@ if (platformSelect) {
    if(hasPreviouslyAccruedWallet && !pendingWalletNums.includes(w.num)) pendingWalletNums.push(w.num);
    newWalletAccrualPending=pendingWalletNums.length>0;
    started=true;
-   $('newFlowEditor').hidden=true;
+   closeCreateFlowEditor();
    status((createMode==='reinvest'?'Реинвест: создан кошелёк №':'Создан кошелёк №')+w.num+' · '+(type==='FF'?'Fast Flow (FF)':'Super Fast Flow (SFF)')+' на '+money(amount,currency())+'. '+(createMode==='reinvest'?'Средства списаны из копилки. ':'Копилка не затронута.')+' Период 0/'+w.days+'.');
    render();
    updateAccrualTimer();
@@ -2770,7 +2819,8 @@ if (platformSelect) {
  $('newFlowAmount').addEventListener('input',updateReinvestPreview);
  $('reinvestUseAll').addEventListener('click',()=>{ $('newFlowAmount').value=fmt(piggy).replace(/\s/g,'').replace(',','.'); updateReinvestPreview(); });
  $('confirmCreateFlow').addEventListener('click',confirmCreate);
- $('cancelCreateFlow').addEventListener('click',()=>{$('newFlowEditor').hidden=true;});
+ $('cancelCreateFlow').addEventListener('click',closeCreateFlowEditor);
+ $('closeCreateFlow').addEventListener('click',closeCreateFlowEditor);
  const resetDialog=$('resetConfirmDialog');
  const closeResetDialog=()=>{
    resetDialog.hidden=true;
@@ -2786,7 +2836,7 @@ if (platformSelect) {
  $('confirmCascadeReset').addEventListener('click',()=>{
    wallets=[];nextNum=1;piggy=0;started=false;createMode='external';simDate=today();nextAccrualAt=0;pendingWalletNums=[];newWalletAccrualPending=false;skipSunday();
    $('cascadeDays').disabled=false;$('platformSelect').disabled=false;
-   $('newFlowEditor').hidden=true;
+   closeCreateFlowEditor();
    closeResetDialog();
    status('Каскад сброшен. Выберите тип каскада и создайте первый кошелёк.');
    render();
@@ -2795,7 +2845,8 @@ if (platformSelect) {
    if(event.target===resetDialog)closeResetDialog();
  });
  document.addEventListener('keydown',(event)=>{
-   if(event.key==='Escape'&&!resetDialog.hidden)closeResetDialog();
+   if(event.key==='Escape'&&!$('newFlowEditor').hidden)closeCreateFlowEditor();
+   else if(event.key==='Escape'&&!resetDialog.hidden)closeResetDialog();
  });
  $('toggleArchive').addEventListener('click',()=>{
    archiveView=!archiveView;
