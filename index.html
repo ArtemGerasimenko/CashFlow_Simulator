@@ -157,6 +157,45 @@ h1{font-size:clamp(1.55rem,3.5vw,3.5rem);line-height:1.08;letter-spacing:-.04em}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
+
+/* Telegram contact block */
+.telegram-contact{width:100%;margin:clamp(18px,3vh,30px) auto 0;display:flex;flex-direction:column;gap:12px}
+.telegram-heading{text-align:center;margin:0 0 3px}
+.telegram-heading h2{margin:0;color:#19ddf5;font-size:clamp(1.05rem,2.2vw,1.45rem);font-weight:900;letter-spacing:.04em}
+.telegram-heading p{margin:5px 0 0;color:#a9c5e9;font-size:clamp(.72rem,1.2vw,.88rem)}
+.telegram-card{--telegram-accent:#168dff;position:relative;display:grid;grid-template-columns:74px minmax(0,1fr) auto;align-items:center;gap:14px;min-height:104px;padding:14px 18px;border:1.5px solid var(--telegram-accent);border-radius:19px;text-decoration:none;color:inherit;background:linear-gradient(110deg,#0a2850,#061b39 68%,#06152f);box-shadow:0 0 9px color-mix(in srgb,var(--telegram-accent) 35%,transparent),inset 0 1px 0 #ffffff20;transition:transform .2s,filter .2s,box-shadow .2s}
+.telegram-card:hover{transform:translateY(-2px);filter:brightness(1.1);box-shadow:0 0 16px color-mix(in srgb,var(--telegram-accent) 48%,transparent)}
+.telegram-card:focus-visible{outline:3px solid white;outline-offset:4px}
+.telegram-chat{--telegram-accent:#168dff}
+.telegram-info{--telegram-accent:#d6a13c;background:linear-gradient(110deg,#302844,#1b2039 68%,#10182e)}
+.telegram-personal{--telegram-accent:#13cfe8;background:linear-gradient(110deg,#073b4c,#08283d 68%,#061b32)}
+.telegram-icon{display:grid;place-items:center;align-self:stretch;min-height:70px;border-right:1px solid color-mix(in srgb,var(--telegram-accent) 48%,transparent);font-size:2.5rem}
+.telegram-content{min-width:0}
+.telegram-content h3{margin:0;color:#f6f9ff;font-size:clamp(.9rem,1.65vw,1.15rem);font-weight:900;line-height:1.2}
+.telegram-content p{margin:5px 0 0;color:#b3cbed;font-size:.82rem;line-height:1.35}
+.telegram-content strong{display:block;margin-top:4px;color:#19ddf5;font-size:.96rem;overflow-wrap:anywhere}
+.telegram-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 13px;border:1px solid var(--telegram-accent);border-radius:999px;background:color-mix(in srgb,var(--telegram-accent) 13%,transparent);color:#f3f7ff;font-size:.72rem;font-weight:900;letter-spacing:.025em;white-space:nowrap}
+.telegram-action span{font-size:1rem}
+.telegram-footer{margin:1px 0 0;color:#7898bd;text-align:center;font-size:.65rem;font-weight:800;letter-spacing:.12em}
+@media(max-width:600px){
+ .telegram-contact{gap:8px;margin-top:16px}
+ .telegram-heading h2{font-size:1rem}
+ .telegram-heading p{font-size:.68rem}
+ .telegram-card{grid-template-columns:48px minmax(0,1fr);gap:9px;min-height:83px;padding:9px 10px;border-radius:14px}
+ .telegram-icon{grid-row:1 / span 2;min-height:58px;font-size:2rem}
+ .telegram-content h3{font-size:clamp(.72rem,3.2vw,.9rem)}
+ .telegram-content p{font-size:.66rem;margin-top:3px}
+ .telegram-content strong{font-size:.8rem}
+ .telegram-action{grid-column:2;justify-self:start;padding:5px 9px;font-size:.61rem;margin-top:1px}
+ .telegram-footer{font-size:.58rem}
+}
+@media(max-width:360px){
+ .telegram-card{grid-template-columns:40px minmax(0,1fr);padding:8px}
+ .telegram-icon{font-size:1.7rem}
+ .telegram-content h3{font-size:.68rem}
+ .telegram-action{font-size:.56rem}
+}
+
 </style>
 </head>
 <body>
@@ -183,6 +222,43 @@ h1{font-size:clamp(1.55rem,3.5vw,3.5rem);line-height:1.08;letter-spacing:-.04em}
       <div class="content"><h2>Year Flow</h2><p>Симулятор годового потока</p><div class="tags"><span class="tag">▦ 12 месяцев</span></div></div>
       <span class="arrow" aria-hidden="true">›</span>
     </a>
+  </section>
+
+  <section class="telegram-contact" aria-label="Связь со мной в Telegram">
+    <div class="telegram-heading">
+      <h2>📲 СВЯЗЬ СО МНОЙ</h2>
+      <p>Присоединяйтесь к моим Telegram-ресурсам</p>
+    </div>
+
+    <a class="telegram-card telegram-chat" href="https://t.me/+wxKrJ5_uNYI0ZjE6" target="_blank" rel="noopener noreferrer">
+      <div class="telegram-icon" aria-hidden="true">❓</div>
+      <div class="telegram-content">
+        <h3>ВОПРОСЫ И ОТВЕТЫ</h3>
+        <p>Общение и помощь в чате</p>
+      </div>
+      <span class="telegram-action">ПЕРЕЙТИ В ЧАТ <span aria-hidden="true">↗</span></span>
+    </a>
+
+    <a class="telegram-card telegram-info" href="https://t.me/+fG6IYVm_x5piOWEy" target="_blank" rel="noopener noreferrer">
+      <div class="telegram-icon" aria-hidden="true">ℹ️</div>
+      <div class="telegram-content">
+        <h3>INFO — ИНФОРМАЦИОННЫЙ КАНАЛ</h3>
+        <p>Новости и важные объявления</p>
+      </div>
+      <span class="telegram-action">ОТКРЫТЬ КАНАЛ <span aria-hidden="true">↗</span></span>
+    </a>
+
+    <a class="telegram-card telegram-personal" href="https://t.me/ArtLiveChatMercury" target="_blank" rel="noopener noreferrer">
+      <div class="telegram-icon" aria-hidden="true">👤</div>
+      <div class="telegram-content">
+        <h3>ЛИЧНАЯ СВЯЗЬ</h3>
+        <strong>@ArtLiveChatMercury</strong>
+        <p>Мой личный Telegram</p>
+      </div>
+      <span class="telegram-action">НАПИСАТЬ МНЕ <span aria-hidden="true">↗</span></span>
+    </a>
+
+    <p class="telegram-footer">CASHFLOW • TELEGRAM COMMUNITY</p>
   </section>
 </main>
 </body>
