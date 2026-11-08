@@ -543,69 +543,91 @@
       .metric.primary strong { font-size: 1.2rem; }
       table { min-width: 620px; }
     }
-    /* Tariff table: preserve the original five-column structure on every device. */
-    .tariff-card { margin-top: 18px; }
-    .tariff-card h2 { margin-bottom: 16px; }
-    .tablewrap {
-      width: 100%;
-      max-width: 100%;
-      overflow-x: auto;
-      overflow-y: hidden;
-      border: 1px solid #d6e3e9;
-      border-radius: 15px;
-      background: #fff;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin;
-    }
-    table {
-      width: 100%;
-      min-width: 760px;
-      table-layout: auto;
-      border-collapse: collapse;
-      background: #fff;
-    }
-    th, td {
-      padding: 13px 14px;
-      border-bottom: 1px solid #e5edf1;
-      text-align: left;
-      vertical-align: middle;
-      white-space: nowrap;
-    }
-    th {
-      background: #eff6f7;
-      color: #36566a;
-      font-size: .78rem;
-      font-weight: 750;
-      line-height: 1.4;
-    }
-    td {
-      color: #304b60;
-      font-size: .9rem;
-      font-variant-numeric: tabular-nums;
-      line-height: 1.45;
-    }
-    tbody tr:last-child td { border-bottom: 0; }
-    tbody tr:hover { background: #f4faf9; }
-    .active-row { background: #e8f7f3; font-weight: 750; box-shadow: inset 3px 0 #159b8d; }
-    .active-row td { color: #087f73; }
-    @media (max-width: 760px) {
-      .tariff-card { padding: 16px; }
-      .tablewrap { border-radius: 12px; }
-      table { min-width: 760px; }
-      th, td { padding: 11px 12px; }
-    }
-    @media (max-width: 390px) {
-      .tariff-card { padding: 14px; }
-    }
     @media (prefers-color-scheme: dark) {
       /* Keep the selected light theme regardless of the device appearance setting. */
       :root { color-scheme: light; }
     }
+  
+
+    /* Переключатель темы — в том же стиле, что и VIP Fast Flow. */
+    .hero { position: relative; padding-right: 190px; }
+    .theme-toggle {
+      position: absolute;
+      z-index: 2;
+      top: 20px;
+      right: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 9px 14px;
+      border: 1px solid #cbdde4;
+      border-radius: 999px;
+      background: rgba(255,255,255,.86);
+      color: #24485b;
+      box-shadow: 0 4px 14px rgba(34,70,91,.08);
+      font: 700 .82rem/1.2 var(--font-ui);
+      cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s, transform .2s;
+    }
+    .theme-toggle:hover { transform: translateY(-1px); background: #fff; }
+    .theme-icon { font-size: 1.08rem; line-height: 1; }
+    .theme-toggle:focus-visible { outline: 3px solid #39b8aa; outline-offset: 3px; }
+
+    html[data-theme="dark"] { color-scheme: dark; background: #0a111b; }
+    html[data-theme="dark"] body {
+      background: radial-gradient(ellipse at 8% 0%, rgba(39,105,132,.18), transparent 32%), radial-gradient(ellipse at 100% 12%, rgba(23,125,111,.12), transparent 30%), linear-gradient(180deg, #0b1420 0%, #09111b 100%);
+      color: #e6eef6;
+    }
+    html[data-theme="dark"] .hero { border-color: #294354; background: linear-gradient(112deg, #142a3b 0%, #132c35 58%, #173a3a 100%); box-shadow: 0 16px 40px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.04); }
+    html[data-theme="dark"] .program-label { color: #75d8c8; }
+    html[data-theme="dark"] .hero h1 { color: #f0f6fb; }
+    html[data-theme="dark"] .hero p { color: #b8cbd8; }
+    html[data-theme="dark"] .card { border-color: #293d50; background: linear-gradient(155deg, #142131 0%, #101b29 100%); box-shadow: 0 14px 34px rgba(0,0,0,.24), inset 0 1px rgba(255,255,255,.025); }
+    html[data-theme="dark"] .card h2 { color: #e9f2f8; }
+    html[data-theme="dark"] label { color: #cbd9e5; }
+    html[data-theme="dark"] input, html[data-theme="dark"] select { border-color: #3a5064; background: #0c1724; color: #edf5fa; box-shadow: inset 0 1px 3px rgba(0,0,0,.22); }
+    html[data-theme="dark"] input:hover, html[data-theme="dark"] select:hover { border-color: #648b9b; }
+    html[data-theme="dark"] input:focus, html[data-theme="dark"] select:focus { border-color: #56c9b8; box-shadow: 0 0 0 3px rgba(86,201,184,.16); }
+    html[data-theme="dark"] input::placeholder { color: #8297a8; }
+    html[data-theme="dark"] select option { background: #142131; color: #edf5fa; }
+    html[data-theme="dark"] .hint, html[data-theme="dark"] .muted, html[data-theme="dark"] .foot { color: #9aafbf; }
+    html[data-theme="dark"] .metric { border-color: #30485b; background: linear-gradient(145deg, #17293a, #112131); }
+    html[data-theme="dark"] .metric span { color: #afc2d0; }
+    html[data-theme="dark"] .metric strong { color: #eff6fa; }
+    html[data-theme="dark"] .metric.primary { border-color: #287d75; background: linear-gradient(135deg, #173c46, #12343a); }
+    html[data-theme="dark"] .metric.primary strong { color: #8be3d3; }
+    html[data-theme="dark"] .note { border-color: #304658; background: #142333; color: #bfd0dc; }
+    html[data-theme="dark"] .notice { border-color: #75613d; background: #30291e; color: #e4d5b5; }
+    html[data-theme="dark"] .notice strong { color: #f0c875; }
+    html[data-theme="dark"] .btn { border-color: #258f83; background: linear-gradient(135deg, #168f88, #176d78 60%, #225a79); box-shadow: 0 8px 20px rgba(0,0,0,.3), inset 0 1px rgba(255,255,255,.12); }
+    html[data-theme="dark"] .copy-feedback { color: #83dfd0; }
+    html[data-theme="dark"] .tablewrap { border-color: #344b5e; }
+    html[data-theme="dark"] table { background: #101d2b; }
+    html[data-theme="dark"] th { border-color: #30465a; background: #1b3042; color: #bed0de; }
+    html[data-theme="dark"] td { border-color: #263c4f; color: #d7e3ec; }
+    html[data-theme="dark"] tbody tr:hover { background: #1b3042; }
+    html[data-theme="dark"] .active-row { background: #1c3a4b; color: #b9e4dc; }
+    html[data-theme="dark"] .active-row td { color: #b9e4dc; }
+    html[data-theme="dark"] ol { color: #b9cbd8; }
+    html[data-theme="dark"] .theme-toggle { border-color: #40586a; background: #172838; color: #e6f1f6; box-shadow: 0 4px 14px rgba(0,0,0,.22); }
+    html[data-theme="dark"] .theme-toggle:hover { background: #20384a; }
+    @media (max-width: 760px) {
+      .hero { padding-right: 20px; padding-top: 70px; }
+      .theme-toggle { top: 14px; right: 14px; min-height: 38px; padding: 8px 12px; }
+    }
+    @media (max-width: 390px) {
+      .hero { padding-top: 66px; }
+      .theme-toggle { font-size: .76rem; }
+    }
+
   </style>
 </head>
 <body>
   <main>
     <header class="hero">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Тёмная тема</span></button>
       <h1>
         <span class="program-label">YEAR FLOW · YF</span>
         <span id="pageTitle">Симулятор Годового Потока</span>
@@ -637,10 +659,6 @@
           <p class="hint" id="amountHint">Выберите фиксированный номинал из таблицы коэффициентов. Произвольный ввод суммы не предусмотрен.</p>
         </div>
         <div class="field">
-          <label for="currency">Валюта суммы</label>
-          <input id="currency" type="text" value="USDT" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false">
-        </div>
-        <div class="field">
           <label for="rate" id="rateLabel">Курс подтяжки ECR (стоимость 1 ECR в выбранной валюте)</label>
           <input id="rate" type="number" min="0.00000001" step="any" value="275" inputmode="decimal">
         </div>
@@ -662,9 +680,9 @@
       </section>
     </div>
 
-    <section class="card tariff-card" id="tariffTable" aria-labelledby="tiersHeading">
-      <h2 id="tiersHeading">Таблица тарифов Year Flow</h2>
-      <div class="tablewrap" role="region" aria-label="Таблица тарифов и коэффициентов; на небольших экранах доступна прокрутка по горизонтали" tabindex="0">
+    <section class="card" id="tariffTable" aria-labelledby="tiersHeading">
+      <h2 id="tiersHeading">📈 Таблица коэффициентов Year Flow</h2>
+      <div class="tablewrap" role="region" aria-label="Таблица коэффициентов; на телефоне можно прокручивать по горизонтали" tabindex="0">
         <table>
           <thead>
             <tr>
@@ -679,6 +697,19 @@
         </table>
       </div>
     </section>
+
+    <section class="card" id="usage" aria-labelledby="usageHeading">
+      <h2 id="usageHeading">ℹ️ Как пользоваться Year Flow</h2>
+      <ol>
+        <li><strong>Выберите площадку.</strong> Симулятор автоматически подставит её валюту и таблицу коэффициентов.</li>
+        <li><strong>Выберите номинал.</strong> Доступны фиксированные суммы из списка.</li>
+        <li><strong>Проверьте курс токена.</strong> Для ECR укажите актуальный курс вручную. Для России курс ERUB рассчитывается автоматически и увеличивается на 0,5 RUB каждый день в 00:00 по Москве.</li>
+        <li><strong>Посмотрите результат.</strong> Ниже отображаются коэффициент, сумма после подтяжки, количество токенов и расчётная еженедельная выплата.</li>
+        <li><strong>Скопируйте расчёт</strong> кнопкой «Скопировать расчёт», если нужно сохранить или отправить результат.</li>
+      </ol>
+      <p class="note"><strong>Важно.</strong> Еженедельная выплата в модели рассчитывается как 1/50 от суммы после полной подтяжки. Результаты справочные: они основаны на таблице коэффициентов и не подтверждают реальные условия площадки или гарантированные выплаты.</p>
+    </section>
+
   </main>
 
   <script>
@@ -737,32 +768,24 @@
     }
 
     function getCurrency() {
-      const currency = $('#currency').value.trim().toUpperCase();
-      return currency || 'валюта';
+      return (defaultSettings[getMarket()] || defaultSettings.EU).currency;
+    }
+
+    // ERUB: базовый курс 34 RUB на 08.11.2026 (МСК), далее +0.5 RUB
+    // за каждый новый календарный день по часовому поясу Europe/Moscow.
+    function getDynamicErubRate() {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit'
+      }).formatToParts(new Date());
+      const dateParts = Object.fromEntries(parts.map(part => [part.type, part.value]));
+      const todayUtc = Date.UTC(Number(dateParts.year), Number(dateParts.month) - 1, Number(dateParts.day));
+      const startUtc = Date.UTC(2026, 10, 8);
+      const elapsedDays = Math.max(0, Math.floor((todayUtc - startUtc) / 86400000));
+      return 34 + elapsedDays * 0.5;
     }
 
     function getToken() {
       return getMarket() === 'RU' ? 'ERUB' : 'ECR';
-    }
-
-    // Russia: ERUB starts at 34 RUB on 2026-11-08 (Moscow time),
-    // then increases by 0.5 RUB at each Moscow midnight.
-    function getRussiaErubRate(now = new Date()) {
-      const parts = new Intl.DateTimeFormat('en-CA', {
-        timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit'
-      }).formatToParts(now);
-      const dateParts = Object.fromEntries(parts.map(part => [part.type, part.value]));
-      const todayUtc = Date.UTC(Number(dateParts.year), Number(dateParts.month) - 1, Number(dateParts.day));
-      const startUtc = Date.UTC(2026, 10, 8); // 8 November 2026
-      const daysElapsed = Math.max(0, Math.floor((todayUtc - startUtc) / 86400000));
-      return 34 + daysElapsed * 0.5;
-    }
-
-    function syncRussiaErubRate() {
-      if (getMarket() !== 'RU') return;
-      $('#rate').value = String(getRussiaErubRate());
-      $('#rate').readOnly = true;
-      $('#rate').setAttribute('aria-readonly', 'true');
     }
 
     function populateAmounts(preferredAmount) {
@@ -771,7 +794,6 @@
       const current = String(preferredAmount ?? select.value ?? tiers[0][0]);
       const currency = getCurrency();
 
-      // Use DOM text nodes instead of interpolating user-entered currency into HTML.
       select.replaceChildren();
       for (const [nominal] of tiers) {
         const option = document.createElement('option');
@@ -789,10 +811,9 @@
       if (element) element.textContent = value;
     }
 
-    function appendCell(row, value, label) {
+    function appendCell(row, value) {
       const cell = document.createElement('td');
       cell.textContent = value;
-      cell.dataset.label = label;
       row.append(cell);
     }
 
@@ -806,11 +827,11 @@
         const row = document.createElement('tr');
         if (chosen && chosen[0] === nominal) row.className = 'active-row';
 
-        appendCell(row, `${fmt(nominal, 0)} ${currency}`, 'Номинал создания');
-        appendCell(row, `×${fmt(multiplier, 1)}`, 'Коэффициент');
-        appendCell(row, `${fmt(totalAfterPullup)} ${currency}`, 'После подтяжки');
-        appendCell(row, `${fmt(totalAfterPullup / 50)} ${currency}`, 'Выплата в неделю');
-        appendCell(row, `${fmt(requiredToken, 2)} ${token}`, `Количество ${token}`);
+        appendCell(row, `${fmt(nominal, 0)} ${currency}`);
+        appendCell(row, `×${fmt(multiplier, 1)}`);
+        appendCell(row, `${fmt(totalAfterPullup)} ${currency}`);
+        appendCell(row, `${fmt(totalAfterPullup / 50)} ${currency}`);
+        appendCell(row, `${fmt(requiredToken, 2)} ${token}`);
         tbody.append(row);
       }
     }
@@ -833,10 +854,10 @@
       setText('#pageTitle', `Симулятор Годового Потока — ${marketNames[market] || market}`);
       document.title = `Year Flow — ${marketNames[market] || market}`;
       setText('#tokenLabel', `${token} для полной подтяжки`);
-      setText('#tokenColumnHeading', `Количество ${token}`);
+      setText('#tokenColumnHeading', `Количество ${token} по выбранному курсу`);
       setText('#rateLabel', `Курс подтяжки ${token} (стоимость 1 ${token} в выбранной валюте)`);
       setText('#rateHelp', market === 'RU'
-        ? 'Автоматический курс ERUB: 34 RUB, увеличение на 0,5 RUB ежедневно в 00:00 по Москве.'
+        ? 'Курс ERUB растёт на 0,5 RUB каждый день в 00:00 по Москве.'
         : `Укажите курс 1 ${token} в выбранной валюте. Коэффициент выбирается по сумме создания потока.`);
 
       setText('#outAmount', amount > 0 && Number.isFinite(amount) ? `${fmt(amount)} ${currency}` : '—');
@@ -906,35 +927,72 @@
     }
 
     $('#amount').addEventListener('change', render);
-    $('#currency').addEventListener('input', () => {
-      const selectedAmount = $('#amount').value;
-      populateAmounts(selectedAmount);
-      render();
-    });
     $('#rate').addEventListener('input', render);
-    $('#market').addEventListener('change', () => {
+
+    function syncMarketSettings(resetAmount = true) {
       const market = getMarket();
       const settings = defaultSettings[market] || defaultSettings.EU;
-      $('#currency').value = settings.currency;
-      $('#rate').value = settings.rate;
-      $('#rate').readOnly = market === 'RU';
-      if (market === 'RU') syncRussiaErubRate();
-      populateAmounts(settings.amount);
+      const isRussia = market === 'RU';
+      $('#rate').value = isRussia ? String(getDynamicErubRate()) : settings.rate;
+      $('#rate').readOnly = isRussia;
+      $('#rate').setAttribute('aria-readonly', String(isRussia));
+      $('#rate').setAttribute('aria-label', isRussia
+        ? 'Автоматический курс ERUB в российских рублях'
+        : 'Курс токена в валюте выбранной площадки');
+      $('#rateHelp').textContent = isRussia
+        ? 'Курс ERUB растёт на 0,5 RUB каждый день в 00:00 по Москве.'
+        : 'Укажите актуальный курс 1 ECR в валюте выбранной площадки.';
+      if (resetAmount) populateAmounts(settings.amount);
       render();
-    });
+    }
+
+    $('#market').addEventListener('change', () => syncMarketSettings(true));
     $('#copy').addEventListener('click', copyCalculation);
 
     populateAmounts();
-    syncRussiaErubRate();
-    render();
-    // Refresh an already-open page shortly after Moscow midnight.
+    syncMarketSettings(false);
+
+    // Обновляем курс и результат, даже если страница остаётся открытой в полночь по Москве.
+    let lastErubRate = getDynamicErubRate();
     window.setInterval(() => {
-      if (getMarket() === 'RU') {
-        const previousRate = $('#rate').value;
-        syncRussiaErubRate();
-        if ($('#rate').value !== previousRate) render();
+      if (getMarket() !== 'RU') return;
+      const currentRate = getDynamicErubRate();
+      if (currentRate !== lastErubRate) {
+        lastErubRate = currentRate;
+        $('#rate').value = String(currentRate);
+        render();
       }
-    }, 30000);
+    }, 60000);
   </script>
+
+<script>
+(() => {
+  'use strict';
+  const root = document.documentElement;
+  const button = document.getElementById('themeToggle');
+  if (!button) return;
+  const icon = button.querySelector('.theme-icon');
+  const label = button.querySelector('.theme-text');
+  const applyTheme = theme => {
+    const dark = theme === 'dark';
+    root.dataset.theme = dark ? 'dark' : 'light';
+    button.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    button.setAttribute('aria-label', dark ? 'Переключить на светлую тему' : 'Переключить на тёмную тему');
+    icon.textContent = dark ? '☀' : '☾';
+    if (label) label.textContent = dark ? 'Светлая тема' : 'Тёмная тема';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', dark ? '#0b1420' : '#f4f8fb');
+  };
+  let saved = 'light';
+  try { saved = localStorage.getItem('year-flow-theme') || 'light'; } catch (_) {}
+  applyTheme(saved);
+  button.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem('year-flow-theme', next); } catch (_) {}
+  });
+})();
+</script>
+
 </body>
 </html>
