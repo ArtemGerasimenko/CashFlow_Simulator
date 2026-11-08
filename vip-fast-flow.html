@@ -677,7 +677,9 @@
   font-size: .92rem;
   font-variant-numeric: tabular-nums;
 }
-.vip-tariff-table th:last-child, .vip-tariff-table td:last-child { text-align: right; }
+/* Match Year Flow: align the second column from its left edge on every screen. */
+.vip-tariff-table th:last-child,
+.vip-tariff-table td:last-child { text-align: left; }
 .vip-tariff-table tbody tr:last-child td { border-bottom: 0; }
 .vip-tariff-table tbody tr:hover { background: #f2f9f8; }
 .vip-tariff-table tbody tr.selected-nominal {
@@ -909,8 +911,37 @@ html[data-theme="dark"] .hero p { color: #b8cbd8; }
   .hero p { font-size: .91rem; line-height: 1.58; }
 }
 
+
+/* Unified typography: matched to Year Flow master */
+:root { --font-ui: Inter, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif; }
+html, body { font-family: var(--font-ui); }
+body { font-size: 14.5px; color: var(--text); }
+h1, .hero h1 { font-size: clamp(2rem, 3.3vw, 2.85rem); line-height: 1.14; letter-spacing: -.04em; color: var(--text); }
+.hero p, .subtitle, .description { font-size: .91rem; line-height: 1.58; color: var(--muted); }
+h2, .card h2, .section-title { font-size: 1.13rem; line-height: 1.3; color: var(--text); }
+label, .field-label, .metric span, .hint, .muted, small { color: var(--muted); }
+.metric strong { font-size: 1.16rem; color: var(--text); }
+.metric.primary strong { font-size: 1.36rem; }
+.notice, .info, .warning, .copy-feedback { font-size: .82rem; line-height: 1.55; }
+button, .btn { font-family: inherit; font-size: .9rem; }
+input, select, textarea { font-family: inherit; font-size: 16px; color: var(--text); }
+table { font-size: .86rem; color: var(--text); }
+@media (max-width: 600px) { body { font-size: 14.5px; } .metric strong { font-size: 1.08rem; } .metric span { font-size: .73rem; } .metric.primary strong { font-size: 1.2rem; } .site-nav a, .theme-toggle { font-size: .76rem; } }
+
 </style>
 
+<style id="cashflow-unified-instructions-typography">
+.usage-guide h2 { font-size:18px !important; }
+.usage-guide .usage-steps, .usage-guide .usage-steps li,
+.usage-guide .usage-steps li strong { font-size:15px !important; line-height:1.55 !important; }
+.usage-guide .usage-note { font-size:14px !important; line-height:1.55 !important; }
+</style>
+<style id="cashflow-unified-instruction-spacing">
+.usage-guide h2 { margin-bottom: 20px !important; }
+.usage-guide .usage-steps { display: grid !important; gap: 18px !important; margin-top: 0 !important; margin-bottom: 0 !important; line-height: 1.55 !important; }
+.usage-guide .usage-steps li { margin: 0 !important; padding: 0 !important; line-height: 1.55 !important; }
+.usage-guide .usage-note { margin-top: 20px !important; }
+</style>
 </head><body><main>
 <header class="hero">
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Тёмная тема</span></button>
@@ -934,20 +965,10 @@ html[data-theme="dark"] .hero p { color: #b8cbd8; }
 </div><button class="btn" id="copy" type="button">⧉ Скопировать расчёт</button><p class="copy-feedback" id="copyFeedback" aria-live="polite"></p></section>
 </div>
 
-<section class="card usage-guide" aria-labelledby="usageTitle">
-  <h2 id="usageTitle">Как пользоваться VIP Fast Flow</h2>
-  <ol class="usage-steps">
-    <li><strong>Выберите номинал.</strong> Укажите сумму USDT из фиксированного списка.</li>
-    <li><strong>Введите курс ECR.</strong> Укажите, сколько USDT стоит 1 ECR.</li>
-    <li><strong>Проверьте расчёт.</strong> Симулятор автоматически применит тариф выбранного номинала и покажет результат за 30 дней.</li>
-    <li><strong>Посмотрите количество ECR.</strong> Оно рассчитывается для подтяжки по введённому курсу.</li>
-    <li><strong>Скопируйте результат.</strong> Нажмите «Скопировать расчёт», чтобы сохранить параметры и итоговые значения.</li>
-  </ol>
-  <p class="hint usage-note">Срок Fast Flow — 30 начислений. Выплата по модели указана единой суммой после 30-го начисления. Тарифы можно сверить в таблице ниже.</p>
-</section>
+
 
 <section class="card tariff-reference" id="tariffTable">
-  <h2>Таблица тарифов VIP Fast Flow</h2>
+  <h2>📈 Таблица тарифов VIP Fast Flow</h2>
   <div class="tariff-table-wrap">
     <table class="vip-tariff-table">
       <thead><tr><th>Номинал потока · USDT</th><th>Тариф начисления</th></tr></thead>
@@ -972,6 +993,18 @@ html[data-theme="dark"] .hero p { color: #b8cbd8; }
     <strong>ВНИМАНИЕ!</strong>
     <p>Можно создать только один поток на каждую сумму, но по окончании работы потока можно запустить такой же.</p>
   </div>
+</section>
+
+<section class="card usage-guide" aria-labelledby="usageTitle">
+  <h2 id="usageTitle">ℹ️ Как пользоваться VIP Fast Flow</h2>
+  <ol class="usage-steps">
+    <li><strong>Выберите номинал.</strong> Укажите сумму USDT из фиксированного списка.</li>
+    <li><strong>Введите курс ECR.</strong> Укажите, сколько USDT стоит 1 ECR.</li>
+    <li><strong>Проверьте расчёт.</strong> Симулятор автоматически применит тариф выбранного номинала и покажет результат за 30 дней.</li>
+    <li><strong>Посмотрите количество ECR.</strong> Оно рассчитывается для подтяжки по введённому курсу.</li>
+    <li><strong>Скопируйте результат.</strong> Нажмите «Скопировать расчёт», чтобы сохранить параметры и итоговые значения.</li>
+  </ol>
+  <p class="hint usage-note">Срок Fast Flow — 30 начислений. Выплата по модели указана единой суммой после 30-го начисления. Тарифы можно сверить в таблице выше.</p>
 </section>
 
 </main><script>
@@ -1121,4 +1154,27 @@ html[data-theme="dark"] .hero p { color: #b8cbd8; }
 })();
 </script>
 
+
+<style id="year-flow-exact-vip-table-highlight-colors">
+/* Selected VIP tariff row uses the exact Year Flow palette */
+.vip-tariff-table tbody tr.selected-nominal {
+  background: #e8f7f3 !important;
+  color: inherit !important;
+  font-weight: 750 !important;
+  box-shadow: inset 3px 0 #159b8d !important;
+}
+.vip-tariff-table tbody tr.selected-nominal td {
+  background: transparent !important;
+  color: #087f73 !important;
+  font-weight: 750 !important;
+}
+html[data-theme="dark"] .vip-tariff-table tbody tr.selected-nominal {
+  background: #1c3a4b !important;
+  box-shadow: inset 3px 0 #4bc4b2 !important;
+}
+html[data-theme="dark"] .vip-tariff-table tbody tr.selected-nominal td {
+  background: transparent !important;
+  color: #b9e4dc !important;
+}
+</style>
 </body></html>
