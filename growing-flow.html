@@ -492,7 +492,12 @@ html:not([data-theme="dark"]) .hint,
 html:not([data-theme="dark"]) .muted { color:#60788a !important; opacity:1 !important; }
 html[data-theme="dark"] .usage-card ol,
 html[data-theme="dark"] .usage-card ol li { color:#c6d3e1 !important; opacity:1 !important; }
-html[data-theme="dark"] .usage-card ol strong { color:#e7f3f6 !important; }
+html[data-theme="dark"] .usage-card ol strong,
+html[data-theme="dark"] .usage-card .note strong,
+html[data-theme="dark"] .usage-card .usage-note strong {
+  color:#e9f2f8 !important;
+  font-weight:750 !important;
+}
 html[data-theme="dark"] .usage-card .note { color:#aebed0 !important; }
 </style>
 
@@ -804,40 +809,4 @@ td{font-size:.9rem;line-height:1.45}
 .tablewrap th { font-size:13px; line-height:1.4; }
 .tablewrap td { font-size:14px; line-height:1.4; }
 </style>
-
-<style id="year-flow-exact-table-highlight-colors">
-/* Selected tariff row: exact Year Flow palette */
-.tablewrap tbody tr.active-row,
-.table-wrap tbody tr.active-row,
-.tiers-wrap tbody tr.active-row,
-.overflow-wrap tbody tr.active-row {
-  background: #e8f7f3 !important;
-  color: inherit !important;
-  font-weight: 750 !important;
-  box-shadow: inset 3px 0 #159b8d !important;
-}
-.tablewrap tbody tr.active-row td,
-.table-wrap tbody tr.active-row td,
-.tiers-wrap tbody tr.active-row td,
-.overflow-wrap tbody tr.active-row td {
-  background: transparent !important;
-  color: #087f73 !important;
-  font-weight: 750 !important;
-}
-html[data-theme="dark"] .tablewrap tbody tr.active-row,
-html[data-theme="dark"] .table-wrap tbody tr.active-row,
-html[data-theme="dark"] .tiers-wrap tbody tr.active-row,
-html[data-theme="dark"] .overflow-wrap tbody tr.active-row {
-  background: #1c3a4b !important;
-  box-shadow: inset 3px 0 #4bc4b2 !important;
-}
-html[data-theme="dark"] .tablewrap tbody tr.active-row td,
-html[data-theme="dark"] .table-wrap tbody tr.active-row td,
-html[data-theme="dark"] .tiers-wrap tbody tr.active-row td,
-html[data-theme="dark"] .overflow-wrap tbody tr.active-row td {
-  background: transparent !important;
-  color: #b9e4dc !important;
-}
-</style>
-
 </body></html>
