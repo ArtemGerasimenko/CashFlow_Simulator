@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#080d16">
+  <meta name="theme-color" content="#f4f8fb">
   <meta name="description" content="Симулятор Year Flow: расчёт годового потока, коэффициентов и еженедельных выплат по выбранному номиналу и курсу подтяжки.">
   <title>Year Flow — Симулятор годового потока</title>
   <style>
@@ -408,6 +408,199 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
     }
+
+
+    /* Year Flow visual refresh: light, responsive styling only. Calculation logic is unchanged. */
+    :root {
+      color-scheme: light;
+      --bg: #f3f7fa;
+      --panel: #ffffff;
+      --surface: #f7fafc;
+      --line: #dce7ee;
+      --text: #172b3d;
+      --muted: #64788a;
+      --blue: #397ca8;
+      --cyan: #36b9ad;
+      --teal: #159b8d;
+      --teal-dark: #08786f;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 13px;
+    }
+    html { background: var(--bg); }
+    body {
+      background:
+        radial-gradient(ellipse at 8% 0%, rgba(93,190,197,.13), transparent 32%),
+        radial-gradient(ellipse at 100% 12%, rgba(76,151,190,.10), transparent 30%),
+        linear-gradient(180deg, #f8fbfd 0%, #f1f6f9 100%);
+      color: var(--text);
+    }
+    main { padding-top: 24px; }
+    .hero {
+      min-height: 176px;
+      padding: 32px clamp(22px, 3.2vw, 42px);
+      border: 1px solid #d7e8ed;
+      border-radius: 26px;
+      background: linear-gradient(112deg, #ffffff 0%, #eaf7f7 58%, #e3f3f4 100%);
+      box-shadow: 0 14px 36px rgba(35,77,97,.08), inset 0 1px rgba(255,255,255,.9);
+    }
+    .hero::after {
+      border-color: #39a99d25;
+      box-shadow: 0 0 0 34px #39a99d0d, 0 0 0 72px #39a99d08;
+    }
+    .program-label { color: #078b7e; }
+    .hero h1 { color: #142b3c; }
+    .hero p { color: #526b7d; }
+    .card {
+      border: 1px solid #dce7ed;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(155deg, #ffffff 0%, #fbfdfe 100%);
+      box-shadow: 0 10px 28px rgba(34,70,91,.065), inset 0 1px #ffffff;
+    }
+    .card h2 { color: #193348; }
+    label { color: #304b60; }
+    input, select {
+      border: 1px solid #cbdbe5;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: inset 0 1px 2px rgba(25,55,75,.035);
+      color: #183246;
+    }
+    input:hover, select:hover { border-color: #8eb9c3; }
+    input:focus, select:focus {
+      border-color: #21a99b;
+      box-shadow: 0 0 0 3px rgba(33,169,155,.14);
+    }
+    input::placeholder { color: #91a2af; }
+    select option { background: #ffffff; color: #183246; }
+    .hint, .muted, .foot { color: #6c8090; }
+    .metric {
+      border: 1px solid #dce8ed;
+      border-radius: 15px;
+      background: linear-gradient(145deg, #f9fcfd, #f1f7f9);
+    }
+    .metric span { color: #61788a; }
+    .metric strong { color: #183246; }
+    .metric.primary {
+      border-color: #a9dcd5;
+      background: linear-gradient(135deg, #e9f8f4, #e4f4f4);
+    }
+    .metric.primary strong { color: #087f73; }
+    .note {
+      border-color: #dce7ed;
+      background: #f5f9fb;
+      color: #526b7d;
+    }
+    .notice {
+      border-color: #ead8b5;
+      background: #fff9ed;
+      color: #705a32;
+    }
+    .notice strong { color: #9a7024; }
+    .btn {
+      border: 1px solid #0e8f83;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #16a596, #087c73);
+      box-shadow: 0 7px 16px rgba(8,124,115,.17), inset 0 1px rgba(255,255,255,.24);
+      color: #ffffff;
+    }
+    .btn:hover:not(:disabled) { filter: brightness(1.04); box-shadow: 0 9px 20px rgba(8,124,115,.22); }
+    .copy-feedback { color: #087f73; }
+    .tablewrap { border-color: #d6e3e9; background: #ffffff; }
+    table { background: #ffffff; }
+    th, td { border-bottom-color: #e5edf1; }
+    th { background: #eff5f7; color: #496477; }
+    td { color: #304b60; }
+    tbody tr:hover { background: #f2f9f8; }
+    .active-row { background: #e5f5f2; color: #087f73; }
+    .active-row td { color: #087f73; }
+    ol { color: #405b6e; }
+    .foot { color: #718493; }
+    @media (min-width: 761px) {
+      .layout { gap: 20px; }
+      .card { padding: clamp(20px, 2vw, 28px); }
+    }
+    @media (max-width: 760px) {
+      main { padding: 12px 12px 34px; }
+      .hero { padding: 23px 20px; border-radius: 21px; }
+      .card { padding: 17px; border-radius: 18px; }
+      .layout { gap: 12px; }
+      .metric { min-width: 0; }
+      .metric strong { overflow-wrap: anywhere; }
+      .tablewrap { border-radius: 13px; }
+      table { min-width: 650px; }
+      .btn { min-height: 48px; }
+    }
+    @media (max-width: 390px) {
+      main { padding-left: 9px; padding-right: 9px; }
+      .hero { padding: 19px 16px; }
+      .card { padding: 14px; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric.wide { grid-column: 1 / -1; }
+      .metric { padding: 11px; }
+      .metric span { font-size: .73rem; }
+      .metric strong { font-size: 1rem; }
+      .metric.primary strong { font-size: 1.2rem; }
+      table { min-width: 620px; }
+    }
+    /* Tariff table: preserve the original five-column structure on every device. */
+    .tariff-card { margin-top: 18px; }
+    .tariff-card h2 { margin-bottom: 16px; }
+    .tablewrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      border: 1px solid #d6e3e9;
+      border-radius: 15px;
+      background: #fff;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    table {
+      width: 100%;
+      min-width: 760px;
+      table-layout: auto;
+      border-collapse: collapse;
+      background: #fff;
+    }
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid #e5edf1;
+      text-align: left;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    th {
+      background: #eff6f7;
+      color: #36566a;
+      font-size: .78rem;
+      font-weight: 750;
+      line-height: 1.4;
+    }
+    td {
+      color: #304b60;
+      font-size: .9rem;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.45;
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #f4faf9; }
+    .active-row { background: #e8f7f3; font-weight: 750; box-shadow: inset 3px 0 #159b8d; }
+    .active-row td { color: #087f73; }
+    @media (max-width: 760px) {
+      .tariff-card { padding: 16px; }
+      .tablewrap { border-radius: 12px; }
+      table { min-width: 760px; }
+      th, td { padding: 11px 12px; }
+    }
+    @media (max-width: 390px) {
+      .tariff-card { padding: 14px; }
+    }
+    @media (prefers-color-scheme: dark) {
+      /* Keep the selected light theme regardless of the device appearance setting. */
+      :root { color-scheme: light; }
+    }
   </style>
 </head>
 <body>
@@ -469,9 +662,9 @@
       </section>
     </div>
 
-    <section class="card" id="tariffTable" aria-labelledby="tiersHeading">
-      <h2 id="tiersHeading">📈 Таблица коэффициентов Year Flow</h2>
-      <div class="tablewrap" role="region" aria-label="Таблица коэффициентов; на телефоне можно прокручивать по горизонтали" tabindex="0">
+    <section class="card tariff-card" id="tariffTable" aria-labelledby="tiersHeading">
+      <h2 id="tiersHeading">Таблица тарифов Year Flow</h2>
+      <div class="tablewrap" role="region" aria-label="Таблица тарифов и коэффициентов; на небольших экранах доступна прокрутка по горизонтали" tabindex="0">
         <table>
           <thead>
             <tr>
@@ -486,19 +679,6 @@
         </table>
       </div>
     </section>
-
-    <section class="card" id="usage" aria-labelledby="usageHeading">
-      <h2 id="usageHeading">ℹ️ Как пользоваться</h2>
-      <ol>
-        <li>Выберите площадку и фиксированный номинал создания потока.</li>
-        <li>Укажите валюту суммы.</li>
-        <li>Введите курс подтяжки выбранного токена в валюте площадки.</li>
-        <li>Проверьте коэффициент, сумму после полной подтяжки, еженедельную выплату и количество токенов.</li>
-      </ol>
-      <p class="note">Расчёт справочный и основан на заданной таблице коэффициентов. Он не подтверждает фактические условия площадки, наличие выплат или возврат средств и не гарантирует доход.</p>
-    </section>
-
-    <p class="foot">YEAR FLOW · YF — модуль единого интерфейса Fast Flow.</p>
   </main>
 
   <script>
@@ -540,7 +720,7 @@
       PL:  { currency: 'PLN',  rate: '1010', amount: 4000 },
       CN:  { currency: 'CNY',  rate: '1800', amount: 8000 },
       KG:  { currency: 'KGS',  rate: '25000', amount: 100000 },
-      RU:  { currency: 'RUB',  rate: '28', amount: 100000 }
+      RU:  { currency: 'RUB',  rate: '34', amount: 100000 }
     };
 
     const $ = (selector) => document.querySelector(selector);
@@ -563,6 +743,26 @@
 
     function getToken() {
       return getMarket() === 'RU' ? 'ERUB' : 'ECR';
+    }
+
+    // Russia: ERUB starts at 34 RUB on 2026-11-08 (Moscow time),
+    // then increases by 0.5 RUB at each Moscow midnight.
+    function getRussiaErubRate(now = new Date()) {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Europe/Moscow', year: 'numeric', month: '2-digit', day: '2-digit'
+      }).formatToParts(now);
+      const dateParts = Object.fromEntries(parts.map(part => [part.type, part.value]));
+      const todayUtc = Date.UTC(Number(dateParts.year), Number(dateParts.month) - 1, Number(dateParts.day));
+      const startUtc = Date.UTC(2026, 10, 8); // 8 November 2026
+      const daysElapsed = Math.max(0, Math.floor((todayUtc - startUtc) / 86400000));
+      return 34 + daysElapsed * 0.5;
+    }
+
+    function syncRussiaErubRate() {
+      if (getMarket() !== 'RU') return;
+      $('#rate').value = String(getRussiaErubRate());
+      $('#rate').readOnly = true;
+      $('#rate').setAttribute('aria-readonly', 'true');
     }
 
     function populateAmounts(preferredAmount) {
@@ -589,9 +789,10 @@
       if (element) element.textContent = value;
     }
 
-    function appendCell(row, value) {
+    function appendCell(row, value, label) {
       const cell = document.createElement('td');
       cell.textContent = value;
+      cell.dataset.label = label;
       row.append(cell);
     }
 
@@ -605,11 +806,11 @@
         const row = document.createElement('tr');
         if (chosen && chosen[0] === nominal) row.className = 'active-row';
 
-        appendCell(row, `${fmt(nominal, 0)} ${currency}`);
-        appendCell(row, `×${fmt(multiplier, 1)}`);
-        appendCell(row, `${fmt(totalAfterPullup)} ${currency}`);
-        appendCell(row, `${fmt(totalAfterPullup / 50)} ${currency}`);
-        appendCell(row, `${fmt(requiredToken, 2)} ${token}`);
+        appendCell(row, `${fmt(nominal, 0)} ${currency}`, 'Номинал создания');
+        appendCell(row, `×${fmt(multiplier, 1)}`, 'Коэффициент');
+        appendCell(row, `${fmt(totalAfterPullup)} ${currency}`, 'После подтяжки');
+        appendCell(row, `${fmt(totalAfterPullup / 50)} ${currency}`, 'Выплата в неделю');
+        appendCell(row, `${fmt(requiredToken, 2)} ${token}`, `Количество ${token}`);
         tbody.append(row);
       }
     }
@@ -632,9 +833,11 @@
       setText('#pageTitle', `Симулятор Годового Потока — ${marketNames[market] || market}`);
       document.title = `Year Flow — ${marketNames[market] || market}`;
       setText('#tokenLabel', `${token} для полной подтяжки`);
-      setText('#tokenColumnHeading', `Количество ${token} по выбранному курсу`);
+      setText('#tokenColumnHeading', `Количество ${token}`);
       setText('#rateLabel', `Курс подтяжки ${token} (стоимость 1 ${token} в выбранной валюте)`);
-      setText('#rateHelp', `Укажите курс 1 ${token} в выбранной валюте. Коэффициент выбирается по сумме создания потока.`);
+      setText('#rateHelp', market === 'RU'
+        ? 'Автоматический курс ERUB: 34 RUB, увеличение на 0,5 RUB ежедневно в 00:00 по Москве.'
+        : `Укажите курс 1 ${token} в выбранной валюте. Коэффициент выбирается по сумме создания потока.`);
 
       setText('#outAmount', amount > 0 && Number.isFinite(amount) ? `${fmt(amount)} ${currency}` : '—');
       setText('#outPct', multiplier === null ? 'Нет тарифа' : `×${fmt(multiplier, 1)}`);
@@ -714,13 +917,24 @@
       const settings = defaultSettings[market] || defaultSettings.EU;
       $('#currency').value = settings.currency;
       $('#rate').value = settings.rate;
+      $('#rate').readOnly = market === 'RU';
+      if (market === 'RU') syncRussiaErubRate();
       populateAmounts(settings.amount);
       render();
     });
     $('#copy').addEventListener('click', copyCalculation);
 
     populateAmounts();
+    syncRussiaErubRate();
     render();
+    // Refresh an already-open page shortly after Moscow midnight.
+    window.setInterval(() => {
+      if (getMarket() === 'RU') {
+        const previousRate = $('#rate').value;
+        syncRussiaErubRate();
+        if ($('#rate').value !== previousRate) render();
+      }
+    }, 30000);
   </script>
 </body>
 </html>
