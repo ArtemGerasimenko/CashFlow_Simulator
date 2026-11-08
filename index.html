@@ -380,6 +380,30 @@ h1{font-size:clamp(1.55rem,3.5vw,3.5rem);line-height:1.08;letter-spacing:-.04em}
     transform:translateY(-1px);
   }
 }
+
+/* Mobile: Telegram action buttons match the full-width exchange buttons */
+@media(max-width:600px){
+  .telegram-action{
+    grid-column:2;
+    justify-self:stretch;
+    width:100%;
+    min-height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    margin-top:2px;
+    padding:6px 8px;
+    border-radius:999px;
+    font-size:clamp(.6rem,2.45vw,.7rem);
+    font-weight:900;
+    text-align:center;
+    white-space:nowrap;
+  }
+}
+@media(max-width:360px){
+  .telegram-action{min-height:31px;font-size:.58rem;padding:5px 6px}
+}
 </style>
 </head>
 <body>
