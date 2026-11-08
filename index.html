@@ -338,6 +338,48 @@ h1{font-size:clamp(1.55rem,3.5vw,3.5rem);line-height:1.08;letter-spacing:-.04em}
   .telegram-icon{width:60px;height:60px;padding:4px;border-radius:9px}
 }
 
+
+/* Desktop: Telegram actions match exchange registration buttons */
+@media(min-width:601px){
+  .telegram-card{
+    grid-template-columns:112px minmax(0,1fr);
+    grid-template-rows:auto auto auto;
+    column-gap:16px;
+    row-gap:5px;
+    min-height:0;
+  }
+  .telegram-icon{
+    grid-column:1;
+    grid-row:1 / span 3;
+  }
+  .telegram-content{
+    grid-column:2;
+    grid-row:1 / span 2;
+    align-self:end;
+  }
+  .telegram-action{
+    grid-column:2;
+    grid-row:3;
+    width:100%;
+    min-height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:3px;
+    padding:8px 12px;
+    border-radius:999px;
+    font-size:.74rem;
+    font-weight:900;
+    letter-spacing:.02em;
+    text-align:center;
+    white-space:nowrap;
+    transition:filter .18s ease,transform .18s ease;
+  }
+  .telegram-card:hover .telegram-action{
+    filter:brightness(1.16);
+    transform:translateY(-1px);
+  }
+}
 </style>
 </head>
 <body>
