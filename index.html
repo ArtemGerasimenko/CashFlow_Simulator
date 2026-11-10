@@ -29,7 +29,7 @@ transition:transform .2s,filter .2s,box-shadow .2s}
 .card:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,#ffffff12,transparent 35%,transparent 72%,#3abaff0b)}
 .card:hover{transform:translateY(-2px);filter:brightness(1.1);box-shadow:0 0 13px var(--accent),0 0 34px var(--glow),inset 0 1px 0 #ffffff35}
 .card:focus-visible{outline:3px solid white;outline-offset:4px}
-.card.growing,.card.year{--accent:#12cfff;--glow:rgba(0,190,255,.38)}
+.card.growing,.card.year,.card.cumulative{--accent:#12cfff;--glow:rgba(0,190,255,.38)}
 .card.vip{--accent:#ffc34d;--glow:rgba(255,178,40,.4);background:radial-gradient(ellipse at 0 50%,rgba(255,176,38,.2),transparent 48%),linear-gradient(115deg,#33263b,#14213e 62%,#08162f)}
 .art{position:relative;z-index:1;display:grid;place-items:center;height:100%;min-height:164px;border-right:1px solid #2686d66b;background:linear-gradient(90deg,#0b3a7022,transparent);font-size:clamp(4.2rem,8vw,5.6rem);filter:drop-shadow(0 8px 12px #0009)}
 .content{position:relative;z-index:1;min-width:0;padding:17px 23px}
@@ -428,6 +428,11 @@ h1{font-size:clamp(1.55rem,3.5vw,3.5rem);line-height:1.08;letter-spacing:-.04em}
 <a class="card year" href="year-flow.html">
 <div aria-hidden="true" class="art">🗓️</div>
 <div class="content"><h2>Year Flow</h2><p>Симулятор годового потока</p><div class="tags"><span class="tag">▦ 12 месяцев</span></div></div>
+<span aria-hidden="true" class="arrow">›</span>
+</a>
+<a class="card cumulative" href="Cumulative-Flow.html">
+<div aria-hidden="true" class="art">📊</div>
+<div class="content"><h2>Cumulative Flow</h2><p>Симулятор накопительного потока</p><div class="tags"><span class="tag">▦ Накопление</span></div></div>
 <span aria-hidden="true" class="arrow">›</span>
 </a>
 </section>
