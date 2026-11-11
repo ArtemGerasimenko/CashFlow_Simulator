@@ -579,7 +579,7 @@ html[data-theme="dark"] .hero .theme-toggle{border-color:#40586a!important;backg
 <div class="metric primary wide"><span>Ежемесячная выплата в период выплат</span><strong id="monthly">50,00 EUR</strong></div>
 <div class="metric total wide"><span>Всего будет получено за весь период выплат</span><strong id="total">1 800,00 EUR</strong></div>
 </div><p class="notice"><strong>Внимание!</strong> При несвоевременном пополнении итоговая сумма вознаграждения может быть уменьшена, а начало периода выплат может быть отложено на количество пропущенных дней. Своевременно уточняйте условия программы.</p>
-<button class="btn" id="copy" type="button">Скопировать расчёт</button><p class="copy-feedback" id="feedback" aria-live="polite"></p></section>
+<button id="copy" class="btn" type="button">⧉ Скопировать расчёт</button><p class="copy-feedback" id="feedback" aria-live="polite"></p></section>
 <section class="card" aria-labelledby="tariffTitle"><h2 id="tariffTitle">📈 Таблица коэффициентов Cumulative Flow</h2><p class="intro">Коэффициенты зависят от суммы взноса и выбранного периода накопления.</p><div class="table-wrap"><table><thead><tr><th>Взнос</th><th>3 года</th><th>5 лет</th><th>7 лет</th><th>10 лет</th><th>15 лет</th><th>20 лет</th><th>25 лет</th></tr></thead><tbody id="tariffBody"></tbody></table></div><p class="foot">Тарифные коэффициенты перенесены из предоставленной таблицы. Расчёт использует коэффициент, соответствующий выбранной сумме и периоду, а также автоматически установленный курс подтяжки ECR или ERUB.</p></section>
 
 <section class="card" id="usage" aria-labelledby="usageHeading">
@@ -948,5 +948,31 @@ html[data-theme="dark"] .copy-feedback{color:#8fe2d2}
   color: var(--text) !important;
 }
 </style>
+
+
+
+
+<style id="cf-copy-button-from-year-flow">
+/* Внешний вид кнопки скопирован с Year Flow; остальные элементы не затронуты. */
+#copy.btn {
+  display:inline-flex; align-items:center; justify-content:center; width:100%;
+  min-height:50px; margin-top:13px; padding:11px 18px;
+  border:1px solid #0e8f83; border-radius:13px;
+  background:linear-gradient(135deg,#16a596,#087c73);
+  box-shadow:0 7px 16px rgba(8,124,115,.17),inset 0 1px rgba(255,255,255,.24);
+  color:#fff; cursor:pointer; font:740 .91rem/1.3 var(--font-ui);
+  letter-spacing:.005em; transition:filter .16s ease,transform .16s ease,box-shadow .16s ease;
+}
+#copy.btn:hover:not(:disabled) { filter:brightness(1.04); transform:translateY(-1px); box-shadow:0 9px 20px rgba(8,124,115,.22); }
+#copy.btn:active:not(:disabled) { transform:translateY(1px); }
+#copy.btn:focus-visible { outline:3px solid #a6c8ff; outline-offset:3px; }
+html[data-theme="dark"] #copy.btn {
+  border-color:#258f83;
+  background:linear-gradient(135deg,#168f88,#176d78 60%,#225a79);
+  box-shadow:0 8px 20px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.12);
+}
+@media(max-width:760px) { #copy.btn { min-height:48px; } }
+</style>
+
 </body>
 </html>
