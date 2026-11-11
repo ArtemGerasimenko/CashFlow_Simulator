@@ -337,7 +337,7 @@ td{font-size:13px;font-weight:500;color:#DCE7F3;font-variant-numeric:tabular-num
 .active-row td{color:#9BE8DC;font-weight:750}
 ol{font-size:13px;line-height:1.6;color:#C6D3E1}
 ol li{margin:8px 0}
-#status{color:#B9C9D9}
+#status{color:#B9C9D9;white-space:pre-line}
 #thresholdHint{color:#AABBCD}
 :focus-visible{outline-color:#8FE2D7}
 @media(max-width:760px){
@@ -752,7 +752,7 @@ html[data-theme="dark"] .tablewrap table tbody tr.active-row td {
   <div class="field"><label for="amount">Сумма пополнения</label><input id="amount" type="number" min="1" step="any" value="1" inputmode="decimal"><p class="min-warning" id="minWarning" role="alert" aria-live="polite" hidden></p></div>
 <div class="field"><label for="currency">Валюта площадки</label><input id="currency" type="text" value="EUR" maxlength="12" autocomplete="off" readonly aria-readonly="true"></div>
 <div class="field"><label for="rate" id="rateLabel">Курс подтяжки · EUR за 1 ECR</label><input id="rate" type="number" min="0.00000001" step="any" value="250" inputmode="none" readonly aria-readonly="true"></div>
-<p class="note" id="thresholdHint">Минимальная сумма входа для выбранной площадки: 50 EUR. Процент подтяжки выбирается отдельно по неизменённой тарифной таблице ниже.</p></section>
+<p class="note" id="thresholdHint">Курс ECR фиксированный — 250 EUR за 1 ECR. Он устанавливается автоматически и доступен только для просмотра.</p></section>
 <section class="card"><h2>📊 Результат расчёта</h2><div class="metrics">
 <div class="metric"><span>Сумма пополнения</span><strong id="outAmount">250,00 EUR</strong></div><div class="metric"><span>Процент подтяжки</span><strong id="outPct">+70%</strong></div>
 <div class="metric"><span>Сумма подтяжки</span><strong id="outBonus">175,00 EUR</strong></div><div class="metric primary"><span>Сумма после подтяжки</span><strong id="outTotal">425,00 EUR</strong></div>
@@ -810,7 +810,7 @@ function render(){
  const minWarning=document.querySelector('#minWarning');
  minWarning.textContent=belowMinimum?`Минимальный взнос от ${fmt(minThreshold,0)} ${currency}.`:'';
  minWarning.hidden=!belowMinimum;
- document.querySelector('#thresholdHint').textContent=`Минимальная сумма входа для ${marketNames[market]}: ${fmt(minThreshold,0)} ${currency}. Процент подтяжки выбирается отдельно по неизменённой тарифной таблице ниже.`+(isRussia?' Курс ERUB растёт на 0,5 RUB каждый день в 00:00 по Москве.':' Курс ECR фиксированный и доступен только для просмотра.');
+ document.querySelector('#thresholdHint').textContent=isRussia?`Курс ERUB — ${fmt(rate,2)} RUB за 1 ERUB. Он обновляется автоматически ежедневно в 00:00 по Москве.`:`Курс ECR фиксированный — ${fmt(rate,0)} ${currency} за 1 ECR. Он устанавливается автоматически и доступен только для просмотра.`;
  const token=market==='RU'?'ERUB':'ECR';
  document.querySelector('#tokenLabel').textContent=`Количество подтяжки ${token}`;
  document.querySelector('#rateLabel').textContent=isRussia?'Курс подтяжки · RUB за 1 ERUB':`Курс подтяжки · ${currency} за 1 ECR`;
@@ -822,7 +822,7 @@ function render(){
  document.querySelector('#outTotal').textContent=pct===null||!Number.isFinite(total)?'—':`${fmt(total)} ${currency}`;
  document.querySelector('#outEcr').textContent=pct===null||!Number.isFinite(ecr)||!(rate>0)?'—':`${fmt(ecr,8)} ${token}`;
  const chosenIndex=chosen?tiers.indexOf(chosen):-1; const nextTier=chosenIndex>=0?tiers[chosenIndex+1]:null;
- document.querySelector('#status').textContent=belowMinimum?`Расчёт недоступен: минимальный взнос от ${fmt(minThreshold,0)} ${currency}.`:pct===null?`Для этой суммы тариф не определён.`:nextTier?`Применён тариф: +${fmt(pct,0)}%. Следующий тариф — от ${fmt(nextTier[0],0)} ${currency}: +${fmt(nextTier[1],0)}%. Количество ${token} = сумма подтяжки ÷ курс.`:`Применён тариф: +${fmt(pct,0)}%. Количество ${token} = сумма подтяжки ÷ курс.`;
+ document.querySelector('#status').textContent=belowMinimum?`Расчёт недоступен: минимальный взнос от ${fmt(minThreshold,0)} ${currency}.`:pct===null?`Для этой суммы тариф не определён.`:nextTier?`Применён тариф: +${fmt(pct,0)}%.\nСледующий тариф — от ${fmt(nextTier[0],0)} ${currency}: +${fmt(nextTier[1],0)}%.`:`Применён тариф: +${fmt(pct,0)}%.`;
  document.querySelector('#tiers').innerHTML=tiers.map(t=>`<tr class="${chosen&&chosen[0]===t[0]?'active-row':''}"><td>от ${fmt(t[0],0)} ${currency}</td><td>+${fmt(t[1],0)}%</td></tr>`).join('');
  document.querySelector('#copy').disabled=belowMinimum;
 }
