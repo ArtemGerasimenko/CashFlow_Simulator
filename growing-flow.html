@@ -122,6 +122,19 @@ html[data-theme="dark"] td { border-color:#263c4f; color:#d7e3ec; }
 html[data-theme="dark"] .active-row,html[data-theme="dark"] .active-row td { background:#1c3a4b; color:#b9e4dc; }
 html[data-theme="dark"] .btn { border-color:#258f83; background:linear-gradient(135deg,#168f88,#176d78 60%,#225a79); color:#fff; }
 
+
+/* Курс подтяжки доступен только для просмотра: без текстового курсора при нажатии */
+#rate {
+  caret-color: transparent !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#rate:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 </style><style id="fast-flow-unified-design">
 
 /* Единая дизайн-система Fast Flow */
@@ -937,5 +950,16 @@ td{font-size:.9rem;line-height:1.45}
 .tablewrap table { font-size:14px; line-height:1.4; }
 .tablewrap th { font-size:13px; line-height:1.4; }
 .tablewrap td { font-size:14px; line-height:1.4; }
+/* Валюта площадки только для просмотра: без текстового курсора */
+#currency {
+  caret-color: transparent !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#currency:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 </style>
 </body></html>

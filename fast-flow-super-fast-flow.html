@@ -940,6 +940,19 @@ input, select, textarea { font-family: inherit; font-size: 16px; color: var(--te
 table { font-size: .86rem; color: var(--text); }
 @media (max-width: 600px) { body { font-size: 14.5px; } .metric strong { font-size: 1.08rem; } .metric span { font-size: .73rem; } .metric.primary strong { font-size: 1.2rem; } .site-nav a, .theme-toggle { font-size: .76rem; } }
 
+
+/* Курс подтяжки доступен только для просмотра: без текстового курсора при нажатии */
+#rate {
+  caret-color: transparent !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#rate:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 </style>
 <style id="cashflow-unified-instructions-typography">
 .usage-guide h2 { font-size:18px !important; }
@@ -1607,6 +1620,17 @@ html[data-theme="dark"] .hero .theme-toggle{border-color:#40586a!important;backg
 .min-warning{margin:8px 2px 0;color:#d62828;font-size:.86rem;font-weight:800;line-height:1.45}
 .min-warning[hidden]{display:none!important}
 html[data-theme="dark"] .min-warning{color:#ff7777}
+/* Валюта площадки только для просмотра: без текстового курсора */
+#currency {
+  caret-color: transparent !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#currency:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 </style>
 
 </head><body><main>

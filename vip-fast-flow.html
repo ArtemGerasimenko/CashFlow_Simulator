@@ -928,6 +928,19 @@ input, select, textarea { font-family: inherit; font-size: 16px; color: var(--te
 table { font-size: .86rem; color: var(--text); }
 @media (max-width: 600px) { body { font-size: 14.5px; } .metric strong { font-size: 1.08rem; } .metric span { font-size: .73rem; } .metric.primary strong { font-size: 1.2rem; } .site-nav a, .theme-toggle { font-size: .76rem; } }
 
+
+/* Курс подтяжки доступен только для просмотра: без текстового курсора при нажатии */
+#rate {
+  caret-color: transparent !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#rate:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 </style>
 
 <style id="cashflow-unified-instructions-typography">
@@ -1280,6 +1293,17 @@ html:not([data-theme="dark"]) .usage-guide .usage-steps strong,
 html:not([data-theme="dark"]) .usage-guide .usage-note strong {
   color: #203b50 !important;
   font-weight: 750 !important;
+}
+/* Валюта площадки только для просмотра: без текстового курсора */
+#currency {
+  caret-color: transparent !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#currency:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 </style>
 </body></html>

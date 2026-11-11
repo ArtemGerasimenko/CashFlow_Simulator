@@ -1563,6 +1563,19 @@ table { font-size: .86rem; color: var(--text); }
 @media (max-width: 600px) { body { font-size: 14.5px; } .metric strong { font-size: 1.08rem; } .metric span { font-size: .73rem; } .metric.primary strong { font-size: 1.2rem; } .site-nav a, .theme-toggle { font-size: .76rem; } }
 
 
+
+/* Курс подтяжки доступен только для просмотра: без текстового курсора при нажатии */
+#rate {
+  caret-color: transparent !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#rate:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 </style>
 <style id="cashflow-unified-instructions-typography">
 #usage h2 { font-size:18px !important; }
@@ -2075,6 +2088,17 @@ html[data-theme="dark"] .hero .theme-toggle{border-color:#40586a!important;backg
 <style id="year-flow-usage-bold-color-match">
   /* Year Flow uses #usage ol; match the light-theme bold instruction text to Growing Flow. */
   html:not([data-theme="dark"]) #usage ol strong { color: #203b50 !important; font-weight: 750 !important; }
+/* Валюта площадки только для просмотра: без текстового курсора */
+#currency {
+  caret-color: transparent !important;
+  cursor: default !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#currency:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 </style>
 
 </body>
