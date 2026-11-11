@@ -1601,6 +1601,14 @@ html[data-theme="dark"] .hero .theme-toggle{border-color:#40586a!important;backg
 @media(max-width:760px){.hero{min-height:0!important;padding:68px 20px 22px!important;border-radius:21px!important}.hero .theme-toggle{top:13px!important;right:14px!important;min-height:38px!important;padding:7px 11px!important;font-size:.76rem!important}.hero .program-label{margin-top:0!important;margin-bottom:8px!important;font-size:.66rem!important}.hero h1{font-size:clamp(1.75rem,7vw,2.2rem)!important;line-height:1.14!important}.hero p{font-size:.9rem!important;line-height:1.55!important}}
 @media(max-width:390px){.hero{padding:64px 16px 19px!important}.hero .theme-toggle{right:12px!important;top:12px!important}}
 </style>
+
+<style id="ff-sff-minimum-deposit-warning-from-growing-flow">
+/* Тот же стиль всплывающего предупреждения, что и в Growing Flow. */
+.min-warning{margin:8px 2px 0;color:#d62828;font-size:.86rem;font-weight:800;line-height:1.45}
+.min-warning[hidden]{display:none!important}
+html[data-theme="dark"] .min-warning{color:#ff7777}
+</style>
+
 </head><body><main>
 <header class="hero">
 <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Тёмная тема</span></button>
@@ -1631,7 +1639,7 @@ html[data-theme="dark"] .hero .theme-toggle{border-color:#40586a!important;backg
 <button class="platform" data-market="RU" type="button"></button>
 </div>
 <div class="field" style="margin-top:18px"><label for="kind">Тип потока</label><select id="kind"><option value="FF">Fast Flow · 30 дней</option><option value="SFF">Super Fast Flow · 15 дней</option></select></div>
-<div class="field"><label for="amount">Номинал потока</label><input id="amount" min="0" step="any" type="number" value="250"/></div>
+<div class="field"><label for="amount">Номинал потока</label><input id="amount" min="0" step="any" type="number" value="250"/><p class="min-warning" id="minWarning" role="alert" aria-live="polite" hidden></p></div>
 <div class="ratebox"><span class="muted" id="rateTitle">Курс ECR</span><br/><strong id="rateLabel">1 ECR = 250 EUR</strong></div>
 <div class="field"><label for="rate" id="rateInputLabel">Курс подтяжки · EUR за 1 ECR</label><input id="rate" min="0.00000001" step="any" type="number" value="250" readonly aria-readonly="true"/></div><div class="hint" id="rateHint">Курс подтяжки устанавливается автоматически. Количество ECR или ERUB рассчитывается по результату потока и этому курсу.</div></section>
 <section class="card"><h2>📊 Результат расчёта</h2><div class="tariff"><span>Процент по тарифной таблице</span><strong id="pct">+3,5%</strong><span id="threshold">Порог тарифа: 250 EUR</span></div><div class="metrics">
@@ -1671,6 +1679,10 @@ KG:{name:'KGS',rate:25000,FF:[[25000,3.5],[50000,3.6],[100000,3.7],[150000,3.8],
 let market='EU';const fmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
 function render(){
  const c=configs[market],k=document.querySelector('#kind').value,a=Number(document.querySelector('#amount').value),r=Number(document.querySelector('#rate').value),t=c[k];
+ const minimumDeposit=t[0][0];
+ const minimumWarning=document.querySelector('#minWarning');
+ minimumWarning.textContent=`Минимальный взнос от ${minimumDeposit.toLocaleString('ru-RU')} ${c.name}.`;
+ minimumWarning.hidden=Number.isFinite(a)&&a>=minimumDeposit;
  document.querySelector('#tiersHeading').textContent=`📈 Таблица тарифов ${k==='FF'?'Fast Flow':'Super Fast Flow'}`;
  const token=market==='RU'?'ERUB':'ECR';
  const safeAmount=Number.isFinite(a)&&a>0?a:0;
