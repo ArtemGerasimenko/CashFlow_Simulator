@@ -1,0 +1,3323 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f3f7fa">
+<title>Калькулятор вывода · CashFlow</title>
+<style>
+:root{--bg:#f3f7fa;--card:#fff;--ink:#203448;--muted:#6d8090;--line:#dce6ec;--accent:#087f73;--accent-bg:#e8f6f2;--warn:#fff8e9;--shadow:0 8px 28px #24435b0d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{width:min(100% - 28px,960px);margin:24px auto 48px}.hero{padding:24px;border-radius:22px;background:linear-gradient(135deg,#fff,#edf7f6);border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:18px}
+.eyebrow{font-size:.76rem;letter-spacing:.12em;font-weight:800;color:var(--accent)}h1{font-size:clamp(1.5rem,4vw,2.25rem);line-height:1.15;margin:7px 0 8px}.hero p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}.card h2{font-size:1.08rem;margin:0 0 16px}
+.field{margin:13px 0}.field label{display:block;font-weight:700;font-size:.88rem;margin-bottom:6px}.field input,.field select{width:100%;padding:13px 12px;border:1px solid #cbd9e2;border-radius:12px;background:#fff;color:var(--ink);font:inherit;outline:none}.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #087f7318}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}#msCurrencyResults{display:flex;flex-direction:column;gap:10px}#msCurrencyResults .result{margin-top:0}.result{background:var(--accent-bg);border:1px solid #c5e6dd;border-radius:15px;padding:15px;margin-top:14px}.result small{display:block;color:#58796f}.result strong{font-size:1.45rem;font-weight:850;display:block;overflow-wrap:anywhere}.subresult{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.subresult div{background:#f6fafb;border:1px solid var(--line);border-radius:12px;padding:12px}.subresult small{display:block;color:var(--muted)}.subresult strong{display:block;font-size:1.05rem;overflow-wrap:anywhere}
+.hint{color:var(--muted);font-size:.82rem;margin-top:7px}.pill{display:inline-block;background:#edf3f6;color:#536b7b;border-radius:30px;padding:4px 9px;font-size:.74rem;font-weight:750}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px}table{border-collapse:collapse;width:100%;min-width:520px}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);font-size:.88rem}th{background:#f2f6f8;color:#526a7b}tr:last-child td{border-bottom:0}td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+/* Refined exchange-rates table */
+.rates-table-wrap{border:1px solid #d8e6e8;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 5px 18px #2034480a}
+.rates-table{min-width:0;width:100%;border-collapse:separate;border-spacing:0}
+.rates-table th{padding:13px 14px;background:#edf6f5;color:#54736f;font-size:.76rem;line-height:1.35;font-weight:800;letter-spacing:.025em;border-bottom:1px solid #d8e6e8}
+.rates-table td{padding:12px 14px;border-bottom:1px solid #edf1f3;font-size:.88rem;vertical-align:middle}
+.rates-table tbody tr:nth-child(even){background:#f8fbfc}
+.rates-table tbody tr:last-child td{border-bottom:0}
+.rates-table td:first-child{font-weight:750;color:#263d50;white-space:nowrap}
+.rates-table td:first-child b{display:inline-flex;align-items:center;justify-content:center;min-width:48px;padding:5px 8px;margin-right:7px;border-radius:8px;background:#e8f4f1;color:#087f73;font-size:.78rem}
+.rates-table td:nth-child(2){width:34%}
+.rates-table td:last-child{text-align:right;color:#526b7b;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rates-table .rate-edit{display:block;width:100%;min-width:0;padding:10px 11px;border:1px solid #d5e1e6;border-radius:10px;background:#fff;color:#203448;font:600  .9rem/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums;outline:none}
+.rates-table .rate-edit:focus{border-color:#087f73;box-shadow:0 0 0 3px #087f7318}
+@media(max-width:540px){
+ .rates-table th{padding:10px 8px;font-size:.69rem}
+ .rates-table td{padding:10px 8px;font-size:.8rem}
+ .rates-table td:first-child{font-size:.82rem}
+ .rates-table td:first-child b{min-width:43px;margin-right:5px;padding:4px 6px}
+ .rates-table td:nth-child(2){width:35%}
+ .rates-table .rate-edit{padding:9px 7px;font-size: .88rem}
+}
+
+.rates-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.rate-panel{border:1px solid var(--line);border-radius:14px;padding:14px}.rate-panel h3{margin:0 0 8px;font-size:.96rem}.rate-panel p{margin:0 0 10px;color:var(--muted);font-size:.8rem}.rate-row{display:grid;grid-template-columns:58px 1fr;gap:8px;align-items:center;margin:7px 0}.rate-row label{font-size:.82rem;font-weight:700}.rate-row input{width:100%;min-width:0;padding:9px;border:1px solid #d1dde5;border-radius:9px;font:inherit}
+.notice{padding:13px 15px;border-radius:13px;background:var(--warn);border:1px solid #f0dfba;color:#765d31;font-size:.84rem;margin-top:12px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}button{border:0;border-radius:11px;padding:11px 15px;font:inherit;font-weight:750;cursor:pointer;background:var(--accent);color:white}button.secondary{background:#eaf0f4;color:#3c5668}
+footer{text-align:center;color:var(--muted);font-size:.78rem;margin-top:20px}
+@media(max-width:700px){main{width:min(100% - 18px,960px);margin:10px auto 30px}.hero,.card{padding:16px;border-radius:16px}.grid{grid-template-columns:1fr}.rates-grid{grid-template-columns:1fr}.row{gap:9px}.subresult{grid-template-columns:1fr 1fr}}
+
+/* Universal responsive layout */
+html{width:100%;min-width:0;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{width:100%;min-width:0;overflow-x:hidden}
+main{min-width:0}
+main>*{min-width:0}
+.grid,.row,.subresult,.rates-grid{min-width:0}
+.grid>* ,.row>* ,.subresult>* ,.rates-grid>*{min-width:0}
+.field{min-width:0}
+.field input,.field select,.rate-row input{min-width:0;max-width:100%;font-size:16px}
+input,select,button{touch-action:manipulation}
+button{min-height:44px}
+.tablewrap{-webkit-overflow-scrolling:touch;max-width:100%}
+.result strong,.subresult strong,td,th{overflow-wrap:anywhere}
+:focus-visible{outline:3px solid #087f7355;outline-offset:2px}
+@media(min-width:1100px){
+  main{width:min(100% - 48px,1080px);margin:32px auto 56px}
+  .card{padding:24px}
+}
+@media(max-width:760px){
+  main{width:calc(100% - 24px);margin:14px auto 34px}
+  .hero,.card{padding:18px}
+  .grid{grid-template-columns:1fr}
+  .rates-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .subresult{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:540px){
+  main{width:calc(100% - 20px);margin:10px auto 28px}
+  .hero,.card{padding:15px;border-radius:15px}
+  .row{grid-template-columns:1fr;gap:4px}
+  .rates-grid{grid-template-columns:1fr}
+  .subresult{grid-template-columns:1fr 1fr;gap:8px}
+  .subresult div{padding:10px}
+  .result{padding:13px}
+  .result strong{font-size:clamp(1.15rem,5vw,1.4rem)}
+  .subresult strong{font-size:1rem}
+  .field{margin:10px 0}
+  th,td{padding:9px 10px}
+}
+@media(max-width:360px){
+  .subresult{grid-template-columns:1fr}
+  .hero,.card{padding:13px}
+}
+@media(prefers-reduced-motion:no-preference){
+  button,.field input,.field select{transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+}
+
+
+/* CashFlow unified interface — aligned with Fast Flow */
+:root{color-scheme:dark;--bg:#080c14;--panel:#111a28;--panel2:#0c1523;--line:#26354a;--text:#edf3ff;--muted:#8b9bb3;--blue:#70a7ff;--cyan:#70e0d1;--orange:#ffb45e;--field:#0a1220;--fieldline:#34445d;--result:#142b31;--resultline:#28554f;--resulttext:#a9d9d0;--notice:#181b27;--noticeline:#35384a;--noticetext:#c4cddd;--button:#243d5b;--buttontext:#edf3ff;--shadow:0 12px 30px #0003}
+html[data-theme=light]{color-scheme:light;--bg:#f1f5fa;--panel:#fff;--panel2:#f5f8fc;--line:#d8e2ee;--text:#203047;--muted:#697b91;--blue:#3979d4;--cyan:#087f73;--orange:#b97925;--field:#fff;--fieldline:#cbd7e4;--result:#e8f5f2;--resultline:#c8e5dc;--resulttext:#52776f;--notice:#fff8e9;--noticeline:#ead8ae;--noticetext:#765d31;--button:#eaf0f6;--buttontext:#29435d;--shadow:0 8px 26px #24435b10}
+*{box-sizing:border-box}html,body{width:100%;min-width:0;overflow-x:hidden}body{margin:0;background:radial-gradient(ellipse at 95% 0,color-mix(in srgb,var(--blue) 15%,transparent),transparent 38%),radial-gradient(ellipse at 0 20%,color-mix(in srgb,var(--cyan) 9%,transparent),transparent 34%),var(--bg);color:var(--text);font:15px/1.55 Inter,"SF Pro Display",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;transition:background .2s,color .2s}
+main{width:min(100% - 28px,1080px);max-width:1080px;margin:28px auto 52px;padding:0;min-width:0}main>*{min-width:0}
+.hero{position:relative;padding:28px 205px 28px 28px;border-radius:25px;border:1px solid #304862;background:linear-gradient(120deg,#142b43,#111a2b 70%,#172338);box-shadow:0 20px 55px #0004;margin-bottom:18px}
+html[data-theme=light] .hero{border-color:#d4e0ed;background:linear-gradient(120deg,#fff,#edf4fc 70%,#e8f4f2);box-shadow:var(--shadow)}
+.eyebrow{font-size:.76rem;letter-spacing:.14em;font-weight:850;color:var(--cyan);text-transform:uppercase}h1{font-size:clamp(1.7rem,4.2vw,2.65rem);line-height:1.12;font-weight:850;letter-spacing:-.025em;margin:10px 0 12px;color:var(--text)}.hero p{margin:0;color:#b8c7dc;font-size:clamp(.9rem,1.5vw,1.04rem);line-height:1.6}html[data-theme=light] .hero p{color:#697b91}
+.theme-toggle{position:absolute;right:24px;top:24px;min-height:44px;padding:10px 15px;border:1px solid #3a5877;border-radius:999px;background:#1a2d45;color:#edf3ff;font:700 .88rem/1.2 Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 5px 16px #0002}html[data-theme=light] .theme-toggle{background:#fff;border-color:#cbd9e8;color:#29435d}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{min-width:0;margin:15px 0;padding:22px;border-radius:21px;background:linear-gradient(155deg,var(--panel),color-mix(in srgb,var(--panel) 90%,var(--bg)));border:1px solid var(--line);box-shadow:var(--shadow);color:var(--text);transition:background .2s,border-color .2s,color .2s}.card h2{font-size:1.12rem;line-height:1.35;font-weight:800;color:var(--text);margin:0 0 15px}.card h3{color:var(--text)}
+.field{min-width:0;margin:13px 0}.field label{display:block;color:var(--text);font-weight:700;font-size:.9rem;margin-bottom:7px}.field input,.field select,.rate-row input,.rates-table .rate-edit{width:100%;min-width:0;max-width:100%;padding:13px 14px;border:1px solid var(--fieldline);border-radius:13px;background:var(--field);color:var(--text);font:inherit;font-size:16px;outline:none;box-shadow:inset 0 1px 2px #00000008}.field input:focus,.field select:focus,.rate-row input:focus,.rates-table .rate-edit:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 20%,transparent)}input:disabled{opacity:.65}select option{background:var(--panel);color:var(--text)}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.result{min-width:0;margin-top:14px;padding:16px;border-radius:17px;background:linear-gradient(135deg,var(--result),color-mix(in srgb,var(--result) 80%,var(--panel)));border:1px solid var(--resultline);color:var(--text)}#msCurrencyResults{display:flex;flex-direction:column;gap:10px}#msCurrencyResults .result{margin-top:0}.result small{display:block;color:var(--resulttext);font-size:.87rem;font-weight:650;line-height:1.45}.result strong{display:block;margin-top:4px;color:var(--text);font-size:clamp(1.35rem,3.6vw,1.8rem);font-weight:850;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.subresult{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}.subresult div{min-width:0;padding:13px;border-radius:15px;background:var(--panel2);border:1px solid var(--line)}.subresult small{display:block;color:var(--muted);font-size:.82rem;line-height:1.4}.subresult strong{display:block;margin-top:5px;color:var(--text);font-size:clamp(.98rem,2.6vw,1.15rem);font-weight:800;line-height:1.35;overflow-wrap:anywhere}
+.hint,.muted,footer{color:var(--muted)}.hint{font-size:.82rem;margin-top:7px}.pill{display:inline-flex;align-items:center;background:var(--panel2);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:.76rem;font-weight:750}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--panel2)}.rates-table-wrap{border:1px solid var(--line);border-radius:17px;background:var(--panel2);overflow:hidden;box-shadow:var(--shadow)}.rates-table{min-width:0;width:100%;border-collapse:separate;border-spacing:0}.rates-table th{padding:13px 14px;background:color-mix(in srgb,var(--blue) 13%,var(--panel));color:var(--muted);font-size:.76rem;line-height:1.35;font-weight:850;letter-spacing:.025em;border-bottom:1px solid var(--line)}.rates-table td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:.88rem;vertical-align:middle;color:var(--text)}.rates-table tbody tr:nth-child(even){background:color-mix(in srgb,var(--panel) 65%,var(--bg))}.rates-table tbody tr:last-child td{border-bottom:0}.rates-table td:first-child{font-weight:750;color:var(--text);white-space:nowrap}.rates-table td:first-child b{display:inline-flex;align-items:center;justify-content:center;min-width:48px;padding:5px 8px;margin-right:7px;border-radius:9px;background:color-mix(in srgb,var(--cyan) 16%,var(--panel));color:var(--cyan);font-size:.78rem}.rates-table td:nth-child(2){width:34%}.rates-table td:last-child{text-align:right;color:var(--muted);font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}.rates-table .rate-edit{display:block;width:100%;min-width:0;padding:10px 11px;border-radius:11px;font-size:.9rem}
+.rates-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.rate-panel{border:1px solid var(--line);border-radius:15px;padding:14px;background:var(--panel2)}.rate-panel h3{margin:0 0 8px;font-size:.96rem}.rate-panel p{margin:0 0 10px;color:var(--muted);font-size:.8rem}.rate-row{display:grid;grid-template-columns:58px minmax(0,1fr);gap:8px;align-items:center;margin:7px 0}.rate-row label{font-size:.82rem;font-weight:700}
+.notice{margin:15px 0 0;padding:15px 17px;border-radius:15px;background:var(--notice);border:1px solid var(--noticeline);color:var(--noticetext);font-size:.88rem;line-height:1.55}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}button{min-height:46px;padding:11px 17px;border:1px solid transparent;border-radius:999px;background:linear-gradient(180deg,#70a7ff,#477fca);color:#081321;font:800 .92rem/1.2 Inter,system-ui,sans-serif;cursor:pointer;box-shadow:0 7px 17px #0003,inset 0 1px 0 #ffffff55;transition:filter .15s,transform .15s,background .2s}button:hover{filter:brightness(1.07)}button:active{transform:translateY(1px)}button.secondary{background:var(--button);color:var(--buttontext);border-color:var(--line);box-shadow:none}html[data-theme=light] button:not(.theme-toggle):not(.secondary){background:linear-gradient(180deg,#3979d4,#2865b7);color:#fff}footer{text-align:center;font-size:.8rem;margin-top:22px}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--blue) 65%,transparent);outline-offset:3px}input,select,button{touch-action:manipulation}.tablewrap{-webkit-overflow-scrolling:touch;max-width:100%}.result strong,.subresult strong,td,th{overflow-wrap:anywhere}
+@media(min-width:1100px){main{width:min(100% - 48px,1080px);margin:32px auto 56px}.card{padding:24px}}
+@media(max-width:760px){main{width:calc(100% - 24px);margin:14px auto 34px}.hero,.card{padding:18px;border-radius:18px}.hero{padding-top:78px;padding-right:18px}.theme-toggle{top:15px;right:15px}.grid{grid-template-columns:1fr}.rates-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){main{width:calc(100% - 20px);margin:10px auto 28px}.hero,.card{padding:15px;border-radius:16px}.hero{padding-top:76px;padding-right:15px}.theme-toggle{top:12px;right:12px;min-height:41px;padding:9px 13px;font-size:.82rem}.row{grid-template-columns:1fr;gap:4px}.rates-grid{grid-template-columns:1fr}.subresult{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.subresult div{padding:10px}.result{padding:14px}.result strong{font-size:clamp(1.2rem,5vw,1.55rem)}.subresult strong{font-size:1rem}.field{margin:10px 0}.rates-table th{padding:10px 8px;font-size:.69rem}.rates-table td{padding:10px 8px;font-size:.8rem}.rates-table td:first-child b{min-width:42px;margin-right:5px;padding:4px 6px}.rates-table .rate-edit{padding:9px 7px;font-size:.88rem}}
+@media(max-width:360px){.subresult{grid-template-columns:1fr}.hero,.card{padding:13px}.hero{padding-top:72px}}
+@media(prefers-reduced-motion:no-preference){button,input,select{transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}}
+
+
+.calc-details{
+  margin-top:14px;border:1px solid var(--line);border-radius:16px;
+  background:var(--panel-2);overflow:hidden;color:var(--text);
+}
+.calc-details summary{
+  position:relative;cursor:pointer;list-style:none;padding:15px 48px 15px 16px;
+  color:var(--blue);font-weight:800;font-size:.92rem;
+}
+.calc-details summary::-webkit-details-marker{display:none}
+.calc-details summary .when-closed{display:inline}
+.calc-details summary .when-open{display:none}
+.calc-details[open] summary .when-closed{display:none}
+.calc-details[open] summary .when-open{display:inline}
+.calc-details summary:after{
+  content:"＋";position:absolute;right:17px;top:50%;transform:translateY(-50%);
+  color:var(--cyan);font-size:1.15rem;font-weight:800;
+}
+.calc-details[open] summary:after{content:"−"}
+.calc-details>.subresult{padding:0 14px 14px;margin-top:0}
+.calc-details .notice{margin:0 14px 14px}
+.calc-details .subresult div{background:var(--panel);border-radius:12px}
+@media(max-width:540px){.calc-details summary{padding:14px 42px 14px 13px}.calc-details>.subresult{padding:0 10px 10px}}
+
+
+.calc-details .detail-heading{
+  grid-column:1/-1;padding:8px 2px 0;margin-top:4px;
+  color:var(--cyan);font-size:.82rem;font-weight:850;letter-spacing:.02em;
+}
+.calc-details .detail-heading:not(:first-child){
+  border-top:1px solid var(--line);padding-top:15px;margin-top:7px;
+}
+.calc-details .subresult div:not(.detail-heading) small{line-height:1.45}
+\n
+/* Money Storage: each metric occupies the full available row */
+#money-storage-buy > .subresult,
+#money-storage-buy .commission-breakdown{grid-template-columns:minmax(0,1fr)}
+#money-storage-buy > .subresult > div,
+#money-storage-buy .commission-breakdown > div{width:100%;min-width:0}
+
+/* Global responsive spacing and typography refinement */
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-size:clamp(14px,1.15vw,16px);line-height:1.5}
+main{width:min(calc(100% - 40px),1080px);max-width:1080px;margin:clamp(16px,3vw,32px) auto 52px}
+.hero{padding:clamp(20px,3vw,30px);margin-bottom:clamp(14px,2vw,20px);border-radius:clamp(17px,2vw,25px)}
+h1{font-size:clamp(1.65rem,3.2vw,2.55rem);line-height:1.14;margin:9px 0 11px}
+.hero p{font-size:clamp(.9rem,1.2vw,1.02rem);line-height:1.55;max-width:760px}
+.card{padding:clamp(16px,2.2vw,24px);margin:clamp(12px,1.7vw,18px) 0;border-radius:clamp(15px,1.8vw,21px)}
+.card h2{font-size:clamp(1.02rem,1.5vw,1.16rem);line-height:1.35;margin:0 0 14px}
+.card h3{font-size:clamp(.98rem,1.3vw,1.1rem);line-height:1.35}
+.field{margin:12px 0 15px}
+.field label{font-size:clamp(.84rem,.95vw,.92rem);line-height:1.4;margin-bottom:6px}
+.field input,.field select,.rate-row input,.rates-table .rate-edit{
+  min-height:48px;padding:11px 13px;font-size:16px;line-height:1.35;border-radius:12px
+}
+.hint,.muted,.notice{font-size:clamp(.8rem,.95vw,.9rem);line-height:1.5}
+.result{padding:clamp(13px,1.7vw,17px);margin-top:12px;border-radius:16px}
+.result small{font-size:clamp(.8rem,.95vw,.88rem);line-height:1.45}
+.result strong{font-size:clamp(1.25rem,2.3vw,1.75rem);line-height:1.25}
+.subresult{gap:clamp(8px,1.2vw,12px);margin-top:11px}
+.subresult div{padding:clamp(10px,1.35vw,14px);border-radius:14px}
+.subresult small{font-size:clamp(.77rem,.9vw,.86rem);line-height:1.4}
+.subresult strong{font-size:clamp(.95rem,1.45vw,1.12rem);line-height:1.35;overflow-wrap:anywhere}
+.notice{padding:13px 15px;border-radius:13px;margin-top:12px}
+.actions{gap:9px;margin-top:13px}
+button{min-height:44px;padding:10px 16px;font-size:clamp(.84rem,.95vw,.92rem)}
+.theme-toggle{min-height:42px;padding:9px 14px;font-size:.84rem}
+.calc-details{margin-top:13px;border-radius:15px}
+.calc-details summary{padding:14px 44px 14px 15px;font-size:clamp(.86rem,1vw,.94rem)}
+.calc-details>.subresult{gap:10px;padding:0 12px 12px}
+.calc-details .detail-heading{font-size:.8rem;padding-top:7px}
+.rates-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.rates-table{min-width:500px}
+.rates-table th{padding:11px 12px;font-size:.75rem;line-height:1.35}
+.rates-table td{padding:10px 12px;font-size:.84rem;line-height:1.4}
+.rates-table .rate-edit{min-height:42px;padding:9px 10px;font-size:.9rem}
+footer{font-size:.78rem;line-height:1.45;margin-top:20px}
+
+/* Tablet */
+@media(min-width:700px) and (max-width:1023px){
+  main{width:calc(100% - 36px);margin:22px auto 42px}
+  .card{padding:19px}
+  .subresult{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .row{gap:12px}
+}
+
+/* Phones */
+@media(max-width:699px){
+  body{font-size:14px;line-height:1.48}
+  main{width:calc(100% - 22px);margin:11px auto 30px}
+  .hero{padding:74px 15px 16px;margin-bottom:12px;border-radius:17px}
+  .theme-toggle{top:12px;right:12px;min-height:40px;padding:8px 12px;font-size:.8rem}
+  h1{font-size:clamp(1.45rem,6vw,1.85rem);line-height:1.15;margin:7px 0 9px}
+  .hero p{font-size:.86rem;line-height:1.45}
+  .eyebrow{font-size:.68rem;letter-spacing:.12em}
+  .card{padding:14px;margin:10px 0;border-radius:15px}
+  .card h2{font-size:1rem;margin-bottom:11px}
+  .field{margin:9px 0 12px}
+  .field label{font-size:.82rem;margin-bottom:5px}
+  .field input,.field select,.rate-row input{min-height:46px;padding:10px 11px;font-size:16px}
+  .row{grid-template-columns:1fr;gap:2px}
+  .subresult{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}
+  .subresult div{padding:10px;border-radius:12px}
+  .subresult small{font-size:.75rem;line-height:1.35}
+  .subresult strong{font-size:clamp(.88rem,3.8vw,1rem);line-height:1.3}
+  .result{padding:12px;margin-top:10px;border-radius:14px}
+  .result small{font-size:.78rem}
+  .result strong{font-size:clamp(1.15rem,5vw,1.45rem)}
+  .notice{padding:11px 12px;font-size:.78rem}
+  .actions{gap:7px}
+  .actions button{flex:1 1 auto}
+  button{min-height:42px;padding:9px 13px;font-size:.82rem}
+  .calc-details{margin-top:10px;border-radius:14px}
+  .calc-details summary{padding:12px 39px 12px 12px;font-size:.84rem}
+  .calc-details>.subresult{padding:0 9px 10px;gap:7px}
+  .calc-details .detail-heading{font-size:.75rem;padding-top:7px}
+  .rates-table th{padding:9px 8px;font-size:.69rem}
+  .rates-table td{padding:9px 8px;font-size:.77rem}
+  .rates-table .rate-edit{min-height:40px;padding:8px 7px;font-size:.85rem}
+  footer{font-size:.72rem;margin-top:16px}
+}
+
+/* Narrow phones */
+@media(max-width:380px){
+  main{width:calc(100% - 16px);margin:8px auto 24px}
+  .card{padding:11px;border-radius:13px}
+  .hero{padding:70px 12px 13px}
+  .subresult{gap:6px}
+  .subresult div{padding:8px}
+  .subresult small{font-size:.71rem}
+  .subresult strong{font-size:.84rem}
+  .calc-details>.subresult{grid-template-columns:1fr}
+  .calc-details .detail-heading{font-size:.76rem}
+}
+
+/* Wide desktop: avoid overly stretched controls and cards */
+@media(min-width:1200px){
+  main{max-width:1060px}
+  .card{padding:24px}
+  .field{max-width:100%}
+}
+
+
+/* Fine alignment: commission details grid */
+.calc-details .subresult{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;
+  align-content:start;
+  gap:10px;
+}
+.calc-details .subresult > div:not(.detail-heading){
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  min-width:0;
+  height:100%;
+  min-height:112px;
+  padding:13px 14px;
+  margin:0;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+}
+.calc-details .subresult > div:not(.detail-heading) small{
+  display:block;
+  flex:1 1 auto;
+  min-height:2.8em;
+  line-height:1.42;
+  margin:0;
+}
+.calc-details .subresult > div:not(.detail-heading) strong{
+  display:block;
+  flex:0 0 auto;
+  margin-top:8px;
+  line-height:1.3;
+  overflow-wrap:anywhere;
+}
+.calc-details .subresult > .detail-heading{
+  display:flex;
+  align-items:center;
+  grid-column:1/-1;
+  min-height:0;
+  margin:3px 0 0;
+  padding:0 2px 7px;
+  border:0;
+  border-bottom:1px solid var(--line);
+  border-radius:0;
+  background:transparent;
+  color:var(--cyan);
+  font-size:.84rem;
+  font-weight:850;
+  line-height:1.35;
+}
+.calc-details .subresult > .detail-heading:not(:first-child){
+  margin-top:8px;
+  padding-top:10px;
+}
+.calc-details .notice{margin:0 14px 14px}
+@media(max-width:699px){
+  .calc-details .subresult{gap:8px}
+  .calc-details .subresult > div:not(.detail-heading){
+    min-height:116px;
+    padding:11px 12px;
+    border-radius:13px;
+  }
+  .calc-details .subresult > div:not(.detail-heading) small{min-height:3em}
+  .calc-details .subresult > div:not(.detail-heading) strong{margin-top:7px}
+  .calc-details .subresult > .detail-heading{font-size:.8rem;padding-bottom:7px}
+  .calc-details .subresult > .detail-heading:not(:first-child){margin-top:6px;padding-top:9px}
+  .calc-details .notice{margin:0 10px 10px}
+}
+@media(max-width:380px){
+  .calc-details .subresult{grid-template-columns:1fr}
+  .calc-details .subresult > div:not(.detail-heading){min-height:0}
+  .calc-details .subresult > div:not(.detail-heading) small{min-height:0}
+}
+
+
+/* Commission details: each item occupies the full available width */
+.calc-details .subresult{
+  grid-template-columns:minmax(0,1fr) !important;
+}
+.calc-details .subresult > div:not(.detail-heading){
+  grid-column:1 / -1;
+  width:100%;
+  min-height:0;
+}
+.calc-details .subresult > .detail-heading{
+  grid-column:1 / -1;
+}
+
+/* BlackBIT main result: emphasize only the net amount received */
+.result .subresult .payout-summary-single{
+  grid-column:1/-1;
+  width:100%;
+}
+
+
+
+/* Currency rates: explicit, fully adaptive light/dark palette */
+html[data-theme="light"] main .card.rates-card{
+  background:linear-gradient(145deg,#ffffff 0%,#f8fbff 100%)!important;
+  color:#26384a!important;border-color:#d8e3ed!important
+}
+html[data-theme="light"] .rates-heading h2{color:#203448!important}
+html[data-theme="light"] .rates-intro{color:#687b8d!important}
+html[data-theme="light"] .rates-saved{background:#e0f5eb!important;color:#08734f!important;border:1px solid #c5e9d8}
+html[data-theme="light"] .rates-table-wrap{background:#fff!important;border-color:#d8e4ef!important}
+html[data-theme="light"] .rates-table{background:#fff!important;color:#203448!important}
+html[data-theme="light"] .rates-table th{background:#eaf1fa!important;color:#536b82!important;border-color:#d8e4ef!important}
+html[data-theme="light"] .rates-table td,
+html[data-theme="light"] .rates-table tbody tr:nth-child(even) td{background:#fff!important;color:#203448!important;border-color:#e3ebf2!important}
+html[data-theme="light"] .rates-table tbody tr:nth-child(even) td{background:#f6f9fc!important}
+html[data-theme="light"] .rates-table td:first-child{color:#203448!important}
+html[data-theme="light"] .rates-table td:first-child b{background:#dff1ed!important;color:#147e70!important}
+html[data-theme="light"] .rates-table .rate-edit{background:#fff!important;color:#203448!important;border-color:#cbd7e5!important}
+html[data-theme="light"] .rates-table .rate-edit::placeholder{color:#8795a3!important}
+html[data-theme="light"] .rates-table .rate-edit:focus{background:#fff!important;color:#203448!important;border-color:#078b79!important;box-shadow:0 0 0 3px #078b7920!important}
+html[data-theme="light"] .rates-table .rate-fixed{background:#edf8f4!important;color:#08745c!important;border-color:#c7e4da!important}
+html[data-theme="light"] .rates-info{background:#f1f6fa!important;border-color:#dce7ef!important;color:#536b82!important}
+html[data-theme="light"] .rates-info-icon{color:#087f73!important}
+html[data-theme="light"] .rates-reset{background:linear-gradient(110deg,#078a78,#00a783)!important;color:#fff!important}
+
+html[data-theme="dark"] main .card.rates-card{
+  background:linear-gradient(145deg,#142330 0%,#101c28 100%)!important;
+  color:#e2eaf1!important;border-color:#34495a!important
+}
+html[data-theme="dark"] .rates-heading h2{color:#f3f7fb!important}
+html[data-theme="dark"] .rates-intro{color:#b8c6d2!important}
+html[data-theme="dark"] .rates-saved{background:#183d35!important;color:#b5f0dc!important;border:1px solid #32675e}
+html[data-theme="dark"] .rates-table-wrap{background:#142330!important;border-color:#405568!important}
+html[data-theme="dark"] .rates-table{background:#142330!important;color:#e2eaf1!important}
+html[data-theme="dark"] .rates-table th{background:#263b4b!important;color:#dce7ef!important;border-color:#405568!important}
+html[data-theme="dark"] .rates-table td{background:#192b39!important;color:#e2eaf1!important;border-color:#34495a!important}
+html[data-theme="dark"] .rates-table tbody tr:nth-child(even) td{background:#213544!important;color:#e2eaf1!important}
+html[data-theme="dark"] .rates-table td:first-child{color:#e2eaf1!important}
+html[data-theme="dark"] .rates-table td:first-child b{background:#21483f!important;color:#b9f1e1!important}
+html[data-theme="dark"] .rates-table .rate-edit{background:#101c28!important;color:#f0f5fa!important;border-color:#506477!important}
+html[data-theme="dark"] .rates-table .rate-edit::placeholder{color:#aebdca!important}
+html[data-theme="dark"] .rates-table .rate-edit:focus{background:#142735!important;color:#fff!important;border-color:#55c8b4!important;box-shadow:0 0 0 3px #55c8b426!important}
+html[data-theme="dark"] .rates-table .rate-fixed{background:#183b36!important;color:#b9f1e1!important;border-color:#39796e!important}
+html[data-theme="dark"] .rates-info{background:#1b2b38!important;border-color:#405568!important;color:#d0dce6!important}
+html[data-theme="dark"] .rates-info-icon{color:#65d5c1!important}
+html[data-theme="dark"] .rates-reset{background:linear-gradient(110deg,#087f70,#079b7c)!important;color:#fff!important;box-shadow:0 6px 18px #0006!important}
+html[data-theme="dark"] .rates-reset:focus-visible{outline:3px solid #70d9c7!important;outline-offset:3px}
+
+/* Currency rates panel — refreshed light design */
+.rates-card{padding:22px;background:linear-gradient(145deg,#fff 0%,#fbfdff 100%);border-color:#dce6ef}
+.rates-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.rates-heading h2{margin:0;font-size:1.2rem;font-weight:850;color:#203448}
+.rates-saved{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:30px;background:#e0f5eb;color:#08734f;font-size:.78rem;font-weight:800}
+.rates-intro{margin:0 0 16px;color:#6d8090;font-size:.92rem;line-height:1.55}
+.rates-table-wrap{border:1px solid #d8e4ef;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 5px 18px #2034480a}
+.rates-table{width:100%;min-width:0;border-collapse:separate;border-spacing:0;table-layout:fixed}
+.rates-table th{padding:13px 14px;background:#eaf1fa;color:#64768d;font-size:.82rem;font-weight:850;letter-spacing:.01em;text-align:left;border-bottom:1px solid #d8e4ef}
+.rates-table th:first-child{width:43%}
+.rates-table td{padding:10px 14px;border-bottom:1px solid #e8eef4;font-size:.92rem;vertical-align:middle}
+.rates-table tbody tr:nth-child(even){background:#f8fafd}
+.rates-table tbody tr:last-child td{border-bottom:0}
+.rates-table td:first-child{font-weight:800;color:#203448;white-space:nowrap}
+.rates-table td:first-child b{display:inline-flex;align-items:center;justify-content:center;min-width:58px;padding:6px 9px;margin-right:8px;border-radius:10px;background:#dff1ed;color:#147e70;font-size:.86rem;font-weight:900}
+.rates-table .rate-edit{display:block;width:100%;min-width:0;min-height:48px;padding:10px 13px;border:1.5px solid #cbd7e5;border-radius:15px;background:#fff;color:#203448;font:600 1rem/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums;outline:none}
+.rates-table .rate-edit:focus{border-color:#078b79;box-shadow:0 0 0 3px #078b791c}
+.rates-table .rate-fixed{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:48px;padding:10px 13px;border:1.5px solid #d5e6e1;border-radius:15px;background:#edf8f4;color:#08745c;font-weight:800;font-variant-numeric:tabular-nums}
+.rates-info{display:flex;align-items:flex-start;gap:12px;margin-top:16px;padding:14px 15px;border:1px solid #dce7ef;border-radius:16px;background:#f1f6fa;color:#536b82}
+.rates-info p{margin:0;font-size:.88rem;line-height:1.55}
+.rates-info-icon{flex:0 0 auto;color:#087f73;font-size:1.35rem;font-weight:900}
+.rates-actions{margin-top:16px}
+.rates-reset{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;padding:13px 18px;border:0;border-radius:30px;background:linear-gradient(110deg,#078a78,#00a783);color:#fff;font-size:1rem;font-weight:850;box-shadow:0 6px 16px #078a782b}
+.rates-reset:active{transform:translateY(1px);filter:brightness(.96)}
+html[data-theme="dark"] .rates-card{background:var(--card);color:#dce6ef}
+html[data-theme="dark"] .rates-heading h2{color:#f0f5fa}
+html[data-theme="dark"] .rates-intro{color:#aebdca}
+html[data-theme="dark"] .rates-saved{background:#183d35;color:#a8ead5;border-color:#32675e}
+html[data-theme="dark"] .rates-table-wrap{background:#142330;border-color:#34495a}
+html[data-theme="dark"] .rates-table{background:#142330;color:#e2eaf1}
+html[data-theme="dark"] .rates-table th{background:#263b4b;color:#d5e0e9;border-color:#405568}
+html[data-theme="dark"] .rates-table td{background:#192b39;color:#e2eaf1;border-color:#34495a}
+html[data-theme="dark"] .rates-table tbody tr:nth-child(even) td{background:#213544;color:#e2eaf1}
+html[data-theme="dark"] .rates-table td:first-child{color:#e2eaf1}
+html[data-theme="dark"] .rates-table td:first-child b{background:#21483f;color:#a9ead8}
+html[data-theme="dark"] .rates-table .rate-edit{background:#101c28;color:#f0f5fa;border-color:#506477}
+html[data-theme="dark"] .rates-table .rate-edit::placeholder{color:#9aabba}
+html[data-theme="dark"] .rates-table .rate-edit:focus{background:#142735;color:#fff;border-color:#55c8b4;box-shadow:0 0 0 3px #55c8b426}
+html[data-theme="dark"] .rates-table .rate-fixed{background:#183b36;color:#b9f1e1;border-color:#39796e}
+html[data-theme="dark"] .rates-info{background:#1b2b38;border-color:#354a5b;color:#d0dce6}
+html[data-theme="dark"] .rates-info-icon{color:#55c8b4}
+html[data-theme="dark"] .rates-reset{background:linear-gradient(110deg,#087f70,#079b7c);color:#fff;box-shadow:0 6px 18px #0006}
+html[data-theme="dark"] .rates-reset:focus-visible{outline:3px solid #70d9c7;outline-offset:3px}
+@media(max-width:540px){
+ .rates-card{padding:16px}
+ .rates-heading{align-items:flex-start}
+ .rates-saved{font-size:.72rem;padding:6px 9px}
+ .rates-intro{font-size:.86rem}
+ .rates-table th{padding:11px 9px;font-size:.72rem}
+ .rates-table th:first-child{width:39%}
+ .rates-table td{padding:9px 8px;font-size:.82rem}
+ .rates-table td:first-child{font-size:.8rem}
+ .rates-table td:first-child b{min-width:48px;padding:5px 6px;margin-right:4px;font-size:.78rem}
+ .rates-table .rate-edit,.rates-table .rate-fixed{min-height:46px;padding:9px 8px;border-radius:12px;font-size:.88rem}
+ .rates-info{padding:12px;gap:9px}
+ .rates-info p{font-size:.82rem}
+ .rates-reset{min-height:52px;font-size:.92rem}
+}
+
+</style>
+<script>(function(){try{const t=localStorage.getItem('cfCalculatorTheme');document.documentElement.dataset.theme=(t==='light'||t==='dark')?t:'dark'}catch(e){document.documentElement.dataset.theme='dark'}})();</script>
+
+<style id="desktop-rates-layout-fix">
+/* Desktop: the exchange-rates card is the only child of .grid; use the full width. */
+@media (min-width: 761px) {
+  main > .grid:has(> .rates-card:only-child) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    align-items: stretch;
+  }
+  main > .grid > .rates-card {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+  }
+  main > .grid > .rates-card .rates-table-wrap { width: 100%; }
+  main > .grid > .rates-card .rates-table th:first-child { width: 34%; }
+  main > .grid > .rates-card .rates-table td:nth-child(2) { width: 66%; }
+}
+</style>
+
+
+<style id="full-width-action-buttons">
+/* All functional buttons fill the width of their parent section on desktop and mobile. */
+button:not(.theme-toggle),
+.actions button,
+.rates-actions button {
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  text-align:center;
+  white-space:normal;
+}
+.actions {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  width:100%;
+}
+.rates-actions { width:100%; }
+/* Keep the compact theme switch in its existing header position. */
+.theme-toggle { width:auto; }
+</style>
+
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CashFlow">
+<link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+
+
+<style id="withdrawal-copy-calculation-style">
+.copy-calc-btn{
+  display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:50px;
+  margin-top:14px;padding:11px 18px;border:1px solid transparent;border-radius:14px;
+  background:linear-gradient(135deg,#168f88,#176d78 60%,#225a79);
+  box-shadow:0 8px 20px #0003,inset 0 1px #ffffff2c;color:#fff;
+  cursor:pointer;font:800 .92rem/1.3 Inter,system-ui,sans-serif;
+  transition:filter .16s ease,transform .16s ease,box-shadow .16s ease
+}
+.copy-calc-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.copy-calc-btn:active{transform:translateY(1px)}
+.copy-calc-btn:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.copy-feedback{min-height:1.35em;margin:9px 2px 0;color:var(--cyan);font-size:.84rem;line-height:1.4}
+</style>
+
+<style id="cashflow-fast-flow-unified-design">
+/* CASHFLOW / Fast Flow shared visual system — presentation only.
+   All calculator formulas, values, events and copy actions remain unchanged. */
+:root{
+  color-scheme:light;
+  --cf-bg:#f3f7fa;--cf-panel:#fff;--cf-surface:#f3f7fa;--cf-line:#d6e3e9;
+  --cf-text:#20384b;--cf-muted:#718493;--cf-label:#405b6e;
+  --cf-teal:#087f73;--cf-teal-bright:#168f88;--cf-blue:#397ca8;
+  --cf-shadow:0 12px 34px rgba(39,75,96,.08);
+  --cf-font:Inter,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
+}
+html,body{font-family:var(--cf-font)!important;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html{background:var(--cf-bg)!important;scroll-behavior:smooth}
+body{
+  min-width:0!important;font-size:14.5px!important;line-height:1.55!important;letter-spacing:.005em!important;
+  color:var(--cf-text)!important;
+  background:radial-gradient(ellipse at 8% 0%,rgba(93,190,197,.13),transparent 32%),
+    radial-gradient(ellipse at 100% 12%,rgba(76,151,190,.10),transparent 30%),
+    linear-gradient(180deg,#f8fbfd 0%,#f1f6f9 100%)!important;
+}
+main{width:min(100%,1280px)!important;max-width:1280px!important;margin:0 auto!important;padding:24px clamp(12px,2.2vw,30px) 54px!important}
+main>*{min-width:0}
+.hero{
+  position:relative!important;isolation:isolate;display:flex;flex-direction:column;justify-content:center;
+  min-height:190px!important;margin:0 0 16px!important;padding:clamp(28px,3vw,38px)!important;
+  overflow:hidden;border:1px solid #d7e8ed!important;border-radius:26px!important;
+  background:linear-gradient(112deg,#fff 0%,#eaf7f7 58%,#e3f3f4 100%)!important;
+  box-shadow:0 14px 36px rgba(35,77,97,.08),inset 0 1px rgba(255,255,255,.9)!important;
+}
+.hero::after{position:absolute;z-index:-1;top:-170px;right:-90px;width:340px;height:340px;border:1px solid #39a99d25;border-radius:50%;box-shadow:0 0 0 34px #39a99d0d,0 0 0 72px #39a99d08;content:"";pointer-events:none}
+.hero .eyebrow{display:block;margin:0 0 8px!important;color:#078b7e!important;font-size:.7rem!important;font-weight:850!important;letter-spacing:.15em!important;line-height:1.35!important;text-transform:uppercase}
+.hero h1{display:block;max-width:1000px;margin:0 0 10px!important;color:#142b3c!important;font-family:var(--cf-font)!important;font-size:clamp(2rem,3.3vw,2.85rem)!important;font-weight:820!important;letter-spacing:-.04em!important;line-height:1.14!important;text-wrap:balance;overflow-wrap:anywhere}
+.hero p{max-width:900px;margin:0!important;color:#526b7d!important;font-size:.95rem!important;line-height:1.6!important}
+.theme-toggle{
+  position:absolute!important;z-index:3;top:18px!important;right:20px!important;display:inline-flex!important;
+  align-items:center!important;justify-content:center!important;gap:8px;min-height:40px!important;
+  width:auto!important;padding:8px 13px!important;border:1px solid #cbd9e0!important;border-radius:999px!important;
+  background:rgba(255,255,255,.92)!important;color:#29485c!important;
+  font:700 .82rem/1.2 var(--cf-font)!important;box-shadow:0 4px 14px rgba(34,70,91,.08)!important;cursor:pointer;
+  transition:background .18s,color .18s,border-color .18s,transform .18s;
+}
+.theme-toggle:hover{background:#fff!important;transform:translateY(-1px)}
+.theme-toggle:focus-visible{outline:3px solid #39b8aa!important;outline-offset:3px}
+
+/* Cards, sections and spacing */
+.card{
+  min-width:0;margin:15px 0!important;padding:22px!important;border:1px solid #d6e3e9!important;
+  border-radius:26px!important;background:linear-gradient(155deg,#fff 0%,#f8fbfd 100%)!important;
+  box-shadow:0 12px 34px rgba(39,75,96,.08)!important;color:#20384b!important;
+  transition:background .2s,border-color .2s,color .2s,box-shadow .2s;
+}
+.card h2,.card h3,h2{
+  color:#193348!important;font-family:var(--cf-font)!important;font-size:1.18rem!important;
+  font-weight:780!important;line-height:1.3!important;letter-spacing:-.018em!important;
+}
+.card h2{margin:0 0 16px!important}
+.card h3{font-size:1rem!important;line-height:1.35!important}
+.field{min-width:0;margin:13px 0 15px!important}
+.field label,label{color:#304b60!important;font-size:.93rem!important;font-weight:700!important;line-height:1.4!important}
+.field label{display:block;margin:0 0 7px!important}
+.hint,.muted,footer,.rates-intro,.description{color:#718493!important;font-size:.84rem!important;line-height:1.55!important}
+.pill{background:#f3f7fa!important;color:#718493!important;border:1px solid #d6e3e9!important}
+
+/* Inputs and selects */
+input,select,textarea,.field input,.field select,.rate-row input,.rates-table .rate-edit{
+  min-width:0;max-width:100%;min-height:48px!important;padding:11px 13px!important;
+  border:1px solid #cbd9e0!important;border-radius:13px!important;background:#fff!important;
+  color:#263e50!important;font-family:var(--cf-font)!important;font-size:16px!important;line-height:1.4!important;
+  box-shadow:none!important;outline:none;
+}
+input:focus,select:focus,textarea:focus,.field input:focus,.field select:focus,.rate-row input:focus,.rates-table .rate-edit:focus{
+  outline:none!important;border-color:#168f88!important;box-shadow:0 0 0 3px rgba(22,143,136,.14)!important
+}
+input::placeholder,textarea::placeholder{color:#8a9aa5!important}
+select option{background:#fff!important;color:#263e50!important}
+input:disabled,input[readonly]{opacity:1}
+
+/* Calculation result panels and metric tiles */
+.result{
+  min-width:0;margin-top:14px!important;padding:16px!important;border:1px solid #a8d8d0!important;
+  border-radius:17px!important;background:linear-gradient(135deg,#e5f5f1,#edf8f6)!important;color:#20384b!important;
+}
+.result small{display:block;color:#52776f!important;font-size:.87rem!important;font-weight:650!important;line-height:1.45!important}
+.result>strong{display:block;margin-top:4px;color:#087f73!important;font-size:clamp(1.35rem,3.6vw,1.8rem)!important;font-weight:850!important;line-height:1.25!important;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.subresult{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px!important;margin-top:12px!important}
+.subresult>div{min-width:0;padding:13px!important;border:1px solid #d6e3e9!important;border-radius:15px!important;background:#f3f7fa!important}
+.subresult small{display:block;color:#718493!important;font-size:.82rem!important;line-height:1.4!important}
+.subresult strong{display:block;margin-top:5px;color:#20384b!important;font-size:clamp(.98rem,2.6vw,1.15rem)!important;font-weight:800!important;line-height:1.35!important;overflow-wrap:anywhere}
+.notice{padding:13px 15px!important;border:1px solid #ead8ae!important;border-radius:14px!important;background:#fff8e9!important;color:#765d31!important;font-size:.86rem!important;line-height:1.55!important}
+.note{border:1px solid #d6e3e9!important;border-radius:14px!important;background:#f3f7fa!important;color:#526b7d!important}
+.notice strong{color:#9a7024!important}
+
+/* Expandable calculation details */
+.calc-details,.commission-details{
+  margin-top:14px!important;border:1px solid #d6e3e9!important;border-radius:15px!important;
+  background:#f7fafc!important;overflow:hidden!important;color:#20384b!important;
+}
+.calc-details>summary,.commission-details>summary{
+  position:relative;cursor:pointer;list-style:none;padding:14px 46px 14px 15px!important;
+  color:#087f73!important;font-size:.9rem!important;font-weight:780!important;line-height:1.4!important;
+}
+.calc-details>summary::-webkit-details-marker,.commission-details>summary::-webkit-details-marker{display:none}
+.calc-details>summary:after,.commission-details>summary:after{content:"＋";position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#168f88;font-size:1.15rem;font-weight:800}
+.calc-details[open]>summary:after,.commission-details[open]>summary:after{content:"−"}
+.calc-details>.subresult,.commission-details>.subresult{padding:0 13px 13px!important;margin-top:0!important}
+.calc-details .detail-heading{color:#087f73!important;border-color:#d6e3e9!important}
+.calc-details .notice{margin:0 13px 13px!important}
+
+/* Buttons — same size, shape, gradient and interaction as Fast Flow */
+button:not(.theme-toggle),.copy-calc-btn,.rates-actions button,.actions button{
+  display:flex!important;align-items:center!important;justify-content:center!important;gap:8px;
+  width:100%!important;max-width:100%!important;min-width:0!important;min-height:48px!important;
+  margin-top:13px!important;padding:11px 18px!important;border:1px solid #168f88!important;
+  border-radius:14px!important;background:linear-gradient(135deg,#168f88,#176d78 60%,#225a79)!important;
+  color:#fff!important;font-family:var(--cf-font)!important;font-size:.9rem!important;font-weight:780!important;
+  letter-spacing:.005em!important;line-height:1.3!important;text-align:center!important;white-space:normal!important;
+  box-shadow:0 8px 20px rgba(22,100,112,.16),inset 0 1px rgba(255,255,255,.16)!important;
+  cursor:pointer;transition:filter .16s ease,transform .16s ease,box-shadow .16s ease!important;
+}
+button:not(.theme-toggle):hover:not(:disabled),.copy-calc-btn:hover:not(:disabled){
+  filter:brightness(1.06)!important;transform:translateY(-1px);
+  box-shadow:0 9px 22px rgba(22,100,112,.22),inset 0 1px rgba(255,255,255,.16)!important
+}
+button:not(.theme-toggle):active:not(:disabled),.copy-calc-btn:active:not(:disabled){transform:translateY(1px)}
+button:not(.theme-toggle):focus-visible,.copy-calc-btn:focus-visible{outline:3px solid rgba(22,143,136,.25)!important;outline-offset:2px!important}
+button:disabled{opacity:.55!important;cursor:not-allowed!important}
+.copy-calc-btn{margin-top:14px!important}
+.copy-feedback{min-height:1.35em!important;margin:9px 2px 0!important;color:#087f73!important;font-size:.82rem!important;line-height:1.4!important}
+#msCurrencyResults .cascade-use-btn{
+  display:flex!important;width:100%!important;min-height:44px!important;margin-top:10px!important;
+  padding:10px 14px!important;border:1px solid #168f88!important;border-radius:13px!important;
+  background:linear-gradient(135deg,#168f88,#176d78 60%,#225a79)!important;color:#fff!important;
+  font:750 .86rem/1.3 var(--cf-font)!important;box-shadow:0 5px 14px rgba(22,100,112,.14)!important;
+}
+
+/* Rates table, saved status and help card */
+.rates-card{padding:22px!important}
+.rates-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.rates-heading h2{margin:0!important;font-size:1.18rem!important;font-weight:780!important;color:#193348!important}
+.rates-intro{margin:0 0 16px!important}
+.rates-saved{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid #c5e9d8!important;border-radius:30px;background:#e0f5eb!important;color:#08734f!important;font-size:.78rem!important;font-weight:800}
+.rates-table-wrap,.tablewrap{max-width:100%;overflow-x:auto!important;border:1px solid #d6e3e9!important;border-radius:15px!important;background:#fff!important;-webkit-overflow-scrolling:touch}
+.rates-table{width:100%;min-width:0!important;border-collapse:separate!important;border-spacing:0;background:#fff!important}
+.rates-table th{padding:13px 14px!important;background:#eff5f7!important;color:#496477!important;font-size:.8rem!important;font-weight:750!important;line-height:1.4!important;border-bottom:1px solid #e5edf1!important;text-align:left!important}
+.rates-table td{padding:11px 13px!important;background:#fff!important;color:#304b60!important;font-size:.88rem!important;line-height:1.45!important;border-bottom:1px solid #e5edf1!important}
+.rates-table tbody tr:nth-child(even) td{background:#f8fbfc!important}
+.rates-table tbody tr:last-child td{border-bottom:0!important}
+.rates-table td:first-child{font-weight:750!important;color:#263d50!important}
+.rates-table td:first-child b{background:#e5f5f1!important;color:#087f73!important;border-radius:9px!important}
+.rates-info{border:1px solid #d6e3e9!important;border-radius:14px!important;background:#f3f7fa!important;color:#526b7d!important}
+.rates-info-icon{color:#087f73!important}
+.rates-reset{width:100%!important}
+.usage-guide{margin-top:18px!important;padding:22px!important}
+.usage-guide h2{margin:0 0 18px!important}
+.usage-steps{display:grid;gap:14px;margin:0;padding-left:1.45rem;color:#405b6e!important;font-size:.91rem!important;line-height:1.58!important}
+.usage-steps li{padding-left:4px}
+.usage-steps li::marker{color:#168f88;font-weight:850}
+.usage-steps strong,.usage-note strong{color:#087f73!important;font-weight:780!important}
+.usage-note{margin-top:18px!important;padding:14px 16px!important;border:1px solid #d6e3e9!important;border-radius:14px!important;background:#f3f7fa!important;color:#526b7d!important;font-size:.86rem!important;line-height:1.58!important}
+footer{margin-top:20px!important;text-align:center}
+
+/* Dark palette — exact CashFlow night theme */
+html[data-theme="dark"]{color-scheme:dark!important;background:#0a111b!important}
+html[data-theme="dark"] body{
+  color:#edf4ff!important;
+  background:radial-gradient(ellipse at 12% -8%,rgba(48,104,151,.28),transparent 34%),
+    radial-gradient(ellipse at 92% 12%,rgba(36,112,105,.16),transparent 30%),
+    linear-gradient(180deg,#080f1b 0%,#070c15 55%,#0a1220 100%)!important
+}
+html[data-theme="dark"] .hero{border-color:#263a52!important;background:linear-gradient(112deg,#111a28 0%,#0b1523 58%,#10212b 100%)!important;box-shadow:0 14px 36px rgba(0,0,0,.24)!important}
+html[data-theme="dark"] .hero h1,html[data-theme="dark"] .card h2,html[data-theme="dark"] h2{color:#edf4ff!important}
+html[data-theme="dark"] .hero .eyebrow{color:#75d8c8!important}
+html[data-theme="dark"] .hero p{color:#b8cbd8!important}
+html[data-theme="dark"] .theme-toggle{border-color:#40586a!important;background:#172838!important;color:#e6f1f6!important;box-shadow:0 4px 14px rgba(0,0,0,.22)!important}
+html[data-theme="dark"] .theme-toggle:hover{background:#20384a!important}
+html[data-theme="dark"] .card{border-color:#263a52!important;background:linear-gradient(155deg,#111a28 0%,#0b1523 100%)!important;box-shadow:0 10px 28px rgba(0,0,0,.18)!important;color:#edf4ff!important}
+html[data-theme="dark"] label,html[data-theme="dark"] .field label{color:#dbe5f6!important}
+html[data-theme="dark"] .hint,html[data-theme="dark"] .muted,html[data-theme="dark"] footer,html[data-theme="dark"] .rates-intro{color:#91a2ba!important}
+html[data-theme="dark"] input,html[data-theme="dark"] select,html[data-theme="dark"] textarea,html[data-theme="dark"] .field input,html[data-theme="dark"] .field select,html[data-theme="dark"] .rate-row input,html[data-theme="dark"] .rates-table .rate-edit{
+  border-color:#263a52!important;background:#0b1523!important;color:#edf4ff!important
+}
+html[data-theme="dark"] input::placeholder,html[data-theme="dark"] textarea::placeholder{color:#8297a8!important}
+html[data-theme="dark"] select option{background:#111a28!important;color:#edf4ff!important}
+html[data-theme="dark"] .result{border-color:#28554f!important;background:linear-gradient(135deg,#142b31,#10252b)!important;color:#edf4ff!important}
+html[data-theme="dark"] .result small{color:#a9d9d0!important}
+html[data-theme="dark"] .result>strong{color:#8be3d3!important}
+html[data-theme="dark"] .subresult>div{border-color:#263a52!important;background:#0b1523!important}
+html[data-theme="dark"] .subresult small{color:#91a2ba!important}
+html[data-theme="dark"] .subresult strong{color:#edf4ff!important}
+html[data-theme="dark"] .notice{border-color:#75613d!important;background:#30291e!important;color:#e4d5b5!important}
+html[data-theme="dark"] .notice strong{color:#f0c875!important}
+html[data-theme="dark"] .note,html[data-theme="dark"] .usage-note,html[data-theme="dark"] .rates-info{border-color:#304658!important;background:#142333!important;color:#bfd0dc!important}
+html[data-theme="dark"] .calc-details,html[data-theme="dark"] .commission-details{border-color:#304658!important;background:#142333!important;color:#d7e3ec!important}
+html[data-theme="dark"] .calc-details>summary,html[data-theme="dark"] .commission-details>summary{color:#75d8c8!important}
+html[data-theme="dark"] .calc-details>summary:after,html[data-theme="dark"] .commission-details>summary:after{color:#70e0d1!important}
+html[data-theme="dark"] .calc-details .detail-heading{color:#75d8c8!important;border-color:#304658!important}
+html[data-theme="dark"] .usage-steps{color:#b9cbd8!important}
+html[data-theme="dark"] .usage-steps strong,html[data-theme="dark"] .usage-note strong{color:#e9f2f8!important}
+html[data-theme="dark"] .rates-heading h2{color:#edf4ff!important}
+html[data-theme="dark"] .rates-saved{background:#183d35!important;color:#a8ead5!important;border-color:#32675e!important}
+html[data-theme="dark"] .rates-table-wrap,html[data-theme="dark"] .tablewrap{border-color:#344b5e!important;background:#101d2b!important}
+html[data-theme="dark"] .rates-table{background:#101d2b!important}
+html[data-theme="dark"] .rates-table th{background:#1b3042!important;color:#bed0de!important;border-color:#30465a!important}
+html[data-theme="dark"] .rates-table td,html[data-theme="dark"] .rates-table tbody tr:nth-child(even) td{background:#101d2b!important;color:#d7e3ec!important;border-color:#263c4f!important}
+html[data-theme="dark"] .rates-table td:first-child{color:#d7e3ec!important}
+html[data-theme="dark"] .rates-table td:first-child b{background:#173d3d!important;color:#8de1d2!important}
+html[data-theme="dark"] .rates-info-icon{color:#65d5c1!important}
+html[data-theme="dark"] button:not(.theme-toggle),html[data-theme="dark"] .copy-calc-btn{border-color:#258f83!important;background:linear-gradient(135deg,#168f88,#176d78 60%,#225a79)!important;color:#fff!important}
+html[data-theme="dark"] .copy-feedback{color:#83dfd0!important}
+html[data-theme="dark"] .usage-guide .usage-steps{color:#b9cbd8!important}
+html[data-theme="dark"] .usage-guide .usage-steps strong{color:#e9f2f8!important}
+
+/* Responsive spacing matches Fast Flow at every breakpoint */
+@media(max-width:760px){
+  body{font-size:14.5px!important}
+  main{padding:12px 12px 34px!important}
+  .hero{min-height:0!important;padding:68px 20px 22px!important;border-radius:21px!important}
+  .hero .theme-toggle{top:13px!important;right:14px!important;min-height:38px!important;padding:7px 11px!important;font-size:.76rem!important}
+  .hero .eyebrow{margin-bottom:8px!important;font-size:.66rem!important}
+  .hero h1{font-size:clamp(1.75rem,7vw,2.2rem)!important;line-height:1.14!important}
+  .hero p{font-size:.9rem!important;line-height:1.55!important}
+  .card{padding:17px!important;border-radius:18px!important}
+  .card h2,h2{font-size:1.12rem!important}
+  .field{margin:11px 0 13px!important}
+  .field label,label{font-size:.88rem!important}
+  .result{padding:14px!important}
+  .subresult{gap:8px!important}
+  .subresult>div{padding:11px!important;border-radius:13px!important}
+  button:not(.theme-toggle),.copy-calc-btn{min-height:46px!important;font-size:.88rem!important}
+  .rates-card,.usage-guide{padding:17px!important}
+  .rates-table th,.rates-table td{padding:10px 11px!important}
+  .usage-steps{gap:12px!important;font-size:.9rem!important}
+}
+@media(max-width:540px){
+  main{padding:11px 10px 30px!important}
+  .hero{padding:66px 16px 19px!important}
+  .card{padding:15px!important;border-radius:16px!important}
+  .row{grid-template-columns:minmax(0,1fr)!important;gap:4px!important}
+  .subresult{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .subresult>div{padding:10px!important}
+  .result>strong{font-size:clamp(1.2rem,5vw,1.55rem)!important}
+  .rates-card,.usage-guide{padding:15px!important}
+  .rates-heading{align-items:flex-start}
+  .rates-saved{font-size:.72rem!important;padding:6px 9px!important}
+  .rates-intro{font-size:.82rem!important}
+  .rates-table th{padding:10px 8px!important;font-size:.72rem!important}
+  .rates-table td{padding:9px 8px!important;font-size:.82rem!important}
+  .rates-table .rate-edit{min-height:44px!important;padding:9px 8px!important;font-size:.88rem!important}
+  .rates-info{padding:12px!important;gap:9px}
+  .rates-info p{font-size:.82rem!important}
+  .usage-guide h2{font-size:1.08rem!important;margin-bottom:15px!important}
+  .usage-steps{padding-left:1.3rem!important;gap:11px!important}
+  .usage-note{padding:13px 14px!important}
+}
+@media(max-width:390px){
+  body{font-size:14px!important}
+  main{padding-left:9px!important;padding-right:9px!important}
+  .hero{padding:64px 14px 17px!important}
+  .card{padding:14px!important}
+  .subresult{gap:7px!important}
+  .subresult>div{padding:9px!important}
+  .subresult small{font-size:.74rem!important}
+  .subresult strong{font-size:.94rem!important}
+  .theme-toggle{font-size:.76rem!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+</style>
+
+<style id="cashflow-color-hierarchy-redesign">
+/* Цветовая иерархия CashFlow: синий — структура, бирюза — результат/действие,
+   янтарный — предупреждение. Только оформление, без изменения расчётов. */
+:root{
+ --cf-blue-deep:#12304b;--cf-blue-mid:#1b4264;--cf-blue-line:#3d6f98;
+ --cf-teal-strong:#00b9a6;--cf-teal-soft:#75e2d3;
+ --cf-amber:#f2b84b;--cf-amber-bg:#352b1b;
+}
+.card{border-color:#29435d!important}
+.card h2{color:#f0f5fc!important}
+.card h2::first-letter{color:#78dccc}
+.field label,.card label{color:#d4e0ed!important}
+.hint,.muted,.description,.rates-intro{color:#9aadc1!important}
+
+/* Информационные карточки — сине-графитовые, не бирюзовые */
+.subresult>div{
+ background:linear-gradient(145deg,#142b42,#102337)!important;
+ border-color:#294660!important;
+}
+.subresult small{color:#9db2c6!important}
+.subresult strong{color:#e6f0fa!important}
+
+/* Итоговые суммы: первый ключевой итог — бирюзовый, остальные — синие */
+#msCurrencyResults>.result{
+ display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+ background:linear-gradient(135deg,#142d46,#10243a)!important;
+ border:1px solid #365d80!important;
+ box-shadow:inset 3px 0 0 #4b8fbd,0 7px 18px rgba(0,0,0,.12)!important;
+}
+#msCurrencyResults>.result:first-child{
+ background:linear-gradient(130deg,#103b3b,#102d39)!important;
+ border-color:#168f83!important;
+ box-shadow:inset 3px 0 0 #21c7b1,0 7px 18px rgba(0,0,0,.14)!important;
+}
+#msCurrencyResults>.result small{color:#b7c9d9!important}
+#msCurrencyResults>.result:first-child small{color:#9ce5d9!important}
+#msCurrencyResults>.result>strong{color:#76e2d2!important}
+#msCurrencyResults>.result:first-child>strong{color:#67ead5!important}
+
+/* Действия — глубокий бирюзовый, визуально отдельно от суммы */
+#msCurrencyResults .cascade-use-btn{
+ background:linear-gradient(135deg,#087f78,#075c68)!important;
+ border:1px solid #21b9a8!important;color:#eafffb!important;
+ box-shadow:0 4px 13px rgba(0,170,155,.16),inset 0 1px rgba(255,255,255,.12)!important;
+}
+#msCurrencyResults .cascade-use-btn:hover{filter:brightness(1.12)!important}
+
+/* Раскрывающиеся комиссии — холодный синий акцент */
+.calc-details,.commission-details{
+ background:linear-gradient(145deg,#132b43,#102338)!important;
+ border-color:#355d7d!important;
+}
+.calc-details>summary,.commission-details>summary{color:#8bc8f4!important}
+.calc-details>summary:after,.commission-details>summary:after{color:#8bc8f4!important}
+.calc-details .detail-heading{color:#9bd5f5!important;border-color:#355d7d!important}
+
+/* Предупреждения — янтарные, чтобы не путать с результатами */
+.notice,.usage-note{
+ background:linear-gradient(135deg,#332b1e,#29251e)!important;
+ border-color:#8b6b32!important;color:#eadbbd!important;
+}
+.notice strong,.usage-note strong{color:#ffd16d!important}
+
+/* Поля ввода и таблицы сохраняют нейтральную синюю основу */
+input,select,textarea,.field input,.field select,.rate-row input,.rates-table .rate-edit{
+ background:#0d1b2b!important;border-color:#36516b!important;color:#edf5fc!important;
+}
+input::placeholder,textarea::placeholder{color:#8298ad!important}
+select option{background:#102338!important;color:#edf5fc!important}
+.rates-table th{background:#1a354e!important;color:#c6d8e8!important}
+.rates-table td,.rates-table tbody tr:nth-child(even) td{background:#102338!important;color:#dce8f3!important;border-color:#29435d!important}
+.rates-table td:first-child b{background:#173d4d!important;color:#7ce0d1!important}
+
+/* Светлая тема: отдельная контрастная палитра, без тёмных заливок */
+html[data-theme="light"] .card{background:linear-gradient(145deg,#fff,#f5f9fc)!important;border-color:#d2e0ea!important}
+html[data-theme="light"] .card h2{color:#18354d!important}
+html[data-theme="light"] .field label,html[data-theme="light"] .card label{color:#38536a!important}
+html[data-theme="light"] .hint,html[data-theme="light"] .muted,html[data-theme="light"] .description,html[data-theme="light"] .rates-intro{color:#718596!important}
+html[data-theme="light"] .subresult>div{background:linear-gradient(145deg,#f1f6fa,#eaf1f7)!important;border-color:#d4e0e9!important}
+html[data-theme="light"] .subresult small{color:#6d8192!important}
+html[data-theme="light"] .subresult strong{color:#203c54!important}
+html[data-theme="light"] #msCurrencyResults>.result{background:linear-gradient(135deg,#e9f1f8,#f5f9fc)!important;border-color:#bfd1e0!important;box-shadow:inset 3px 0 #4b8fbd,0 6px 16px rgba(31,65,89,.07)!important}
+html[data-theme="light"] #msCurrencyResults>.result:first-child{background:linear-gradient(130deg,#e2f7f2,#f0faf7)!important;border-color:#9dd8ca!important;box-shadow:inset 3px 0 #18a995,0 6px 16px rgba(31,65,89,.07)!important}
+html[data-theme="light"] #msCurrencyResults>.result small{color:#557286!important}
+html[data-theme="light"] #msCurrencyResults>.result:first-child small{color:#38796e!important}
+html[data-theme="light"] #msCurrencyResults>.result>strong{color:#176b9b!important}
+html[data-theme="light"] #msCurrencyResults>.result:first-child>strong{color:#087f73!important}
+html[data-theme="light"] .calc-details,html[data-theme="light"] .commission-details{background:#eff5fa!important;border-color:#cbdce9!important}
+html[data-theme="light"] .calc-details>summary,html[data-theme="light"] .commission-details>summary{color:#276d9b!important}
+html[data-theme="light"] .notice,html[data-theme="light"] .usage-note{background:#fff6e5!important;border-color:#ead29a!important;color:#6d5730!important}
+html[data-theme="light"] .notice strong,html[data-theme="light"] .usage-note strong{color:#9b6a12!important}
+html[data-theme="light"] input,html[data-theme="light"] select,html[data-theme="light"] textarea,html[data-theme="light"] .field input,html[data-theme="light"] .field select,html[data-theme="light"] .rate-row input,html[data-theme="light"] .rates-table .rate-edit{background:#fff!important;border-color:#cbd9e3!important;color:#263f53!important}
+html[data-theme="light"] select option{background:#fff!important;color:#263f53!important}
+html[data-theme="light"] .rates-table th{background:#eaf1f6!important;color:#476176!important}
+html[data-theme="light"] .rates-table td,html[data-theme="light"] .rates-table tbody tr:nth-child(even) td{background:#fff!important;color:#304b60!important;border-color:#e0e9ef!important}
+html[data-theme="light"] .rates-table tbody tr:nth-child(even) td{background:#f5f8fb!important}
+html[data-theme="light"] .rates-table td:first-child b{background:#e4f3f2!important;color:#087f73!important}
+
+/* Каскад — отдельная синяя рабочая зона с бирюзовым акцентом */
+#cascade-calculator{border-color:#3b6589!important}
+#cascade-calculator h2{color:#eaf4ff!important}
+#cascade-calculator h2::first-letter{color:#73dccc}
+html[data-theme="light"] #cascade-calculator{border-color:#c7d9e8!important;background:linear-gradient(145deg,#fff,#f2f7fb)!important}
+html[data-theme="light"] #cascade-calculator h2{color:#183b58!important}
+#cascade-calculator .result{border-color:#426b8c!important}
+#cascade-calculator .result>strong{color:#8ed8f0!important}
+html[data-theme="light"] #cascade-calculator .result{background:linear-gradient(135deg,#eaf3fa,#f5f9fc)!important;border-color:#c6d9e8!important}
+html[data-theme="light"] #cascade-calculator .result>strong{color:#176b9b!important}
+
+@media(max-width:540px){
+ #msCurrencyResults>.result{padding:14px!important}
+ #msCurrencyResults .cascade-use-btn{min-height:44px!important}
+}
+</style>
+
+<style id="cashflow-dark-text-contrast-fix">
+html[data-theme="dark"] main h1,
+html[data-theme="dark"] main h2,
+html[data-theme="dark"] main h3,
+html[data-theme="dark"] main h4,
+html[data-theme="dark"] .card h3,
+html[data-theme="dark"] #money-storage-buy h3{color:#f0f6ff!important}
+html[data-theme="dark"] main p,
+html[data-theme="dark"] main .hint,
+html[data-theme="dark"] main small,
+html[data-theme="dark"] main label,
+html[data-theme="dark"] main summary{color:#bdcbdc}
+html[data-theme="dark"] #money-storage-buy .hint{color:#aebfd1!important}
+html[data-theme="dark"] #money-storage-buy .commission-details>summary{color:#8fd9ef!important}
+html[data-theme="dark"] #money-storage-buy .result{background:linear-gradient(135deg,#142d46,#10243a)!important;border:1px solid #365d80!important}
+html[data-theme="dark"] #money-storage-buy .result small{color:#c0d0df!important}
+html[data-theme="dark"] #money-storage-buy .result strong{color:#83dff0!important}
+html[data-theme="dark"] #money-storage-buy .notice{background:linear-gradient(135deg,#332b1e,#29251e)!important;border-color:#8b6b32!important;color:#eadbbd!important}
+html[data-theme="dark"] #money-storage-buy .notice strong{color:#ffd16d!important}
+
+html[data-theme="light"] main h1,
+html[data-theme="light"] main h2,
+html[data-theme="light"] main h3,
+html[data-theme="light"] main h4,
+html[data-theme="light"] .card h3,
+html[data-theme="light"] #money-storage-buy h3{color:#18354d!important}
+html[data-theme="light"] main p,
+html[data-theme="light"] main .hint,
+html[data-theme="light"] main small,
+html[data-theme="light"] main label,
+html[data-theme="light"] main summary{color:#526b80}
+html[data-theme="light"] #money-storage-buy .hint{color:#647b8e!important}
+html[data-theme="light"] #money-storage-buy .result{background:linear-gradient(135deg,#eaf3f8,#f6fafc)!important;border:1px solid #c6d9e8!important}
+html[data-theme="light"] #money-storage-buy .result small{color:#526d82!important}
+html[data-theme="light"] #money-storage-buy .result strong{color:#176b9b!important}
+html[data-theme="light"] #money-storage-buy .result:first-child{background:linear-gradient(135deg,#e2f7f2,#f0faf7)!important;border-color:#9dd8ca!important}
+html[data-theme="light"] #money-storage-buy .result:first-child strong{color:#087f73!important}
+#money-storage-buy h3{font-weight:800!important;line-height:1.4!important;margin:18px 0 8px!important}
+</style>
+
+
+<style id="cashflow-brand-color-refinement">
+/* Единая палитра CashFlow: глубокий графитово-синий + фирменная бирюза.
+   Убираем избыточный ярко-синий оттенок карточек и холодный голубой текст. */
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result,
+html[data-theme="dark"] #msCurrencyResults .result{
+  background:linear-gradient(145deg,#11232f 0%,#0e1d29 100%)!important;
+  border:1px solid #29454b!important;
+  border-left:1px solid #29454b!important;
+  border-radius:22px!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.025)!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result:first-child,
+html[data-theme="dark"] #msCurrencyResults .result:first-child{
+  background:linear-gradient(145deg,#12332f 0%,#102a2b 100%)!important;
+  border-color:#287d70!important;
+  border-left:4px solid #39c7b2!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result small,
+html[data-theme="dark"] #msCurrencyResults .result small{
+  color:#c0d0d0!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result strong,
+html[data-theme="dark"] #msCurrencyResults .result strong{
+  color:#75dfcf!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result:first-child strong,
+html[data-theme="dark"] #msCurrencyResults .result:first-child strong{
+  color:#7be6d4!important;
+}
+
+/* Кнопки оставляем фирменными, но без неонового свечения */
+html[data-theme="dark"] #msCurrencyResults .cascade-use-btn{
+  background:linear-gradient(135deg,#65d8c8,#50c9b8)!important;
+  border:1px solid #82e6d8!important;
+  color:#082c2b!important;
+  box-shadow:0 4px 12px rgba(40,190,170,.12)!important;
+}
+html[data-theme="dark"] #msCurrencyResults .cascade-use-btn:hover{
+  filter:brightness(1.04)!important;
+}
+
+/* Светлая тема: мягкие бело-мятные карточки и тёмный читаемый текст */
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result,
+html[data-theme="light"] #msCurrencyResults .result{
+  background:linear-gradient(145deg,#ffffff 0%,#f2f8f7 100%)!important;
+  border:1px solid #d3e4df!important;
+  border-left:1px solid #d3e4df!important;
+  border-radius:22px!important;
+  box-shadow:0 6px 18px rgba(25,70,63,.06)!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result:first-child,
+html[data-theme="light"] #msCurrencyResults .result:first-child{
+  background:linear-gradient(145deg,#e8f8f3 0%,#f5fbf8 100%)!important;
+  border-color:#a8dacc!important;
+  border-left:4px solid #27ad99!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result small,
+html[data-theme="light"] #msCurrencyResults .result small{
+  color:#536d68!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result strong,
+html[data-theme="light"] #msCurrencyResults .result strong{
+  color:#087f73!important;
+}
+html[data-theme="light"] #msCurrencyResults .cascade-use-btn{
+  background:linear-gradient(135deg,#45c8b5,#32b7a5)!important;
+  border:1px solid #2ba994!important;
+  color:#073a35!important;
+  box-shadow:0 3px 10px rgba(30,150,132,.12)!important;
+}
+</style>
+
+<style id="cashflow-commission-list-and-result-refinement">
+/* Комиссии — вертикальный список строк, а не две отдельные плитки */
+#money-storage-buy .commission-breakdown{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:0!important;
+  margin:14px 0 0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+}
+#money-storage-buy .commission-breakdown>div{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:5px!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:13px 4px!important;
+  border:0!important;
+  border-bottom:1px solid rgba(139,171,181,.20)!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+#money-storage-buy .commission-breakdown>div:last-child{border-bottom:0!important}
+#money-storage-buy .commission-breakdown small{
+  color:#aebfca!important;
+  font-size:.88rem!important;
+  line-height:1.4!important;
+}
+#money-storage-buy .commission-breakdown strong{
+  color:#e7f2f3!important;
+  font-size:1.08rem!important;
+  font-weight:800!important;
+  line-height:1.35!important;
+}
+
+/* Заголовок итоговых сумм — в масштабе заголовков остальных секций */
+#money-storage-buy>h3{
+  font-size:clamp(1.08rem,1.5vw,1.2rem)!important;
+  line-height:1.35!important;
+  font-weight:800!important;
+  color:#edf5f7!important;
+  margin:18px 0 10px!important;
+}
+
+/* Итоговые карточки — спокойный графитово-синий фон; сумма остаётся акцентом */
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result,
+html[data-theme="dark"] #msCurrencyResults .result{
+  background:linear-gradient(145deg,#172733 0%,#12212c 100%)!important;
+  border:1px solid #30434d!important;
+  border-left:1px solid #30434d!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.13)!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result:first-child,
+html[data-theme="dark"] #msCurrencyResults .result:first-child{
+  background:linear-gradient(145deg,#19352f 0%,#142b29 100%)!important;
+  border-color:#39776d!important;
+  border-left:4px solid #55cbb6!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result small,
+html[data-theme="dark"] #msCurrencyResults .result small{
+  color:#c0cdd2!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result strong,
+html[data-theme="dark"] #msCurrencyResults .result strong{
+  color:#f0f6f5!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result:first-child strong,
+html[data-theme="dark"] #msCurrencyResults .result:first-child strong{
+  color:#8be1d1!important;
+}
+
+/* Светлая тема: нейтральные светло-серые карточки, первая — мягкая мятная */
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result,
+html[data-theme="light"] #msCurrencyResults .result{
+  background:linear-gradient(145deg,#f4f7f8 0%,#eaf0f2 100%)!important;
+  border:1px solid #d0dce0!important;
+  border-left:1px solid #d0dce0!important;
+  box-shadow:0 5px 15px rgba(24,54,66,.05)!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result:first-child,
+html[data-theme="light"] #msCurrencyResults .result:first-child{
+  background:linear-gradient(145deg,#e7f5f0 0%,#f1f8f5 100%)!important;
+  border-color:#b8d9ce!important;
+  border-left:4px solid #39ad98!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result small,
+html[data-theme="light"] #msCurrencyResults .result small{
+  color:#536970!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result strong,
+html[data-theme="light"] #msCurrencyResults .result strong{
+  color:#24434b!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result:first-child strong,
+html[data-theme="light"] #msCurrencyResults .result:first-child strong{
+  color:#087f70!important;
+}
+html[data-theme="light"] #money-storage-buy .commission-breakdown>div{
+  border-bottom-color:rgba(70,105,112,.18)!important;
+}
+html[data-theme="light"] #money-storage-buy .commission-breakdown small{color:#647b82!important}
+html[data-theme="light"] #money-storage-buy .commission-breakdown strong{color:#203d45!important}
+html[data-theme="light"] #money-storage-buy>h3{color:#183b43!important}
+</style>
+<style id="cashflow-commission-cards-and-unified-total">
+/* Комиссии Money Storage оформлены как в блоке комиссий основного калькулятора:
+   отдельные тёмные карточки с подписью и крупным значением */
+#money-storage-buy .commission-breakdown{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:10px!important;
+  margin:14px 0 0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+}
+#money-storage-buy .commission-breakdown>div{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:8px!important;
+  width:100%!important;
+  min-width:0!important;
+  padding:15px 16px!important;
+  background:#091725!important;
+  border:1px solid #293d50!important;
+  border-radius:17px!important;
+}
+#money-storage-buy .commission-breakdown small{
+  color:#9eafc1!important;
+  font-size:1rem!important;
+  line-height:1.4!important;
+}
+#money-storage-buy .commission-breakdown strong{
+  color:#edf4fa!important;
+  font-size:1.16rem!important;
+  font-weight:850!important;
+  line-height:1.35!important;
+}
+
+/* Светлая тема — такие же отдельные карточки, но на светлой основе */
+html[data-theme="light"] #money-storage-buy .commission-breakdown>div{
+  background:#f5f8fa!important;
+  border:1px solid #d5e0e6!important;
+}
+html[data-theme="light"] #money-storage-buy .commission-breakdown small{
+  color:#647985!important;
+}
+html[data-theme="light"] #money-storage-buy .commission-breakdown strong{
+  color:#263f4a!important;
+}
+
+/* Первая сумма к оплате — без отдельного выделения, общий стиль со всеми валютами */
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result:first-child,
+html[data-theme="dark"] #msCurrencyResults .result:first-child{
+  background:linear-gradient(145deg,#172733 0%,#12212c 100%)!important;
+  border:1px solid #30434d!important;
+  border-left:1px solid #30434d!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.13)!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result:first-child small,
+html[data-theme="dark"] #msCurrencyResults .result:first-child small{
+  color:#c0cdd2!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .result:first-child strong,
+html[data-theme="dark"] #msCurrencyResults .result:first-child strong{
+  color:#75dfcf!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result:first-child,
+html[data-theme="light"] #msCurrencyResults .result:first-child{
+  background:linear-gradient(145deg,#f4f7f8 0%,#eaf0f2 100%)!important;
+  border:1px solid #d0dce0!important;
+  border-left:1px solid #d0dce0!important;
+  box-shadow:0 5px 15px rgba(24,54,66,.05)!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result:first-child small,
+html[data-theme="light"] #msCurrencyResults .result:first-child small{
+  color:#536970!important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .result:first-child strong,
+html[data-theme="light"] #msCurrencyResults .result:first-child strong{
+  color:#087f70!important;
+}
+</style>
+<style id="cashflow-commission-toggle-blue-spacing-fix">
+/* Заголовок комиссий — тот же голубой акцент, что у соседнего блока */
+#money-storage-buy .commission-details>summary{
+  display:block!important;
+  position:relative!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  padding:14px 54px 14px 15px!important;
+  color:#8bc8f4!important;
+  font-size:1rem!important;
+  font-weight:800!important;
+  line-height:1.4!important;
+}
+#money-storage-buy .commission-details>summary::after{
+  position:absolute!important;
+  right:17px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  color:#8bc8f4!important;
+  font-size:1.2rem!important;
+  line-height:1!important;
+}
+#money-storage-buy .commission-label-open{display:none!important}
+#money-storage-buy .commission-details[open] .commission-label-closed{display:none!important}
+#money-storage-buy .commission-details[open] .commission-label-open{display:inline!important}
+
+/* Ровные внутренние отступы справа и слева у карточек комиссий */
+#money-storage-buy #msCommissionDetails{
+  padding:0!important;
+  overflow:hidden!important;
+}
+#money-storage-buy #msCommissionDetails .commission-breakdown{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:12px!important;
+  width:100%!important;
+  margin:0!important;
+  padding:8px 14px 16px!important;
+  box-sizing:border-box!important;
+}
+#money-storage-buy #msCommissionDetails .commission-breakdown>div{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:8px!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:15px 16px!important;
+  box-sizing:border-box!important;
+  border-radius:17px!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCommissionDetails .commission-breakdown>div{
+  background:#091725!important;
+  border:1px solid #293d50!important;
+}
+html[data-theme="dark"] #money-storage-buy #msCommissionDetails .commission-breakdown small{color:#9eafc1!important}
+html[data-theme="dark"] #money-storage-buy #msCommissionDetails .commission-breakdown strong{color:#edf4fa!important}
+html[data-theme="light"] #money-storage-buy #msCommissionDetails .commission-breakdown>div{
+  background:#f5f8fa!important;
+  border:1px solid #d5e0e6!important;
+}
+html[data-theme="light"] #money-storage-buy #msCommissionDetails .commission-breakdown small{color:#647985!important}
+html[data-theme="light"] #money-storage-buy #msCommissionDetails .commission-breakdown strong{color:#263f4a!important}
+</style>
+
+
+<style id="cashflow-commission-contrast-final">
+/* Общий стиль для ОБОИХ раскрывающихся блоков комиссий */
+.calc-details,
+#money-storage-buy .commission-details{
+  background:var(--panel2)!important;
+  border:1px solid var(--line)!important;
+  border-radius:18px!important;
+  color:var(--text)!important;
+  overflow:hidden!important;
+}
+
+/* Закрыто: голубой заголовок, открыто: бирюзовый.
+   Текст и размер явно отличаются от содержимого карточек. */
+.calc-details>summary,
+#money-storage-buy .commission-details>summary{
+  display:block!important;
+  position:relative!important;
+  list-style:none!important;
+  cursor:pointer!important;
+  padding:16px 54px 16px 17px!important;
+  color:var(--blue)!important;
+  font-size:1.08rem!important;
+  font-weight:850!important;
+  line-height:1.35!important;
+  letter-spacing:.005em!important;
+  user-select:none!important;
+}
+.calc-details>summary::-webkit-details-marker,
+#money-storage-buy .commission-details>summary::-webkit-details-marker{display:none!important}
+.calc-details>summary:after,
+#money-storage-buy .commission-details>summary:after{
+  content:"＋"!important;
+  position:absolute!important;
+  right:18px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  color:var(--blue)!important;
+  font-size:1.35rem!important;
+  font-weight:900!important;
+  line-height:1!important;
+}
+.calc-details[open]>summary,
+#money-storage-buy .commission-details[open]>summary{
+  color:var(--cyan)!important;
+  font-size:1.12rem!important;
+}
+.calc-details[open]>summary:after,
+#money-storage-buy .commission-details[open]>summary:after{
+  content:"−"!important;
+  color:var(--cyan)!important;
+  font-size:1.45rem!important;
+}
+
+/* Подписи закрытого/открытого состояния — правильное переключение */
+.calc-details summary .when-closed{display:inline!important}
+.calc-details summary .when-open{display:none!important}
+.calc-details[open] summary .when-closed{display:none!important}
+.calc-details[open] summary .when-open{display:inline!important}
+#money-storage-buy .commission-details .commission-label-closed{display:inline!important}
+#money-storage-buy .commission-details .commission-label-open{display:none!important}
+#money-storage-buy .commission-details[open] .commission-label-closed{display:none!important}
+#money-storage-buy .commission-details[open] .commission-label-open{display:inline!important}
+
+/* Внутренние заголовки разделов — акцентные, заметно крупнее пояснений */
+.calc-details .detail-heading{
+  grid-column:1/-1!important;
+  color:var(--cyan)!important;
+  font-size:1.02rem!important;
+  font-weight:850!important;
+  line-height:1.4!important;
+  border-color:var(--line)!important;
+  background:color-mix(in srgb,var(--cyan) 8%,var(--panel))!important;
+}
+
+/* Пояснения и числовые значения имеют отдельную иерархию */
+.calc-details .subresult>div:not(.detail-heading),
+#money-storage-buy .commission-breakdown>div{
+  background:var(--field)!important;
+  border:1px solid var(--fieldline)!important;
+  border-radius:15px!important;
+  color:var(--text)!important;
+}
+.calc-details .subresult small,
+#money-storage-buy .commission-breakdown small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:.96rem!important;
+  font-weight:500!important;
+  line-height:1.45!important;
+  opacity:1!important;
+}
+.calc-details .subresult strong,
+#money-storage-buy .commission-breakdown strong{
+  display:block!important;
+  color:var(--text)!important;
+  font-size:1.16rem!important;
+  font-weight:850!important;
+  line-height:1.35!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* Светлая тема: читаемый синий заголовок, бирюзовый открытый статус,
+   тёмные значения и приглушённые подписи */
+html[data-theme="light"] .calc-details,
+html[data-theme="light"] #money-storage-buy .commission-details{
+  background:#f1f6fa!important;
+  border-color:#cbd9e5!important;
+}
+html[data-theme="light"] .calc-details>summary,
+html[data-theme="light"] #money-storage-buy .commission-details>summary{
+  color:#347db6!important;
+}
+html[data-theme="light"] .calc-details[open]>summary,
+html[data-theme="light"] #money-storage-buy .commission-details[open]>summary{
+  color:#087f73!important;
+}
+html[data-theme="light"] .calc-details>summary:after,
+html[data-theme="light"] #money-storage-buy .commission-details>summary:after{color:#347db6!important}
+html[data-theme="light"] .calc-details[open]>summary:after,
+html[data-theme="light"] #money-storage-buy .commission-details[open]>summary:after{color:#087f73!important}
+html[data-theme="light"] .calc-details .detail-heading{
+  color:#087f73!important;
+  background:#e4f3ef!important;
+  border-color:#c7e1d9!important;
+}
+html[data-theme="light"] .calc-details .subresult small,
+html[data-theme="light"] #money-storage-buy .commission-breakdown small{color:#687d8d!important}
+html[data-theme="light"] .calc-details .subresult strong,
+html[data-theme="light"] #money-storage-buy .commission-breakdown strong{color:#20394c!important}
+
+/* Тёмная тема: голубой закрытый заголовок, яркая бирюза открытого,
+   светлые значения и спокойные серо-голубые пояснения */
+html[data-theme="dark"] .calc-details,
+html[data-theme="dark"] #money-storage-buy .commission-details{
+  background:#142536!important;
+  border-color:#344c61!important;
+}
+html[data-theme="dark"] .calc-details>summary,
+html[data-theme="dark"] #money-storage-buy .commission-details>summary{color:#91cfff!important}
+html[data-theme="dark"] .calc-details[open]>summary,
+html[data-theme="dark"] #money-storage-buy .commission-details[open]>summary{color:#75dfcf!important}
+html[data-theme="dark"] .calc-details>summary:after,
+html[data-theme="dark"] #money-storage-buy .commission-details>summary:after{color:#91cfff!important}
+html[data-theme="dark"] .calc-details[open]>summary:after,
+html[data-theme="dark"] #money-storage-buy .commission-details[open]>summary:after{color:#75dfcf!important}
+html[data-theme="dark"] .calc-details .detail-heading{
+  color:#75dfcf!important;
+  background:#102c31!important;
+  border-color:#31575a!important;
+}
+html[data-theme="dark"] .calc-details .subresult>div:not(.detail-heading),
+html[data-theme="dark"] #money-storage-buy .commission-breakdown>div{
+  background:#091725!important;
+  border-color:#2b4054!important;
+}
+html[data-theme="dark"] .calc-details .subresult small,
+html[data-theme="dark"] #money-storage-buy .commission-breakdown small{color:#a9bbcd!important}
+html[data-theme="dark"] .calc-details .subresult strong,
+html[data-theme="dark"] #money-storage-buy .commission-breakdown strong{color:#f0f5fb!important}
+
+@media(max-width:540px){
+  .calc-details>summary,
+  #money-storage-buy .commission-details>summary{padding:14px 46px 14px 13px!important;font-size:1.02rem!important}
+  .calc-details[open]>summary,
+  #money-storage-buy .commission-details[open]>summary{font-size:1.07rem!important}
+  .calc-details .subresult small,
+  #money-storage-buy .commission-breakdown small{font-size:.91rem!important}
+  .calc-details .subresult strong,
+  #money-storage-buy .commission-breakdown strong{font-size:1.08rem!important}
+}
+</style>
+
+<body>
+<main>
+<input type="hidden" id="sberUsdtRubRate" value="83.4808">
+<header class="hero">
+<div class="eyebrow">CASHFLOW · НОВЫЙ ИНСТРУМЕНТ</div>
+<h1>Калькулятор вывода</h1>
+<p>Расчёт покупки ECR на Money Storage, перевода и продажи на BlackBIT, затем вывода USDT через TRC-20.</p>
+<button type="button" id="themeToggle" class="theme-toggle" aria-label="Переключить тему">☀ Светлая тема</button>
+</header>
+
+
+
+
+
+
+<section class="card" id="payout-target">
+<h2>🎯 Желаемая сумма к получению</h2>
+<p class="hint" style="margin-top:-8px">Выбери валюту и укажи желаемую сумму. Калькулятор автоматически пересчитает её в USDT по курсу, соответствующему валюте покупки ECR на Money Storage.</p>
+<div class="field">
+  <label for="payoutCurrency">Валюта получения</label>
+  <select id="payoutCurrency">
+    <option value="EUR">EUR · Евро</option>
+    <option value="USD">USD · Доллар США</option>
+    <option value="RUB">RUB · Российский рубль</option>
+    <option value="UAH">UAH · Украинская гривна</option>
+  </select>
+</div>
+<div class="row">
+  <div class="field">
+    <label for="targetAmount">Желаемая сумма к получению</label>
+    <input id="targetAmount" type="number" min="0" step="any" inputmode="decimal" placeholder="Введите желаемую сумму">
+  </div>
+  <div class="field">
+    <label for="payoutRate" id="payoutRateLabel">Курс Сберкассы (RUB за 1 USDT)</label>
+    <input id="payoutRate" type="number" min="0" step="any" value="83.4808" inputmode="decimal">
+  </div>
+</div>
+<div class="result">
+  <small id="targetUSDTTitle">Необходимая сумма вывода из BlackBIT</small>
+  <strong id="targetAmountUSDT">— USDT</strong>
+
+</div>
+<div class="hint" id="payoutFormulaHint">Сумма в выбранной валюте автоматически пересчитывается в USDT по курсу, зависящему от выбранной валюты покупки ECR на Money Storage. Комиссии и лимиты вывода учитываются далее.</div>
+</section>
+
+<section class="card" id="money-storage-buy">
+<h2>🛒 Money Storage · Покупка ECR</h2>
+<p class="hint" style="margin-top:-8px">Количество ECR автоматически берётся из расчёта BlackBIT: к объёму продажи добавляется 0,5% комиссии за перевод ECR на BlackBIT. Комиссия покупки Money Storage 0,5% рассчитывается в выбранной валюте оплаты (EUR или USDT) и не уменьшает количество купленных ECR.</p>
+<div class="row">
+  <div class="field">
+    <label for="msBuyCurrency">Валюта покупки ECR</label>
+    <select id="msBuyCurrency">
+      <option value="EUR">EUR · Евро</option>
+      <option value="USDT" selected>USDT · Tether</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="msEcrPrice" id="msEcrPriceLabel">Текущий курс покупки ECR (1 ECR = EUR)</label>
+    <input id="msEcrPrice" type="number" min="0" step="any" value="" placeholder="Введите текущий курс" inputmode="decimal">
+  </div>
+</div>
+<div class="subresult">
+  <div><small>Количество ECR для продажи на BlackBIT</small><strong id="msSellQty">— ECR</strong></div>
+  <div><small>Всего ECR нужно купить</small><strong id="msBuyQty">— ECR</strong></div>
+  <div><small>Стоимость покупки до комиссии</small><strong id="msBuyGross">— USDT</strong></div>
+</div>
+<details class="commission-details" id="msCommissionDetails">
+  <summary><span class="commission-label-closed">ⓘ Показать комиссии</span><span class="commission-label-open">ⓘ Скрыть комиссии</span></summary>
+  <div class="subresult commission-breakdown">
+    <div><small>Комиссия вывода ECR · 0,5%</small><strong id="msTransferFee">— ECR</strong></div>
+    <div><small>Комиссия покупки · 0,5% в выбранной валюте</small><strong id="msBuyFee">— USDT</strong></div>
+  </div>
+</details>
+<h3 style="font-size:.98rem;margin:18px 0 8px">💱 Итоговая сумма для закупки ECR в разных валютах</h3>
+<p class="hint" style="margin:0 0 10px">Курсы валют показывают стоимость 1 USDT в выбранной валюте оплаты. Все суммы рассчитаны по сохранённым курсам Money Storage; RUB — по курсу Сберкассы.</p>
+<div id="msCurrencyResults">
+  <div class="result"><small>Итого USDT для покупки всего необходимого ECR</small><strong>Ожидание расчёта…</strong></div>
+</div>
+<div class="notice">Пример: для продажи 1 000 ECR на BlackBIT нужно иметь 1 005 ECR после учёта комиссии перевода. При цене 1 USDT за 1 ECR потребуется 1 010,025 USDT с учётом комиссии покупки 0,5%.</div>
+</section>
+
+
+<style id="cascade-calculator-style">
+#cascade-calculator .period-display strong{color:var(--text);font-weight:650}
+[data-theme=light] 
+:root:not([data-theme=light]) 
+#cascade-calculator .result{margin-top:12px}
+#cascade-calculator .result>strong{font-size:1.55rem}
+#cascade-calculator .subresult{margin-top:10px}
+#cascade-calculator .subresult>div{min-width:0}
+#cascade-calculator .subresult strong{overflow-wrap:anywhere}
+#msCurrencyResults .cascade-use-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;margin-top:9px;padding:9px 14px;border:1px solid var(--resultline)!important;border-radius:12px!important;background:var(--result)!important;color:var(--resulttext)!important;font:750 .84rem/1.3 Inter,system-ui,sans-serif!important;box-shadow:none!important;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}#msCurrencyResults .cascade-use-btn:hover{background:color-mix(in srgb,var(--result) 78%,var(--cyan))!important;border-color:var(--cyan)!important;color:var(--text)!important;filter:none}#msCurrencyResults .cascade-use-btn:active{transform:translateY(1px)}html[data-theme=light] #msCurrencyResults .cascade-use-btn{background:var(--result)!important;color:var(--resulttext)!important;border-color:var(--resultline)!important}
+@media(max-width:560px){#cascade-calculator .row{grid-template-columns:1fr;gap:0}#cascade-calculator .result>strong{font-size:1.35rem}}
+
+#money-storage-buy .commission-details{margin-top:12px;border:1px solid var(--border,rgba(148,163,184,.25));border-radius:14px;padding:0 14px;background:rgba(100,116,139,.06)}
+#money-storage-buy .commission-details>summary{cursor:pointer;list-style:none;padding:13px 0;font-weight:750;color:var(--cyan);user-select:none}
+#blackbit-withdrawal .calc-details>summary{color:var(--cyan)}
+#money-storage-buy .commission-details>summary::-webkit-details-marker{display:none}
+#money-storage-buy .commission-details>summary::after{content:'＋';float:right;opacity:.75}
+#money-storage-buy .commission-details[open]>summary::after{content:'−'}
+#money-storage-buy .commission-breakdown{margin:0 0 12px}
+</style>
+
+<style id="cascade-hybrid-summary-style">
+#cascade-calculator .cascade-hybrid-summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 18px;border:1px solid #b9d9d2;border-radius:22px;background:linear-gradient(145deg,#effaf6,#e5f5f0)}
+#cascade-calculator .cascade-hybrid-summary>div{min-width:0;display:flex;flex-direction:column;gap:7px}
+#cascade-calculator .cascade-hybrid-summary small{color:#607b78;font-weight:750;line-height:1.35}
+#cascade-calculator .cascade-hybrid-summary strong{color:#137d70;font-size:1.18rem;font-weight:900;overflow-wrap:anywhere}
+html[data-theme="dark"] #cascade-calculator .cascade-hybrid-summary{border-color:#356b67;background:linear-gradient(145deg,#173b3a,#153331)}
+html[data-theme="dark"] #cascade-calculator .cascade-hybrid-summary small{color:#a9c8c5}
+html[data-theme="dark"] #cascade-calculator .cascade-hybrid-summary strong{color:#8be0cd}
+@media(max-width:560px){#cascade-calculator .cascade-hybrid-summary{grid-template-columns:1fr;gap:14px}}
+</style>
+<section class="card" id="cascade-calculator">
+  <h2>🧮 Каскад Fast Flow / Super Fast Flow</h2>
+  <p class="hint" id="cascadeIntroHint" style="margin-top:-8px">Укажи общую сумму покупки ECR за выбранный период. Калькулятор подберёт номинал по фактической тарифной таблице выбранной площадки.</p>
+  <div class="row">
+    <div class="field">
+      <label for="cascadeMarket">Площадка</label>
+      <select id="cascadeMarket">
+        <option value="EU">🇪🇺 Европа</option><option value="ES">🇪🇸 Испания</option>
+        <option value="UK">🇬🇧 Британия</option><option value="PL">🇵🇱 Польша</option>
+        <option value="CN">🇨🇳 Китай</option><option value="KG">🇰🇬 Кыргызстан</option>
+        
+      </select>
+    </div>
+    <div class="field">
+      <label for="cascadeType">Тип потока</label>
+      <select id="cascadeType"><option value="FF">Fast Flow · 30 начислений</option><option value="SFF">Super Fast Flow · 15 начислений</option><option value="HYBRID">Гибрид · FF + SFF</option></select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="cascadeTarget">Общая сумма для покупки ECR за выбранный период</label>
+      <input id="cascadeTarget" type="number" min="0" step="any" placeholder="Введите сумму">
+    </div>
+    <div class="field">
+      <label for="cascadeAccruals" id="cascadeAccrualsLabel">За сколько начислений собрать сумму</label>
+      <select id="cascadeAccruals">
+        <option value="1">1 начисление</option>
+        <option value="15">15 начислений</option>
+        <option value="26" selected>26 начислений · 30 календарных дней*</option>
+        <option value="30">30 начислений</option>
+        <option value="calendar15">15 календарных дней</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label for="cascadeStart">Дата запуска каскада</label>
+      <input id="cascadeStart" type="date">
+    </div>
+    
+  </div>
+  <p class="hint">* Для каждого количества начислений календарный период рассчитывается автоматически от выбранной даты запуска. Воскресенья пропускаются; число календарных дней показано прямо в каждом варианте списка.</p>
+  <div id="cascadeHybridControls" class="result" hidden>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <small style="font-weight:700">Распределение суммы между потоками</small>
+      <strong id="cascadeSplitLabel">50% FF / 50% SFF</strong>
+    </div>
+    <input id="cascadeSplit" type="range" min="0" max="100" step="5" value="50" aria-label="Доля суммы для Fast Flow" style="width:100%;accent-color:var(--cyan);margin:12px 0">
+    <div style="display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:var(--muted)">
+      <span>Fast Flow: <strong id="cascadeFFShare">50%</strong></span>
+      <span>Super Fast Flow: <strong id="cascadeSFFShare">50%</strong></span>
+    </div>
+    <div class="subresult" style="margin-top:12px">
+      <div><small id="cascadeFFTargetLabel">Прибыль FF за 26 начислений</small><strong id="cascadeFFTarget">—</strong></div>
+      <div><small id="cascadeSFFTargetLabel">Прибыль SFF за 26 начислений</small><strong id="cascadeSFFTarget">—</strong></div>
+    </div>
+  </div>
+  <div id="cascadeHybridResults" class="cascade-results-layout" hidden>
+    <article class="cascade-flow-card cascade-flow-card-ff">
+      <div class="cascade-flow-heading">
+        <span class="cascade-flow-icon" aria-hidden="true">⚡</span>
+        <div class="cascade-flow-title"><div><span class="cascade-flow-kicker">FAST FLOW</span><span class="cascade-flow-badge">FF</span></div><span class="cascade-flow-caption">Номинал и тариф</span></div>
+        <span class="cascade-period"><small>Период работы</small><strong>30 начислений</strong></span>
+      </div>
+      <div class="cascade-nominal-hero"><small>Номинал потока</small><strong class="cascade-flow-nominal" id="cascadeHybridFFNominal">—</strong></div>
+      <div class="cascade-metrics">
+        <div class="cascade-metric"><small>Сумма FF за выбранный период</small><strong id="cascadeHybridFFPeriodTotal">—</strong></div>
+        <div class="cascade-metric"><small>Необходимая выплата за начисление</small><strong id="cascadeHybridFFRequired">—</strong></div>
+        <div class="cascade-metric"><small>Тариф FF</small><strong id="cascadeHybridFFRate">—</strong></div>
+        <div class="cascade-metric"><small>Фактическая выплата за начисление</small><strong id="cascadeHybridFFPayout">—</strong></div>
+        <div class="cascade-metric"><small>Прибыль за 30 начислений</small><strong id="cascadeHybridFFProfit">—</strong></div>
+      </div>
+    </article>
+    <article class="cascade-flow-card cascade-flow-card-sff">
+      <div class="cascade-flow-heading">
+        <span class="cascade-flow-icon" aria-hidden="true">🚀</span>
+        <div class="cascade-flow-title"><div><span class="cascade-flow-kicker">SUPER FAST FLOW</span><span class="cascade-flow-badge">SFF</span></div><span class="cascade-flow-caption">Номинал и тариф</span></div>
+        <span class="cascade-period"><small>Период работы</small><strong>15 начислений</strong></span>
+      </div>
+      <div class="cascade-nominal-hero"><small>Номинал потока</small><strong class="cascade-flow-nominal" id="cascadeHybridSFFNominal">—</strong></div>
+      <div class="cascade-metrics">
+        <div class="cascade-metric"><small>Тариф SFF</small><strong id="cascadeHybridSFFRate">—</strong></div>
+        <div class="cascade-metric"><small>Требуемая подтяжка ECR за 15 начислений</small><strong id="cascadeHybridSFFRequired">—</strong></div>
+        <div class="cascade-metric"><small>Фактическая подтяжка ECR за 15 начислений</small><strong id="cascadeHybridSFFProfit">—</strong></div>
+        <div class="cascade-metric"><small>Превышение из-за тарифного порога</small><strong id="cascadeHybridSFFExcess">—</strong></div>
+      </div>
+    </article>
+    <div class="cascade-total-card cascade-hybrid-total-nominal"><small>Общий номинал гибридного каскада</small><strong id="cascadeHybridTotalNominal">—</strong></div>
+    <div class="cascade-total-card cascade-hybrid-summary" id="cascadeHybridSummary" hidden>
+      <div><small id="cascadeHybridTotalProfitLabel">Прибыль FF за выбранный период</small><strong id="cascadeHybridTotalProfit">—</strong></div>
+      <div><small id="cascadeHybridGrandTotalLabel">Прибыль SFF за выбранный период</small><strong id="cascadeHybridGrandTotal">—</strong></div>
+    </div>
+    <div class="notice">Введённая сумма — общий объём покупки ECR за выбранный период. Ползунок делит её на две части. Fast Flow: доля FF распределяется на выбранное количество начислений; необходимая выплата за начисление равна доле FF / выбранное количество начислений, а цикл потока — 30 начислений. Super Fast Flow: доля SFF также делится на выбранное количество начислений. Полученная сумма — целевая подтяжка ECR одного номинала за полный цикл SFF из 15 начислений. При изменении периода или ползунка оба номинала пересчитываются автоматически. Тарифы подбираются отдельно по фактической таблице площадки. Для SFF отдельно показаны требуемая подтяжка, фактическая подтяжка по выбранному тарифному порогу и разница между ними.</div>
+  </div>
+  <div id="cascadeSingleResults" class="cascade-results-layout">
+  <div class="cascade-daily-card"><small>Необходимая ежедневная выплата</small><strong id="cascadeDailyNeed">—</strong></div>
+  <article class="cascade-flow-card cascade-flow-card-single">
+    <div class="cascade-flow-heading">
+      <span class="cascade-flow-icon" id="cascadeSingleIcon" aria-hidden="true">⚡</span>
+      <div class="cascade-flow-title"><div><span class="cascade-flow-kicker" id="cascadeSingleFlowType">FAST FLOW</span><span class="cascade-flow-badge" id="cascadeSingleBadge">FF</span></div><span class="cascade-flow-caption" id="cascadeNominalCaption">Минимальный номинал Fast Flow по тарифу</span></div>
+      <span class="cascade-period"><small>Период работы</small><strong id="cascadeSinglePeriod">30 начислений</strong></span>
+    </div>
+    <div class="cascade-nominal-hero"><small>Номинал потока</small><strong class="cascade-flow-nominal" id="cascadeNominal">—</strong></div>
+    <div class="cascade-metrics">
+      <div class="cascade-metric"><small>Применённый тариф</small><strong id="cascadeTariff">—</strong></div>
+      <div class="cascade-metric"><small id="cascadeActualCaption">Фактическая выплата</small><strong id="cascadeDailyActual">—</strong></div>
+    </div>
+  </article>
+  <div class="cascade-secondary-list">
+    <div class="cascade-metric"><small>Расчётный номинал без минимального порога тарифа</small><strong id="cascadeRawNominal">—</strong></div>
+    <div class="cascade-metric"><small>Доплата сверх необходимой суммы за выбранный период</small><strong id="cascadeSurplus">—</strong></div>
+    <div class="cascade-metric"><small>Прибыль за полный цикл потока</small><strong id="cascadeProfit">—</strong></div>
+    <div class="cascade-metric"><small>Всего номинал + прибыль за цикл</small><strong id="cascadeTotal">—</strong></div>
+    <div class="cascade-metric"><small>Начислений для сбора суммы</small><strong id="cascadeAccrualCount">—</strong></div>
+    <div class="cascade-metric"><small>Дата последнего нужного начисления</small><strong id="cascadeEndDate">—</strong></div>
+  </div>
+  <div class="notice" id="cascadeFormulaNote">Нужная сумма распределяется на выбранное количество начислений. Fast Flow: номинал подбирается по ежедневной выплате за 30 начислений. Super Fast Flow: целевая сумма — это подтяжка ECR за полный цикл из 15 начислений. Для SFF выбранные 1, 15, 26 или 30 начислений не изменяют длительность цикла и не умножают прибыль; номинал не прибавляется к прибыли.</div>
+  </div>
+</div>
+</section>
+
+<section class="card" id="blackbit-withdrawal">
+<h2>🚀 BlackBIT · Продажа ECR и вывод USDT TRC-20</h2>
+<p class="hint" style="margin-top:-8px">Укажите рыночную цену ECR. Сумма вывода USDT автоматически рассчитывается выше из выбранной площадки, валюты, желаемой суммы и актуального курса. Комиссия спотовой продажи BlackBIT 0,1% удерживается в USDT; комиссия перевода ECR на BlackBIT 0,5% удерживается отдельно в ECR.</p>
+<div class="row">
+  <div class="field"><label for="ecrPrice">Текущая цена ECR на BlackBIT (USDT)</label><input id="ecrPrice" type="number" min="0" step="any" placeholder="Введите рыночную цену" inputmode="decimal" value="0.24"></div>
+  <div class="field"><label for="withdrawAmount">Сумма вывода USDT (автоматический расчёт)</label><input id="withdrawAmount" type="number" min="0" step="any" value="1197.88023115" readonly></div>
+</div>
+<div class="result">
+  <small>Количество ECR для продажи на споте</small>
+  <strong id="ecrToSell">Введите цену ECR</strong>
+  <div class="subresult">
+    <div class="payout-summary-single"><small>К получению после всех комиссий</small><strong id="finalPayout">— USDT</strong></div>
+  </div>
+</div>
+<details class="calc-details">
+  <summary><span class="when-closed">ⓘ Показать комиссии</span><span class="when-open">ⓘ Скрыть комиссии</span></summary>
+  <div class="subresult">
+    <div class="detail-heading">1. Покупка и продажа ECR</div>
+    <div><small>Сколько ECR нужно продать на BlackBIT до комиссии ордера</small><strong id="grossProceeds">— USDT</strong></div>
+    <div><small>Комиссия BlackBIT за исполнение ордера · 0,1%</small><strong id="spotFee">— USDT</strong></div>
+    <div><small>USDT, которые останутся после комиссии ордера</small><strong id="netProceeds">— USDT</strong></div>
+    <div><small>Сколько ECR удерживается за перевод на BlackBIT · 0,5%</small><strong id="ecrTransferFee">— ECR</strong></div>
+    <div><small>Общее количество ECR для продажи и оплаты перевода</small><strong id="ecrRequired">— ECR</strong></div>
+    <div class="detail-heading">2. Вывод USDT через TRC-20</div>
+    <div><small>Фиксированная комиссия сети · 3 USDT за каждый вывод</small><strong id="networkFixedFee">— USDT</strong></div>
+    <div><small>Комиссия сети · 1% от суммы вывода</small><strong id="networkPercentFee">— USDT</strong></div>
+    <div><small>Все комиссии сети вместе</small><strong id="networkFee">— USDT</strong></div>
+    <div><small>Сколько USDT должно быть на BlackBIT перед выводом</small><strong id="requiredBalance">— USDT</strong></div>
+    <div><small>Как сумма будет разделена между днями</small><strong id="withdrawalSchedule">—</strong></div>
+    <div><small>Объём сделки на BlackBIT до удержания комиссии ордера</small><strong id="tradeGross">— USDT</strong></div>
+  </div>
+  <div class="notice" id="limitNotice">Лимит одного вывода — 502,795543 USDT без учёта комиссии.</div>
+</details>
+<button type="button" class="copy-calc-btn" id="copyCalculationButton">⧉ Скопировать расчёт</button>
+<p class="copy-feedback" id="copyCalculationFeedback" aria-live="polite"></p>
+</section>
+
+<div class="grid">
+
+
+<section class="card rates-card">
+  <div class="rates-heading">
+    <h2>💱 Курсы обмена валют</h2>
+    <span class="rates-saved" id="ratesSavedStatus" role="status">✓ Курсы сохранены на устройстве</span>
+  </div>
+  <p class="rates-intro">Стартовые курсы уже заполнены. Каждый участник может изменить их под свои актуальные условия — значения сохраняются отдельно в его браузере на устройстве.</p>
+  <div class="tablewrap rates-table-wrap"><table class="rates-table"><thead><tr><th>Валюта</th><th>Курс в USDT за 1 единицу валюты</th></tr></thead><tbody id="baseTable"></tbody></table></div>
+  <div class="rates-info"><span class="rates-info-icon">ⓘ</span><p>Введи актуальный курс каждой валюты в USDT за 1 единицу валюты. Например, для EUR — сколько USDT соответствует 1 EUR. Для USDT курс фиксирован: 1 USDT = 1 USDT.</p></div>
+  <div class="rates-actions"><button type="button" class="secondary" id="resetRates">↶ &nbsp;Восстановить базовые курсы</button></div>
+</section>
+</div>
+
+
+
+
+
+<section class="card usage-guide" id="usage">
+  <h2>ℹ️ Как пользоваться калькулятором</h2>
+  <ol class="usage-steps">
+    <li><strong>Укажи желаемую сумму получения.</strong> Выбери валюту, введи сумму, которую хочешь получить, и проверь курс Сберкассы. Калькулятор пересчитает цель в USDT.</li>
+    <li><strong>Заполни курс покупки ECR на Money Storage.</strong> Выбери валюту оплаты и введи актуальную цену ECR. Калькулятор рассчитает необходимое количество ECR и стоимость покупки с учётом комиссии Money Storage.</li>
+    <li><strong>Настрой каскад.</strong> Выбери площадку, тип потока — Fast Flow или Super Fast Flow, укажи целевую сумму, количество начислений и дату запуска. Расчёт номинала будет выполнен по тарифам выбранной площадки.</li>
+    <li><strong>Проверь продажу и вывод на BlackBIT.</strong> Введи актуальную спотовую цену ECR и проверь рассчитанное количество ECR для продажи, сумму USDT и комиссии. При необходимости раскрой блок «Показать комиссии».</li>
+    <li><strong>Сверь итоговые значения.</strong> Проверь необходимую сумму вывода, количество транзакций и итоговые расходы. Если сумма превышает дневной лимит, калькулятор учитывает разделение вывода и фиксированную комиссию за каждую транзакцию.</li>
+  </ol>
+  <div class="usage-note"><strong>Важно:</strong> перед расчётом обнови актуальные курсы Money Storage, BlackBIT и Сберкассы. Калькулятор использует введённые значения — результат зависит от их точности. Кнопка восстановления курсов возвращает сохранённые значения по умолчанию.</div>
+</section>
+
+</main>
+<script>
+
+const SPOT_FEE_RATE=0.001;
+const WITHDRAW_FIXED_FEE=3;
+const WITHDRAW_PERCENT_FEE=0.01;
+const DAILY_WITHDRAW_LIMIT=502.795543;
+function syncPayoutRateField(){
+  const currency=el('payoutCurrency').value;
+  const rateInput=el('payoutRate');
+  const labels={EUR:'евро',USD:'доллары США',RUB:'российские рубли',UAH:'украинские гривны'};
+  // This rate is always expressed as payout currency per 1 USDT,
+  // because the amount is withdrawn from BlackBIT in USDT.
+  let value=0;
+  if(currency==='EUR') value=rates.USDT;
+  else if(currency==='USD') value=1;
+  else if(currency==='RUB') value=Number(el('sberUsdtRubRate').value)||0;
+  else if(currency==='UAH') value=rates.UAH>0?rates.USDT/rates.UAH:0;
+
+  const unitLabel=currency+' за 1 USDT';
+  el('payoutRateLabel').textContent='Курс ('+unitLabel+')';
+  rateInput.value=value?String(Number(value.toFixed(8))):'';
+  rateInput.disabled=currency==='USD';
+  const payoutRateHint=el('payoutRateHint');
+  if(payoutRateHint) payoutRateHint.textContent='Курс показывает, сколько единиц выбранной валюты соответствует 1 USDT. Он используется для расчёта суммы вывода из BlackBIT.';
+  const currencyHint=el('currencyHint');
+  if(currencyHint) currencyHint.textContent='Валюта получения: '+labels[currency]+'.';
+  el('payoutFormulaHint').textContent='Курс всегда указан в выбранной валюте за 1 USDT. Желаемая сумма делится на этот курс, чтобы определить необходимое количество USDT для вывода из BlackBIT.';
+}
+function renderRubTarget(){
+  const currency=el('payoutCurrency').value;
+  const desired=Math.max(0,num(el('targetAmount').value));
+  const rate=Math.max(0,num(el('payoutRate').value));
+  let usdt=0,rateText='—',valid=desired>0&&rate>0;
+
+  // The payout amount is always converted directly to USDT for BlackBIT.
+  if(valid){
+    usdt=desired/rate;
+    rateText='1 USDT = '+fmt(rate,7)+' '+currency;
+  }
+
+  // Keep the underlying editable currency rates in sync with the USDT-based rate.
+  if(valid){
+    if(currency==='EUR'){
+      rates.USDT=rate;
+      saveRates();
+    }else if(currency==='RUB'){
+      el('sberUsdtRubRate').value=String(rate);
+      try{localStorage.setItem(SBER_RATE_STORAGE_KEY,String(rate))}catch(e){}
+      rates.RUB=rates.USDT/rate;
+      saveRates();
+    }else if(currency==='UAH'){
+      rates.UAH=rates.USDT/rate;
+      saveRates();
+    }
+    const rateField=document.querySelector('[data-currency-rate="'+currency+'"]');
+    if(rateField&&rates[currency]>0) rateField.value=String(rates[currency]);
+    const inverse=el('inverse-'+currency);
+    if(inverse&&rates[currency]>0) inverse.textContent=fmt(1/rates[currency],6)+' '+currency;
+  }
+
+  const safeUSDT=valid&&Number.isFinite(usdt)?usdt:0;
+  el('withdrawAmount').value=safeUSDT.toFixed(8).replace(/0+$/,'').replace(/\.$/,'');
+  el('targetAmountUSDT').textContent=valid&&Number.isFinite(usdt)?fmt(usdt,8)+' USDT':'Проверь сумму и курс';
+  if(el('payoutRateLabelValue'))el('payoutRateLabelValue').textContent=rateText;
+  const count=safeUSDT>0?Math.ceil(safeUSDT/DAILY_WITHDRAW_LIMIT):0;
+  if(el('payoutDays'))el('payoutDays').textContent=count+' '+(count===1?'вывод':(count>=2&&count<=4?'вывода':'выводов'));
+  el('targetUSDTTitle').textContent='Необходимая сумма вывода из BlackBIT';
+  renderWithdrawal();
+}
+
+function renderMoneyStorageFromCurrent(){
+  const price=Math.max(0,Number(el('ecrPrice').value)||0);
+  const amount=Math.max(0,Number(el('withdrawAmount').value)||0);
+  const count=amount>0?Math.ceil(amount/DAILY_WITHDRAW_LIMIT):0;
+  const fixed=count*WITHDRAW_FIXED_FEE;
+  const percent=amount*WITHDRAW_PERCENT_FEE;
+  const gross=(amount+fixed+percent)/(1-SPOT_FEE_RATE);
+  const ecr=price>0?gross/price:0;
+  renderMoneyStorage(ecr*1.005,ecr);
+}
+function renderWithdrawal(){
+  const price=Math.max(0,Number(el('ecrPrice').value)||0);
+  const amount=Math.max(0,Number(el('withdrawAmount').value)||0);
+  const withdrawalCount=amount>0?Math.ceil(amount/DAILY_WITHDRAW_LIMIT):0;
+  const networkFixedFee=withdrawalCount*WITHDRAW_FIXED_FEE;
+  const networkPercentFee=amount*WITHDRAW_PERCENT_FEE;
+  const networkFee=networkFixedFee+networkPercentFee;
+  const requiredBalance=amount+networkFee;
+  const tradeGross=requiredBalance/(1-SPOT_FEE_RATE);
+  const spotFee=tradeGross*SPOT_FEE_RATE;
+  const ecr=price>0?tradeGross/price:0;
+  const transferFeeECR=ecr*0.005;
+  const requiredECR=ecr+transferFeeECR;
+  el('spotFee').textContent=fmt(spotFee,6)+' USDT';
+  el('networkFixedFee').textContent=fmt(networkFixedFee,6)+' USDT';
+  el('networkPercentFee').textContent=fmt(networkPercentFee,6)+' USDT';
+  el('networkFee').textContent=fmt(networkFee,6)+' USDT ('+withdrawalCount+' '+(withdrawalCount===1?'вывод':(withdrawalCount>=2&&withdrawalCount<=4?'вывода':'выводов'))+')';
+  el('requiredBalance').textContent=fmt(requiredBalance,6)+' USDT';
+  el('tradeGross').textContent=fmt(tradeGross,6)+' USDT';
+  el('grossProceeds').textContent=fmt(tradeGross,6)+' USDT';
+  el('netProceeds').textContent=fmt(tradeGross-spotFee,6)+' USDT';
+  el('finalPayout').textContent=fmt(amount,6)+' USDT';
+  if(el('summaryWithdrawalCount'))el('summaryWithdrawalCount').textContent=withdrawalCount+' '+(withdrawalCount===1?'вывод':(withdrawalCount>=2&&withdrawalCount<=4?'вывода':'выводов'));
+  el('ecrToSell').textContent=price>0?fmt(ecr,8)+' ECR':'Введите цену ECR';
+  el('ecrTransferFee').textContent=price>0?fmt(transferFeeECR,8)+' ECR':'— ECR';
+  el('ecrRequired').textContent=price>0?fmt(requiredECR,8)+' ECR':'— ECR';
+  renderMoneyStorage(requiredECR,ecr);
+
+  const schedule=[];
+  let remaining=amount;
+  for(let i=0;i<withdrawalCount;i++){
+    const part=Math.min(DAILY_WITHDRAW_LIMIT,remaining);
+    schedule.push(fmt(part,6));
+    remaining-=part;
+  }
+  el('withdrawalSchedule').textContent=withdrawalCount?schedule.join(' + ')+' USDT':'—';
+  const notice=el('limitNotice');
+  notice.textContent=withdrawalCount
+    ?'Сумма автоматически разделена на '+withdrawalCount+' '+(withdrawalCount===1?'отдельный вывод':(withdrawalCount>=2&&withdrawalCount<=4?'отдельных вывода':'отдельных выводов'))+'. За каждый вывод добавляется фиксированная комиссия 3 USDT; дополнительно удерживается 1% от общей суммы. Максимум одного вывода — '+fmt(DAILY_WITHDRAW_LIMIT,6)+' USDT без комиссии.'
+    :'Укажи желаемую сумму и актуальный курс выбранной валюты. Калькулятор разделит вывод на отдельные дни по лимиту '+fmt(DAILY_WITHDRAW_LIMIT,6)+' USDT и посчитает комиссию 3 USDT за каждый вывод.';
+}
+
+
+function renderMoneyStorage(requiredECR,sellECR){
+  const msPrice=Math.max(0,Number(el('msEcrPrice').value)||0);
+  const buyCurrency=el('msBuyCurrency').value;
+  const buyGross=requiredECR*msPrice;
+  const buyFee=buyGross*0.005;
+  const total=buyGross+buyFee;
+  const buyToEur=buyCurrency==='EUR'?1:rates.USDT;
+  const totalEUR=total*buyToEur;
+  const totalUSDT=totalEUR/rates.USDT;
+
+  el('msSellQty').textContent=fmt(sellECR,8)+' ECR';
+  el('msTransferFee').textContent=fmt(requiredECR-sellECR,8)+' ECR';
+  el('msBuyQty').textContent=fmt(requiredECR,8)+' ECR';
+  el('msBuyGross').textContent=fmt(buyGross,6)+' '+buyCurrency;
+  el('msBuyFee').textContent=fmt(buyFee,6)+' '+buyCurrency;
+
+  const container=el('msCurrencyResults');
+  if(!msPrice||!Number.isFinite(total)||!(buyToEur>0)){
+    container.innerHTML='<div class="result"><small>Итоговая сумма для покупки всего необходимого ECR</small><strong>Укажи курс покупки ECR и курс USDT к валюте оплаты</strong></div>';
+    return;
+  }
+
+  const sberRate=Math.max(0,Number(el('sberUsdtRubRate').value)||0);
+  const currencyLabels={
+    EUR:'Евро (EUR)',
+    USDT:'Тезер (USDT)',
+    GBP:'Фунты стерлингов (GBP)',
+    CNY:'Китайские юани (CNY)',
+    PLN:'Польские злотые (PLN)',
+    KGS:'Кыргызские сомы (KGS)',
+    RUB:'Российские рубли (RUB)',
+    UAH:'Украинские гривны (UAH)'
+  };
+  const resultCurrencies=['EUR','USDT','GBP','CNY','PLN','KGS'];
+  const rows=resultCurrencies.map(currency=>{
+    let amount;
+    if(currency==='EUR'){
+      amount=totalEUR;
+    }else if(currency==='USDT'){
+      amount=totalUSDT;
+    }else if(currency==='RUB'){
+      amount=totalUSDT*sberRate;
+    }else{
+      amount=rates[currency]>0?totalEUR/rates[currency]:null;
+    }
+    const digits=currency==='USDT'?6:2;
+    return `<div class="result"><small>Итого к оплате в ${currencyLabels[currency]}</small><strong>${amount===null?'Укажи курс '+currency:fmt(amount,digits)+' '+currency}</strong></div>`;
+  });
+  container.innerHTML=rows.join('');
+}
+
+const base={KGS:0.0101995,GBP:1.18996,CNY:0.133748,PLN:0.226683,USDT:0.896401,RUB:0.0104738,EUR:1,UAH:0.0192383};
+const names={EUR:'Евро',USDT:'Доллар',GBP:'Фунт',CNY:'Юань',PLN:'Злотый',KGS:'Сом',RUB:'Рубль',UAH:'Гривна'};
+const currencies=['EUR','USDT','GBP','CNY','PLN','KGS','RUB','UAH'];
+const RATE_STORAGE_KEY='cashflow_money_storage_currency_rates_v1';
+const SBER_RATE_STORAGE_KEY='cashflow_sberkassa_rub_usdt_rate_v1';
+const rates={...base};
+try{
+  const savedRates=JSON.parse(localStorage.getItem(RATE_STORAGE_KEY)||'{}');
+  const savedSber=Number(localStorage.getItem(SBER_RATE_STORAGE_KEY));
+  for(const c of currencies){
+    const value=Number(savedRates[c]);
+    if(c!=='EUR'&&Number.isFinite(value)&&value>0)rates[c]=value;
+  }
+  // Migration: older builds could mistakenly save the Sberkassa RUB/USDT
+  // rate into UAH's EUR conversion field. Restore the supplied UAH rate.
+  if(Number(savedRates.UAH)>1){
+    rates.UAH=base.UAH;
+    savedRates.UAH=base.UAH;
+    localStorage.setItem(RATE_STORAGE_KEY,JSON.stringify(savedRates));
+  }
+}catch(e){}
+const fmt=(n,d=2)=>Number(n).toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d});
+const num=v=>{const n=Number(String(v??'').trim().replace(/\s/g,'').replace(',','.'));return Number.isFinite(n)?n:0;};
+const el=id=>document.getElementById(id);
+try{const savedSberRate=Number(localStorage.getItem(SBER_RATE_STORAGE_KEY));if(savedSberRate>0)el('sberUsdtRubRate').value=savedSberRate}catch(e){}
+function syncBuyCurrencyLabel(){
+  const c=el('msBuyCurrency').value;
+  el('msEcrPriceLabel').textContent='Текущий курс покупки ECR (1 ECR = '+c+')';
+  const hint=el('msEcrPriceHint');
+  if(hint) hint.textContent=c==='EUR'
+    ? 'Укажи, сколько EUR стоит 1 ECR на Money Storage. Итоги пересчитываются с учётом курса EUR/USDT.'
+    : 'Укажи, сколько USDT стоит 1 ECR на Money Storage. Итоги пересчитываются с учётом курса USDT/EUR.';
+}
+el('msBuyCurrency').addEventListener('change',()=>{
+  syncBuyCurrencyLabel();
+  syncPayoutRateField();
+  recalculateAll();
+  saveUserSettings();
+});
+
+function renderBase(){
+  const usdtEur=Math.max(0,Number(rates.USDT)||0);
+  const orderedCurrencies=[...currencies].sort((a,b)=>{
+    const rateA=a==='USDT'?1:(usdtEur>0?(Number(rates[a])||0)/usdtEur:0);
+    const rateB=b==='USDT'?1:(usdtEur>0?(Number(rates[b])||0)/usdtEur:0);
+    if(rateA===0)return 1;
+    if(rateB===0)return -1;
+    return rateA-rateB;
+  });
+  el('baseTable').innerHTML=orderedCurrencies.map(c=>{
+    const usdtPerUnit=c==='USDT'?1:(usdtEur>0?(Number(rates[c])||0)/usdtEur:0);
+    const input=c==='USDT'
+      ? `<div class="rate-fixed"><span>1,0000000000</span><span aria-label="Курс зафиксирован">🔒</span></div>`
+      : `<input class="rate-edit" type="number" min="0" step="any" data-currency-rate="${c}" value="${usdtPerUnit?Number(usdtPerUnit.toFixed(10)):''}" placeholder="Введи курс" inputmode="decimal" aria-label="Курс ${c} в USDT за 1 единицу">`;
+    return `<tr><td data-label="Валюта"><b>${c}</b> · ${names[c]}</td><td data-label="Курс в USDT">${input}</td></tr>`;
+  }).join('');
+}
+function setRatesSavedStatus(message='✓ Курсы сохранены на устройстве'){
+  const status=el('ratesSavedStatus');
+  if(status)status.textContent=message;
+}
+
+function saveRates(){try{localStorage.setItem(RATE_STORAGE_KEY,JSON.stringify(rates))}catch(e){}}
+function recalculateAll(){
+  renderRubTarget(); // updates USDT target, fees, ECR quantity, and Money Storage purchase totals
+}
+// Recalculate immediately when the payout currency is changed.
+el('payoutCurrency').addEventListener('change',()=>{
+  syncPayoutRateField();
+  recalculateAll();
+  saveUserSettings();
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.matches('[data-currency-rate]')){
+    const c=t.dataset.currencyRate;
+    const value=Number(t.value);
+    if(!Number.isFinite(value)||value<=0)return;
+    if(c==='EUR'){
+      rates.USDT=1/value;
+    }else{
+      rates[c]=value*rates.USDT;
+    }
+    saveRates();
+    setRatesSavedStatus();
+    syncPayoutRateField();
+    recalculateAll();
+    saveUserSettings();
+    return;
+  }
+  if(t.id==='payoutRate'){
+    const currency=el('payoutCurrency').value;
+    const value=Number(t.value);
+    if(value>0){
+      if(currency==='EUR'){
+        rates.USDT=value;
+      }else if(currency==='RUB'){
+        el('sberUsdtRubRate').value=String(value);
+        try{localStorage.setItem(SBER_RATE_STORAGE_KEY,String(value))}catch(e){}
+        rates.RUB=rates.USDT/value;
+      }else if(currency==='UAH'){
+        rates.UAH=rates.USDT/value;
+      }
+      saveRates();
+      const rateField=document.querySelector('[data-currency-rate="'+currency+'"]');
+      if(rateField&&rates[currency]>0)rateField.value=String(rates[currency]);
+      const inverse=el('inverse-'+currency);
+      if(inverse&&rates[currency]>0)inverse.textContent=fmt(1/rates[currency],6)+' '+currency;
+    }
+    recalculateAll();
+    saveUserSettings();
+    return;
+  }
+  if(['targetAmount','ecrPrice','msEcrPrice'].includes(t.id)){
+    recalculateAll();
+    saveUserSettings();
+  }
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.matches('[data-currency-rate]')&&(!Number.isFinite(Number(t.value))||Number(t.value)<=0)){
+    renderBase();
+  }
+});
+
+
+
+const USER_SETTINGS_KEY='cashflow_withdrawal_user_settings_v1';
+function saveUserSettings(){
+  try{
+    localStorage.setItem(USER_SETTINGS_KEY,JSON.stringify({
+      payoutCurrency:el('payoutCurrency').value,
+      buyCurrency:el('msBuyCurrency').value,
+payoutRate:el('payoutRate').value,
+      targetAmount:el('targetAmount').value,
+      ecrPrice:el('ecrPrice').value,
+      msEcrPrice:el('msEcrPrice').value
+    }));
+  }catch(e){}
+}
+function loadUserSettings(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(USER_SETTINGS_KEY)||'{}');
+        if(saved.buyCurrency)el('msBuyCurrency').value=saved.buyCurrency;
+if(saved.targetAmount!==undefined)el('targetAmount').value=saved.targetAmount;
+if(saved.ecrPrice!==undefined)el('ecrPrice').value=saved.ecrPrice;
+if(saved.msEcrPrice!==undefined)el('msEcrPrice').value=saved.msEcrPrice;
+    
+  }catch(e){}
+}
+
+loadUserSettings();
+renderBase();
+try{
+  const saved=JSON.parse(localStorage.getItem(USER_SETTINGS_KEY)||'{}');
+  if(saved.payoutCurrency && [...el('payoutCurrency').options].some(o=>o.value===saved.payoutCurrency)){
+    el('payoutCurrency').value=saved.payoutCurrency;
+  }
+}catch(e){}
+syncPayoutRateField();
+syncBuyCurrencyLabel();
+recalculateAll();
+saveUserSettings();
+
+if(el('resetRates')){
+  el('resetRates').addEventListener('click',()=>{
+    if(!confirm('Восстановить базовые курсы валют? Текущие пользовательские значения будут заменены.'))return;
+    Object.assign(rates,base);
+    try{
+      localStorage.setItem(RATE_STORAGE_KEY,JSON.stringify(rates));
+      localStorage.setItem(SBER_RATE_STORAGE_KEY,'83.4808');
+    }catch(e){}
+    el('sberUsdtRubRate').value='83.4808';
+    renderBase();
+    setRatesSavedStatus('✓ Базовые курсы восстановлены');
+    syncPayoutRateField();
+    recalculateAll();
+    saveUserSettings();
+  });
+}
+
+</script>
+<script>(function(){const root=document.documentElement,b=document.getElementById('themeToggle');if(!b)return;function paint(){const light=root.dataset.theme==='light';b.textContent=light?'☾ Тёмная тема':'☀ Светлая тема';b.setAttribute('aria-label',light?'Включить тёмную тему':'Включить светлую тему')}b.addEventListener('click',function(){const next=root.dataset.theme==='light'?'dark':'light';root.dataset.theme=next;try{localStorage.setItem('cfCalculatorTheme',next)}catch(e){}paint()});paint()})();</script>
+
+<script id="cascade-calculator-script">
+const cascadeConfigs={
+EU:{name:'EUR',rate:250,FF:[[250,3.5],[500,3.6],[1000,3.7],[1500,3.8],[2000,3.9],[3000,4],[4000,4.1],[5000,4.2],[6000,4.3],[7000,4.4],[8000,4.5],[9000,4.6],[10000,4.7],[25000,4.8],[50000,4.9],[100000,5]],SFF:[[500,2],[1000,2.1],[2000,2.2],[3000,2.3],[4000,2.4],[5000,2.5],[6000,2.6],[7000,2.7],[8000,2.8],[9000,2.9],[10000,3],[25000,3.1],[50000,3.2],[100000,3.3]]},
+UK:{name:'GBP',rate:225,FF:[[250,3.5],[500,3.6],[1000,3.7],[1500,3.8],[2000,3.9],[3000,4],[4000,4.1],[5000,4.2],[6000,4.3],[7000,4.4],[8000,4.5],[9000,4.6],[10000,4.7],[25000,4.8],[50000,4.9],[100000,5]],SFF:[[500,2],[1000,2.1],[2000,2.2],[3000,2.3],[4000,2.4],[5000,2.5],[6000,2.6],[7000,2.7],[8000,2.8],[9000,2.9],[10000,3],[25000,3.1],[50000,3.2],[100000,3.3]]},ES:{name:'EUR',rate:250,FF:[[250,3.5],[500,3.6],[1000,3.7],[1500,3.8],[2000,3.9],[3000,4],[4000,4.1],[5000,4.2],[6000,4.3],[7000,4.4],[8000,4.5],[9000,4.6],[10000,4.7],[25000,4.8],[50000,4.9],[100000,5]],SFF:[[500,2],[1000,2.1],[2000,2.2],[3000,2.3],[4000,2.4],[5000,2.5],[6000,2.6],[7000,2.7],[8000,2.8],[9000,2.9],[10000,3],[25000,3.1],[50000,3.2],[100000,3.3]]},RU:{name:'RUB',rate:28,FF:[[25000,3.5],[50000,3.6],[100000,3.7],[150000,3.8],[200000,3.9],[300000,4],[400000,4.1],[500000,4.2],[600000,4.3],[700000,4.4],[800000,4.5],[900000,4.6],[1000000,4.7],[2500000,4.8],[5000000,4.9],[10000000,5]],SFF:[[50000,2],[100000,2.1],[200000,2.2],[300000,2.3],[400000,2.4],[500000,2.5],[600000,2.6],[700000,2.7],[800000,2.8],[900000,2.9],[1000000,3],[2500000,3.1],[5000000,3.2],[10000000,3.3]]},PL:{name:'PLN',rate:1010,FF:[[1000,3.5],[2000,3.6],[4000,3.7],[6000,3.8],[8000,3.9],[12000,4],[16000,4.1],[20000,4.2],[24000,4.3],[28000,4.4],[32000,4.5],[36000,4.6],[40000,4.7],[100000,4.8],[200000,4.9],[400000,5]],SFF:[[2000,2],[4000,2.1],[8000,2.2],[12000,2.3],[16000,2.4],[20000,2.5],[24000,2.6],[28000,2.7],[32000,2.8],[36000,2.9],[40000,3],[100000,3.1],[200000,3.2],[400000,3.3]]},
+CN:{name:'CNY',rate:1800,FF:[[2000,3.5],[4000,3.6],[8000,3.7],[12000,3.8],[16000,3.9],[24000,4],[32000,4.1],[40000,4.2],[48000,4.3],[56000,4.4],[64000,4.5],[72000,4.6],[80000,4.7],[200000,4.8],[400000,4.9],[800000,5]],SFF:[[4000,2],[8000,2.1],[16000,2.2],[24000,2.3],[32000,2.4],[40000,2.5],[48000,2.6],[56000,2.7],[64000,2.8],[72000,2.9],[80000,3],[200000,3.1],[400000,3.2],[800000,3.3]]},
+KG:{name:'KGS',rate:25000,FF:[[25000,3.5],[50000,3.6],[100000,3.7],[150000,3.8],[200000,3.9],[300000,4],[400000,4.1],[500000,4.2],[600000,4.3],[700000,4.4],[800000,4.5],[900000,4.6],[1000000,4.7],[2500000,4.8],[5000000,4.9],[10000000,5]],SFF:[[50000,2],[100000,2.1],[200000,2.2],[300000,2.3],[400000,2.4],[500000,2.5],[600000,2.6],[700000,2.7],[800000,2.8],[900000,2.9],[1000000,3],[2500000,3.1],[5000000,3.2],[10000000,3.3]]}
+};
+const cascadeCurrencyNames={EUR:'EUR',GBP:'GBP',CNY:'CNY',PLN:'PLN',KGS:'KGS',RUB:'RUB',USDT:'USDT',UAH:'UAH'};
+const cascadeFmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const cascadeDateFmt=d=>d.toLocaleDateString('ru-RU',{day:'2-digit',month:'long',year:'numeric'});
+function cascadeCountEnd(start,count){
+  const d=new Date(start+'T12:00:00');
+  if(Number.isNaN(d.getTime())||count<1)return null;
+  let n=0;
+  while(n<count){
+    if(d.getDay()!==0)n++;
+    if(n<count)d.setDate(d.getDate()+1);
+  }
+  return d;
+}
+function cascadeCalendarEnd(start,days){
+  const d=new Date(start+'T12:00:00');
+  if(Number.isNaN(d.getTime())||days<1)return null;
+  d.setDate(d.getDate()+days-1);
+  return d;
+}
+function cascadeCountInCalendarDays(start,days){
+  const d=new Date(start+'T12:00:00');
+  if(Number.isNaN(d.getTime())||days<1)return 0;
+  let count=0;
+  for(let i=0;i<days;i++){
+    if(d.getDay()!==0)count++;
+    d.setDate(d.getDate()+1);
+  }
+  return count;
+}
+function cascadeSelectedAccruals(start,value){
+  return value==='calendar15'?cascadeCountInCalendarDays(start,15):Number(value);
+}
+function cascadeSolve(targetPerAccrual, market, type, accruals){
+  const cfg=cascadeConfigs[market], tiers=cfg[type], cycle=type==='FF'?30:15;
+  if(!(targetPerAccrual>0))return null;
+  for(let i=0;i<tiers.length;i++){
+    const threshold=tiers[i][0], rate=tiers[i][1]/100;
+    const upper=i+1<tiers.length?tiers[i+1][0]:Infinity;
+    // Theoretical nominal is calculated without the tier's minimum threshold.
+    const rawNominal=type==='FF'
+      ?targetPerAccrual*cycle/(1+rate)
+      :targetPerAccrual/rate;
+    // Actual nominal must also satisfy the tariff table's minimum for this tier.
+    const nominal=Math.max(rawNominal,threshold);
+    if(nominal<upper){
+      const fullCycleProfit=nominal*rate;
+      const actualPerAccrual=type==='FF'
+        ?nominal*(1+rate)/cycle
+        :fullCycleProfit;
+      const actualSelectedTotal=type==='FF'
+        ?actualPerAccrual*accruals
+        :fullCycleProfit*accruals;
+      const requiredSelectedTotal=targetPerAccrual*accruals;
+      return {
+        rawNominal,nominal,rate:tiers[i][1],actualPerAccrual,
+        fullCycleProfit,profit:fullCycleProfit,
+        total:nominal+fullCycleProfit,cycle,min:tiers[0][0],threshold,
+        surplus:Math.max(0,actualSelectedTotal-requiredSelectedTotal)
+      };
+    }
+  }
+  return null;
+}
+function cascadeSyncTypeControls(){
+  const type=document.getElementById('cascadeType').value;
+  const select=document.getElementById('cascadeAccruals');
+  const label=document.getElementById('cascadeAccrualsLabel');
+  select.disabled=false;
+  label.textContent=type==='SFF'
+    ?'Период сбора суммы · Super Fast Flow'
+    :type==='HYBRID'?'Период сбора суммы для FF и SFF':'Период сбора суммы · Fast Flow';
+  const intro=document.getElementById('cascadeIntroHint');
+  if(intro)intro.textContent=type==='HYBRID'
+    ?'Распредели общую сумму между Fast Flow и Super Fast Flow. Период сбора влияет на обе доли; циклы потоков остаются фиксированными: FF — 30 начислений, SFF — 15 начислений. Тарифы подбираются отдельно по таблице площадки.'
+    :type==='SFF'
+      ?'Укажи общую сумму покупки ECR за выбранный период. Она делится на число начислений; полученная сумма становится целью подтяжки ECR одного номинала за полный цикл SFF из 15 начислений.'
+      :'Укажи общую сумму покупки ECR за выбранный период. Она делится на число начислений, чтобы определить необходимую ежедневную выплату Fast Flow за цикл из 30 начислений.';
+}
+function renderCascade(){
+  const market=document.getElementById('cascadeMarket').value;
+  const type=document.getElementById('cascadeType').value;
+  const target=Number(document.getElementById('cascadeTarget').value);
+  const accrualSelect=document.getElementById('cascadeAccruals');
+  const start=document.getElementById('cascadeStart').value;
+  const accruals=cascadeSelectedAccruals(start,accrualSelect.value);
+  // Display labels follow the visible selected option; calculation values remain unchanged.
+  const selectedOptionText=accrualSelect.selectedOptions?.[0]?.textContent||'';
+  const labelAccruals=Number(selectedOptionText.match(/^\s*(\d+)/)?.[1])||accruals;
+  const currency=cascadeConfigs[market].name;
+  const hybrid=type==='HYBRID';
+  document.getElementById('cascadeHybridControls').hidden=!hybrid;
+  document.getElementById('cascadeHybridResults').hidden=!hybrid;
+  document.getElementById('cascadeSingleResults').hidden=hybrid;
+  if(hybrid){
+    document.getElementById('cascadeHybridTotalProfitLabel').textContent=`Прибыль FF за ${labelAccruals} начислений`;
+    document.getElementById('cascadeHybridGrandTotalLabel').textContent=`Прибыль SFF за ${labelAccruals} начислений`;
+    const ffPercent=Number(document.getElementById('cascadeSplit').value);
+    const sffPercent=100-ffPercent;
+    const ffTarget=target*ffPercent/100;
+    const sffTarget=target*sffPercent/100;
+    const ffNeed=accruals>0?ffTarget/accruals:0;
+    const ffResult=ffTarget>0?cascadeSolve(ffNeed,market,'FF',accruals):null;
+    // Both hybrid shares are distributed across the selected collection period.
+    // FF: its share per selected accrual is the required daily payout.
+    // SFF: its share per selected accrual is the ECR pull-up target
+    // earned by one nominal over the fixed 15-accrual SFF cycle.
+    const sffPullupTarget=accruals>0?sffTarget/accruals:0;
+    const sffResult=sffPullupTarget>0?cascadeSolve(sffPullupTarget,market,'SFF',15):null;
+    document.getElementById('cascadeSplitLabel').textContent=`${ffPercent}% FF / ${sffPercent}% SFF`;
+    document.getElementById('cascadeSplit').setAttribute('aria-valuetext',`${ffPercent}% Fast Flow, ${sffPercent}% Super Fast Flow`);
+    document.getElementById('cascadeFFShare').textContent=`${ffPercent}%`;
+    document.getElementById('cascadeSFFShare').textContent=`${sffPercent}%`;
+    // Keep the existing dynamic labels; show the two shares of the total ECR purchase amount.
+    const accrualWord = new Intl.PluralRules('ru').select(accruals)==='one'
+      ? 'начисление'
+      : (new Intl.PluralRules('ru').select(accruals)==='few' ? 'начисления' : 'начислений');
+    document.getElementById('cascadeFFTargetLabel').textContent=`Прибыль FF за ${accruals} ${accrualWord}`;
+    document.getElementById('cascadeSFFTargetLabel').textContent=`Прибыль SFF за ${accruals} ${accrualWord}`;
+    document.getElementById('cascadeFFTarget').textContent=target>0?`${cascadeFmt(ffTarget,2)} ${currency}`:'—';
+    document.getElementById('cascadeSFFTarget').textContent=target>0?`${cascadeFmt(sffTarget,2)} ${currency}`:'—';
+    const put=(id,value)=>document.getElementById(id).textContent=value;
+    put('cascadeHybridFFNominal',ffTarget>0?(ffResult?`${cascadeFmt(ffResult.nominal,2)} ${currency}`:'Не найден тариф'):'Не используется');
+    put('cascadeHybridFFPeriodTotal',`${cascadeFmt(ffTarget,2)} ${currency}`);
+    put('cascadeHybridFFRequired',ffTarget>0&&accruals>0?`${cascadeFmt(ffNeed,2)} ${currency}`:'—');
+    put('cascadeHybridFFRate',ffResult?`+${cascadeFmt(ffResult.rate,1)}%`:'—');
+    put('cascadeHybridFFPayout',ffResult?`${cascadeFmt(ffResult.actualPerAccrual,2)} ${currency}`:'—');
+    put('cascadeHybridFFProfit',ffResult?`${cascadeFmt(ffResult.profit,2)} ${currency}`:'—');
+    put('cascadeHybridSFFNominal',sffTarget>0?(sffResult?`${cascadeFmt(sffResult.nominal,2)} ${currency}`:'Не найден тариф'):'Не используется');
+    put('cascadeHybridSFFRate',sffResult?`+${cascadeFmt(sffResult.rate,1)}%`:'—');
+    put('cascadeHybridSFFRequired',sffTarget>0?`${cascadeFmt(sffPullupTarget,2)} ${currency}`:'—');
+    put('cascadeHybridSFFProfit',sffResult?`${cascadeFmt(sffResult.profit,2)} ${currency}`:'—');
+    put('cascadeHybridSFFExcess',sffResult?`${cascadeFmt(Math.max(0,sffResult.profit-sffPullupTarget),2)} ${currency}`:'—');
+    const totalNominal=(ffResult?.nominal||0)+(sffResult?.nominal||0);
+    const ffCycleProfit=ffResult?.fullCycleProfit||0;
+    const sffCycleProfit=sffResult?.fullCycleProfit||0;
+    put('cascadeHybridTotalNominal',`${cascadeFmt(totalNominal,2)} ${currency}`);
+    // Each summary row displays only the profit of its own flow.
+    put('cascadeHybridTotalProfit',`${cascadeFmt(ffCycleProfit,2)} ${currency}`);
+    put('cascadeHybridGrandTotal',`${cascadeFmt(sffCycleProfit,2)} ${currency}`);
+    return;
+  }
+  // Split the requested total across the selected accrual count.
+  // For SFF, each slice is the required profit of one nominal over its full 15-accrual cycle.
+  const requiredDaily=target>0&&accruals>0?target/accruals:0;
+  const end=accrualSelect.value==='calendar15'
+    ?cascadeCalendarEnd(start,15):cascadeCountEnd(start,accruals);
+  const calendarDays=end&&start?(Math.round((end-new Date(start+'T12:00:00'))/86400000)+1):0;
+  document.getElementById('cascadeDailyNeed').previousElementSibling.textContent=
+    type==='FF'?'Необходимая ежедневная выплата':'Необходимая прибыль одного номинала за 15 начислений';
+  document.getElementById('cascadeDailyNeed').textContent=target>0
+    ?`${cascadeFmt(requiredDaily,2)} ${currency}`:'—';
+  document.getElementById('cascadeAccrualCount').textContent=accruals>0?`${accruals} начислений`:'—';
+  document.getElementById('cascadeEndDate').textContent=end?cascadeDateFmt(end):'—';
+  const result=cascadeSolve(requiredDaily,market,type,accruals);
+  const typeName=type==='FF'?'Fast Flow':'Super Fast Flow';
+  document.getElementById('cascadeNominalCaption').textContent=`Минимальный номинал ${typeName} по тарифу`;
+  document.getElementById('cascadeActualCaption').textContent=
+    type==='FF'?'Фактическая выплата за начисление':'Фактическая прибыль за 15 начислений';
+  document.querySelector('#cascade-calculator .subresult > div:nth-child(2) small').textContent=
+    type==='FF'?'Номинал + прибыль за полный цикл':`Номинал + прибыль за ${accruals} начислений`;
+  document.querySelector('#cascade-calculator .subresult > div:nth-child(1) small').textContent=
+    `Прибыль FF за ${accruals} начислений`;
+  if(!result){
+    ['cascadeNominal','cascadeTariff','cascadeDailyActual','cascadeProfit','cascadeTotal','cascadeRawNominal','cascadeSurplus'].forEach(id=>document.getElementById(id).textContent='—');
+    return;
+  }
+  document.getElementById('cascadeNominal').textContent=`${cascadeFmt(result.nominal,2)} ${currency}`;
+  document.getElementById('cascadeRawNominal').textContent=`${cascadeFmt(result.rawNominal,2)} ${currency}`;
+  document.getElementById('cascadeSurplus').textContent=`${cascadeFmt(result.surplus,2)} ${currency}`;
+  document.getElementById('cascadeTariff').textContent=`+${cascadeFmt(result.rate,1)}%`;
+  document.getElementById('cascadeDailyActual').textContent=
+    `${cascadeFmt(result.actualPerAccrual,2)} ${currency}`;
+  document.getElementById('cascadeProfit').textContent=`${cascadeFmt(result.profit,2)} ${currency}`;
+  document.getElementById('cascadeTotal').textContent=`${cascadeFmt(result.total,2)} ${currency}`;
+}
+function cascadeUpdateAccrualOptions(){
+  const start=document.getElementById('cascadeStart').value;
+  const select=document.getElementById('cascadeAccruals');
+  const selected=select.value;
+  [...select.options].forEach(option=>{
+    if(option.value==='calendar15'){
+      const count=cascadeCountInCalendarDays(start,15);
+      option.textContent=start?`${count} начислений · 15 календарных дней`:'15 календарных дней';
+      option.dataset.sortCount=String(count);
+      return;
+    }
+    const count=Number(option.value);
+    const end=cascadeCountEnd(start,count);
+    if(!end){
+      option.textContent=`${count} ${count===1?'начисление':'начислений'}`;
+      option.dataset.sortCount=String(count);
+      return;
+    }
+    const days=Math.round((end-new Date(start+'T12:00:00'))/86400000)+1;
+    option.textContent=`${count} ${count===1?'начисление':'начислений'} · ${days} календарных ${days===1?'день':'дней'}`;
+    option.dataset.sortCount=String(count);
+  });
+  const sorted=[...select.options].sort((a,b)=>
+    Number(a.dataset.sortCount)-Number(b.dataset.sortCount)
+  );
+  sorted.forEach(option=>select.appendChild(option));
+  select.value=selected;
+}
+function cascadeSetToday(){
+  const d=new Date();
+  const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);
+  document.getElementById('cascadeStart').value=local.toISOString().slice(0,10);
+  cascadeUpdateAccrualOptions();
+}
+['cascadeMarket','cascadeType','cascadeTarget','cascadeAccruals','cascadeStart','cascadeSplit'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    if(id==='cascadeStart')cascadeUpdateAccrualOptions();
+    if(id==='cascadeType')cascadeSyncTypeControls();
+    renderCascade();
+  });
+  document.getElementById(id).addEventListener('change',()=>{
+    if(id==='cascadeStart')cascadeUpdateAccrualOptions();
+    if(id==='cascadeType')cascadeSyncTypeControls();
+    renderCascade();
+  });
+});
+cascadeSetToday();
+cascadeSyncTypeControls();
+renderCascade();
+function cascadeSyncAmountCards(){
+  const box=document.getElementById('msCurrencyResults');
+  if(!box)return;
+  box.querySelectorAll('.result').forEach(card=>{
+    const label=card.querySelector('small')?.textContent||'';
+    const currency=(label.match(/\(([A-Z]+)\)/)||[])[1];
+    const value=card.querySelector('strong')?.textContent||'';
+    const marketMap={EUR:'EU',GBP:'UK',CNY:'CN',PLN:'PL',KGS:'KG'};
+    if(!currency||!cascadeCurrencyNames[currency]||value.includes('Укажи')||value.includes('Ожидание')||card.querySelector('.cascade-use-btn'))return;
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='cascade-use-btn';btn.textContent='Использовать сумму для каскада';
+    if(currency==='USDT')btn.title='USDT: текущая площадка каскада останется выбранной';
+    btn.addEventListener('click',()=>{
+      const amount=Number(value.replace(/[^\d,.-]/g,'').replace(/\s/g,'').replace(',','.'));
+      if(amount>0){
+        if(marketMap[currency])document.getElementById('cascadeMarket').value=marketMap[currency];
+        document.getElementById('cascadeTarget').value=amount;
+        document.getElementById('cascade-calculator').scrollIntoView({behavior:'smooth',block:'start'});
+        renderCascade();
+      }
+    });
+    card.appendChild(btn);
+  });
+}
+const cascadeResultsObserver=new MutationObserver(cascadeSyncAmountCards);
+const cascadeResultsEl=document.getElementById('msCurrencyResults');
+if(cascadeResultsEl)cascadeResultsObserver.observe(cascadeResultsEl,{childList:true});
+cascadeSyncAmountCards();
+renderCascade();
+</script>
+
+<script id="withdrawal-copy-calculation-script">
+(function(){
+  const $ = id => document.getElementById(id);
+  const read = id => {
+    const node=$(id);
+    return node ? (node.textContent||'').trim() : '—';
+  };
+  const value = id => {
+    const node=$(id);
+    return node ? String(node.value ?? '').trim() : '—';
+  };
+  const label = (selectId, map) => {
+    const node=$(selectId);
+    if(!node) return '—';
+    return map[node.value] || node.options?.[node.selectedIndex]?.textContent?.trim() || node.value;
+  };
+  function buildCopyText(){
+    const payoutCurrency=label('payoutCurrency',{EUR:'EUR · Евро',USD:'USD · Доллар США',RUB:'RUB · Российский рубль',UAH:'UAH · Украинская гривна'});
+    const buyCurrency=label('msBuyCurrency',{EUR:'EUR · Евро',USDT:'USDT · Tether'});
+    const market=label('cascadeMarket',{EU:'Европа',ES:'Испания',UK:'Британия',PL:'Польша',CN:'Китай',KG:'Кыргызстан'});
+    const flowType=label('cascadeType',{FF:'Fast Flow · 30 начислений',SFF:'Super Fast Flow · 15 начислений',HYBRID:'Гибрид · FF + SFF'});
+    const accrual=label('cascadeAccruals',{});
+    const currencyResults=[...($('msCurrencyResults')?.querySelectorAll('.result')||[])].map(card=>{
+      const small=card.querySelector('small')?.textContent?.trim();
+      const strong=card.querySelector('strong')?.textContent?.trim();
+      return small&&strong ? `${small}: ${strong}` : '';
+    }).filter(Boolean);
+    const lines=[
+      'РАСЧЁТ ВЫВОДА · CASHFLOW',
+      '',
+      '1. ЖЕЛАЕМАЯ СУММА К ПОЛУЧЕНИЮ',
+      `Валюта получения: ${payoutCurrency}`,
+      `Желаемая сумма: ${value('targetAmount')} ${$('payoutCurrency')?.value||''}`,
+      `Курс получения за 1 USDT: ${value('payoutRate')}`,
+      `Необходимая сумма вывода из BlackBIT: ${read('targetAmountUSDT')}`,
+      '',
+      '2. MONEY STORAGE · ПОКУПКА ECR',
+      `Валюта покупки: ${buyCurrency}`,
+      `Курс покупки 1 ECR: ${value('msEcrPrice')} ${$('msBuyCurrency')?.value||''}`,
+      `ECR для продажи на BlackBIT: ${read('msSellQty')}`,
+      `Всего ECR необходимо купить: ${read('msBuyQty')}`,
+      `Стоимость покупки до комиссии: ${read('msBuyGross')}`,
+      `Комиссия перевода ECR: ${read('msTransferFee')}`,
+      `Комиссия покупки Money Storage · 0,5%: ${read('msBuyFee')}`,
+      ...currencyResults,
+      '',
+      '3. КАСКАД FAST FLOW / SUPER FAST FLOW',
+      `Площадка: ${market}`,
+      `Тип потока: ${flowType}`,
+      `Общая сумма для покупки ECR за период: ${value('cascadeTarget')}`,
+      `Количество начислений: ${accrual}`,
+      `Дата запуска: ${value('cascadeStart')}`,
+    ];
+    const hybrid=$('cascadeHybridResults');
+    const isHybrid=hybrid && !hybrid.hidden;
+    if(isHybrid){
+      lines.push(
+        `Распределение FF / SFF: ${read('cascadeSplitLabel')}`,
+        `Доля суммы Fast Flow: ${read('cascadeFFTarget')}`,
+        `Доля суммы Super Fast Flow: ${read('cascadeSFFTarget')}`,
+        `Номинал Fast Flow: ${read('cascadeHybridFFNominal')}`,
+        `Сумма FF за выбранный период: ${read('cascadeHybridFFPeriodTotal')}`,
+        `Необходимая выплата FF за начисление: ${read('cascadeHybridFFRequired')}`,
+        `Тариф FF: ${read('cascadeHybridFFRate')}`,
+        `Фактическая выплата FF за начисление: ${read('cascadeHybridFFPayout')}`,
+        `Прибыль FF за 30 начислений: ${read('cascadeHybridFFProfit')}`,
+        `Номинал Super Fast Flow: ${read('cascadeHybridSFFNominal')}`,
+        `Тариф SFF: ${read('cascadeHybridSFFRate')}`,
+        `Требуемая подтяжка SFF за 15 начислений: ${read('cascadeHybridSFFRequired')}`,
+        `Фактическая прибыль SFF за полный цикл: ${read('cascadeHybridSFFProfit')}`,
+        `Превышение SFF из-за тарифного порога: ${read('cascadeHybridSFFExcess')}`,
+        `Общий номинал гибридного каскада: ${read('cascadeHybridTotalNominal')}`,
+        `Прибыль FF за полный цикл: ${read('cascadeHybridTotalProfit')}`,
+        `Прибыль SFF за полный цикл: ${read('cascadeHybridGrandTotal')}`
+      );
+    }else{
+      lines.push(
+        `Необходимая выплата / прибыль за цикл: ${read('cascadeDailyNeed')}`,
+        `Минимальный номинал по тарифу: ${read('cascadeNominal')}`,
+        `Применённый тариф: ${read('cascadeTariff')}`,
+        `Фактическая выплата / прибыль: ${read('cascadeDailyActual')}`,
+        `Расчётный номинал без минимального порога: ${read('cascadeRawNominal')}`,
+        `Доплата сверх необходимой суммы: ${read('cascadeSurplus')}`,
+        `Прибыль за полный цикл: ${read('cascadeProfit')}`,
+        `Номинал + прибыль за цикл: ${read('cascadeTotal')}`,
+        `Начислений для сбора суммы: ${read('cascadeAccrualCount')}`,
+        `Дата последнего нужного начисления: ${read('cascadeEndDate')}`
+      );
+    }
+    lines.push('',
+      '4. BLACKBIT · ПРОДАЖА ECR И ВЫВОД USDT',
+      `Цена ECR на BlackBIT: ${value('ecrPrice')} USDT`,
+      `Сумма вывода USDT: ${value('withdrawAmount')} USDT`,
+      `Количество ECR для продажи: ${read('ecrToSell')}`,
+      `Комиссия продажи BlackBIT · 0,1%: ${read('spotFee')}`,
+      `USDT после комиссии ордера: ${read('netProceeds')}`,
+      `Комиссия перевода ECR · 0,5%: ${read('ecrTransferFee')}`,
+      `Всего ECR для продажи и перевода: ${read('ecrRequired')}`,
+      `Фиксированная комиссия TRC-20: ${read('networkFixedFee')}`,
+      `Процентная комиссия TRC-20 · 1%: ${read('networkPercentFee')}`,
+      `Все комиссии сети: ${read('networkFee')}`,
+      `Баланс USDT до вывода: ${read('requiredBalance')}`,
+      `График разделения вывода: ${read('withdrawalSchedule')}`,
+      `Объём сделки до комиссии ордера: ${read('tradeGross')}`,
+      `Итог к получению: ${read('finalPayout')}`,
+      ''
+    );
+    lines.push('', 'Примечание: результат рассчитан по значениям и курсам, введённым в калькулятор.');
+    return lines.join('\n');
+  }
+  async function copyCalculation(){
+    const textToCopy=buildCopyText();
+    const feedback=$('copyCalculationFeedback');
+    const button=$('copyCalculationButton');
+    if(feedback)feedback.textContent='';
+    try{
+      if(navigator.clipboard && typeof navigator.clipboard.writeText==='function'){
+        await navigator.clipboard.writeText(textToCopy);
+      }else throw new Error('Clipboard API unavailable');
+      if(feedback)feedback.textContent='Расчёт скопирован.';
+    }catch(error){
+      const temporaryField=document.createElement('textarea');
+      temporaryField.value=textToCopy;
+      temporaryField.setAttribute('readonly','');
+      temporaryField.style.position='fixed';
+      temporaryField.style.opacity='0';
+      temporaryField.style.pointerEvents='none';
+      document.body.append(temporaryField);
+      temporaryField.select();
+      let copied=false;
+      try{copied=document.execCommand('copy')}catch(fallbackError){copied=false}
+      temporaryField.remove();
+      if(feedback)feedback.textContent=copied
+        ?'Расчёт скопирован.'
+        :'Не удалось скопировать автоматически. Выделите и скопируйте данные вручную.';
+    }
+  }
+  if($('copyCalculationButton'))$('copyCalculationButton').addEventListener('click',copyCalculation);
+})();
+</script>
+
+<style id="cascade-button-reference-style">
+/* Кнопки перенесены из cascade-buttons-highlight-2.html */
+#msCurrencyResults .cascade-use-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;margin-top:10px;padding:9px 14px;border:1px solid var(--cyan)!important;border-radius:13px!important;background:var(--cyan)!important;color:#06211f!important;font:750 .84rem/1.25 Inter,system-ui,sans-serif!important;box-shadow:0 3px 10px color-mix(in srgb,var(--cyan) 24%,transparent),inset 0 1px 0 #ffffff55!important;cursor:pointer;transition:filter .15s,transform .15s,box-shadow .15s}#msCurrencyResults .cascade-use-btn:hover{filter:brightness(1.08)!important;box-shadow:0 5px 12px color-mix(in srgb,var(--cyan) 28%,transparent)!important}#msCurrencyResults .cascade-use-btn:active{transform:translateY(1px);filter:brightness(.96)!important}html[data-theme=light] #msCurrencyResults .cascade-use-btn{background:var(--cyan)!important;color:#ffffff!important;border-color:var(--cyan)!important}
+@media(max-width:560px){#cascade-calculator .row{grid-template-columns:1fr;gap:0}#cascade-calculator .result>strong{font-size:1.35rem}}
+
+</style>
+
+
+<style id="source-button-reset-style">
+/* Кнопка восстановления курсов — в едином стиле с кнопками действий каскада */
+#resetRates{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 18px;border:1px solid var(--cyan)!important;border-radius:13px!important;background:var(--cyan)!important;color:#06211f!important;font:800 .9rem/1.3 Inter,system-ui,sans-serif!important;box-shadow:0 5px 14px color-mix(in srgb,var(--cyan) 24%,transparent),inset 0 1px 0 #ffffff55!important;cursor:pointer;transition:filter .15s,transform .15s,box-shadow .15s}
+#resetRates:hover{filter:brightness(1.08);box-shadow:0 7px 18px color-mix(in srgb,var(--cyan) 32%,transparent)!important}
+#resetRates:active{transform:translateY(1px);filter:brightness(.96)}
+html[data-theme=light] #resetRates{background:var(--cyan)!important;color:#fff!important;border-color:var(--cyan)!important}
+@media(max-width:540px){#resetRates{min-height:48px;padding:12px 18px;font-size:.9rem!important}}
+</style>
+
+<script id="cashflow-pwa-registration">
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => {
+      console.warn('CashFlow: service worker registration failed', err);
+    });
+  });
+}
+</script>
+
+
+<style id="money-storage-commission-fullwidth">
+/* Комиссии Money Storage: каждый показатель на всю ширину */
+#msCommissionDetails .commission-breakdown{grid-template-columns:1fr}
+#msCommissionDetails .commission-breakdown>div{width:100%;box-sizing:border-box}
+</style>
+
+
+<style id="cascade-results-fullwidth">
+/* Каскад: каждый показатель и подпункт результатов занимает всю ширину */
+#cascade-calculator .subresult{grid-template-columns:minmax(0,1fr)!important}
+#cascade-calculator .subresult>div{width:100%;box-sizing:border-box}
+</style>
+
+
+<style id="money-storage-primary-metrics-fullwidth-v2">
+/* Money Storage: все три основных показателя строго в одну колонку */
+#money-storage-buy > .subresult:not(.commission-breakdown) {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 100% !important;
+}
+#money-storage-buy > .subresult:not(.commission-breakdown) > div {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+</style>
+
+
+<style id="cashflow-usage-guide-style">
+/* Инструкция оформлена в едином стиле Fast Flow / Super Fast Flow. */
+.usage-guide{margin:0 0 18px!important;padding:22px!important;border-radius:24px!important}
+.usage-guide h2{margin:0 0 18px!important;font-size:1.18rem!important;line-height:1.3!important;font-weight:800!important}
+.usage-steps{display:grid;gap:14px;margin:0;padding-left:1.45rem;color:var(--text);font-size:.94rem;line-height:1.58}
+.usage-steps li{padding-left:4px}
+.usage-steps li::marker{color:var(--cyan);font-weight:850}
+.usage-steps strong{color:var(--text);font-weight:800}
+.usage-note{margin-top:18px;padding:14px 16px;border:1px solid var(--noticeline);border-radius:14px;background:var(--notice);color:var(--noticetext);font-size:.86rem;line-height:1.58}
+.usage-note strong{color:var(--orange);font-weight:800}
+@media(max-width:760px){
+  .usage-guide{padding:18px!important;border-radius:19px!important}
+  .usage-steps{gap:12px;font-size:.9rem}
+  .usage-note{padding:13px 14px}
+}
+@media(max-width:540px){
+  .usage-guide{padding:15px!important}
+  .usage-guide h2{font-size:1.08rem!important;margin-bottom:15px!important}
+  .usage-steps{padding-left:1.3rem;gap:11px}
+}
+</style>
+
+
+
+
+
+
+<style id="commission-toggle-last-override">
+/* Money Storage commission toggle */
+#money-storage-buy details#msCommissionDetails > summary {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  padding:18px 20px !important;
+  min-height:64px !important;
+  box-sizing:border-box !important;
+  list-style:none !important;
+  cursor:pointer !important;
+  font-size:1.18rem !important;
+  line-height:1.35 !important;
+  font-weight:850 !important;
+  color:#8bc8f4 !important;
+}
+#money-storage-buy details#msCommissionDetails > summary::-webkit-details-marker {
+  display:none !important;
+}
+#money-storage-buy details#msCommissionDetails > summary::after {
+  content:"＋" !important;
+  display:inline-block !important;
+  margin-left:auto !important;
+  font-size:1.45rem !important;
+  font-weight:900 !important;
+  color:#8bc8f4 !important;
+}
+#money-storage-buy details#msCommissionDetails[open] > summary {
+  color:#70d9c8 !important;
+  font-size:1.24rem !important;
+}
+#money-storage-buy details#msCommissionDetails[open] > summary::after {
+  content:"−" !important;
+  color:#70d9c8 !important;
+}
+#money-storage-buy #msCommissionDetails .commission-label-closed,
+#money-storage-buy #msCommissionDetails .commission-label-open {
+  display:none !important;
+}
+#money-storage-buy #msCommissionDetails:not([open]) .commission-label-closed {
+  display:inline !important;
+}
+#money-storage-buy #msCommissionDetails[open] .commission-label-open {
+  display:inline !important;
+}
+
+/* The other detailed commission toggle uses the same hierarchy and behavior */
+#blackbit-withdrawal details.calc-details > summary,
+details.calc-details > summary {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  padding:18px 20px !important;
+  min-height:64px !important;
+  box-sizing:border-box !important;
+  list-style:none !important;
+  cursor:pointer !important;
+  color:#8bc8f4 !important;
+  font-size:1.18rem !important;
+  line-height:1.35 !important;
+  font-weight:850 !important;
+}
+details.calc-details > summary::-webkit-details-marker { display:none !important; }
+details.calc-details > summary::after {
+  content:"＋" !important;
+  margin-left:auto !important;
+  color:#8bc8f4 !important;
+  font-size:1.45rem !important;
+  font-weight:900 !important;
+}
+details.calc-details[open] > summary {
+  color:#70d9c8 !important;
+  font-size:1.24rem !important;
+}
+details.calc-details[open] > summary::after {
+  content:"−" !important;
+  color:#70d9c8 !important;
+}
+details.calc-details summary .when-closed { display:inline !important; }
+details.calc-details summary .when-open { display:none !important; }
+details.calc-details[open] summary .when-closed { display:none !important; }
+details.calc-details[open] summary .when-open { display:inline !important; }
+
+/* Light theme */
+html[data-theme="light"] #money-storage-buy details#msCommissionDetails > summary,
+html[data-theme="light"] details.calc-details > summary {
+  color:#347db6 !important;
+}
+html[data-theme="light"] #money-storage-buy details#msCommissionDetails > summary::after,
+html[data-theme="light"] details.calc-details > summary::after {
+  color:#347db6 !important;
+}
+html[data-theme="light"] #money-storage-buy details#msCommissionDetails[open] > summary,
+html[data-theme="light"] details.calc-details[open] > summary {
+  color:#087f73 !important;
+}
+html[data-theme="light"] #money-storage-buy details#msCommissionDetails[open] > summary::after,
+html[data-theme="light"] details.calc-details[open] > summary::after {
+  color:#087f73 !important;
+}
+
+/* Dark theme */
+html[data-theme="dark"] #money-storage-buy details#msCommissionDetails > summary,
+html[data-theme="dark"] details.calc-details > summary {
+  color:#91cfff !important;
+}
+html[data-theme="dark"] #money-storage-buy details#msCommissionDetails > summary::after,
+html[data-theme="dark"] details.calc-details > summary::after {
+  color:#91cfff !important;
+}
+html[data-theme="dark"] #money-storage-buy details#msCommissionDetails[open] > summary,
+html[data-theme="dark"] details.calc-details[open] > summary {
+  color:#75dfcf !important;
+}
+html[data-theme="dark"] #money-storage-buy details#msCommissionDetails[open] > summary::after,
+html[data-theme="dark"] details.calc-details[open] > summary::after {
+  color:#75dfcf !important;
+}
+
+@media(max-width:540px) {
+  #money-storage-buy details#msCommissionDetails > summary,
+  #blackbit-withdrawal details.calc-details > summary,
+  details.calc-details > summary {
+    padding:15px 14px !important;
+    min-height:58px !important;
+    font-size:1.05rem !important;
+  }
+  #money-storage-buy details#msCommissionDetails[open] > summary,
+  details.calc-details[open] > summary {
+    font-size:1.1rem !important;
+  }
+}
+</style>
+
+<style id="commission-toggles-unified-final">
+/* Both commission toggles: same wording, size, weight, spacing and color */
+#money-storage-buy details#msCommissionDetails > summary,
+details.calc-details > summary {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  box-sizing:border-box !important;
+  min-height:52px !important;
+  padding:13px 17px !important;
+  margin:0 !important;
+  list-style:none !important;
+  cursor:pointer !important;
+  font-family:inherit !important;
+  font-size:1rem !important;
+  line-height:1.35 !important;
+  font-weight:750 !important;
+  letter-spacing:0 !important;
+  color:#347db6 !important;
+}
+#money-storage-buy details#msCommissionDetails > summary::-webkit-details-marker,
+details.calc-details > summary::-webkit-details-marker {
+  display:none !important;
+}
+#money-storage-buy details#msCommissionDetails > summary::after,
+details.calc-details > summary::after {
+  content:"＋" !important;
+  display:inline-block !important;
+  flex:0 0 auto !important;
+  margin-left:auto !important;
+  color:inherit !important;
+  font-size:1.12rem !important;
+  font-weight:800 !important;
+  line-height:1 !important;
+}
+#money-storage-buy details#msCommissionDetails[open] > summary,
+details.calc-details[open] > summary {
+  color:#347db6 !important;
+  font-size:1rem !important;
+}
+#money-storage-buy details#msCommissionDetails[open] > summary::after,
+details.calc-details[open] > summary::after {
+  content:"−" !important;
+  color:inherit !important;
+  font-size:1.12rem !important;
+}
+
+/* Consistent state-label switching */
+#money-storage-buy #msCommissionDetails .commission-label-closed,
+details.calc-details summary .when-closed { display:inline !important; }
+#money-storage-buy #msCommissionDetails .commission-label-open,
+details.calc-details summary .when-open { display:none !important; }
+#money-storage-buy #msCommissionDetails[open] .commission-label-closed,
+details.calc-details[open] summary .when-closed { display:none !important; }
+#money-storage-buy #msCommissionDetails[open] .commission-label-open,
+details.calc-details[open] summary .when-open { display:inline !important; }
+
+/* Light theme: same subdued blue for both states */
+html[data-theme="light"] #money-storage-buy details#msCommissionDetails > summary,
+html[data-theme="light"] #money-storage-buy details#msCommissionDetails[open] > summary,
+html[data-theme="light"] details.calc-details > summary,
+html[data-theme="light"] details.calc-details[open] > summary {
+  color:#347db6 !important;
+}
+
+/* Dark theme: same readable pale blue for both states */
+html[data-theme="dark"] #money-storage-buy details#msCommissionDetails > summary,
+html[data-theme="dark"] #money-storage-buy details#msCommissionDetails[open] > summary,
+html[data-theme="dark"] details.calc-details > summary,
+html[data-theme="dark"] details.calc-details[open] > summary {
+  color:#91cfff !important;
+}
+
+@media(max-width:540px) {
+  #money-storage-buy details#msCommissionDetails > summary,
+  #money-storage-buy details#msCommissionDetails[open] > summary,
+  details.calc-details > summary,
+  details.calc-details[open] > summary {
+    min-height:48px !important;
+    padding:12px 14px !important;
+    font-size:.94rem !important;
+    line-height:1.35 !important;
+  }
+  #money-storage-buy details#msCommissionDetails > summary::after,
+  #money-storage-buy details#msCommissionDetails[open] > summary::after,
+  details.calc-details > summary::after,
+  details.calc-details[open] > summary::after {
+    font-size:1.05rem !important;
+  }
+}
+</style>
+
+<style id="cashflow-total-section-unified-light-dark">
+/* Итоговая сумма для закупки ECR — единая система карточек в обеих темах */
+#money-storage-buy h3[style*="font-size"] {
+  color: var(--text) !important;
+  font-size: clamp(1.02rem, 2.2vw, 1.18rem) !important;
+  line-height: 1.35 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+}
+#money-storage-buy > .hint {
+  color: var(--muted) !important;
+  font-size: .9rem !important;
+  line-height: 1.55 !important;
+  margin: 0 0 14px !important;
+}
+#money-storage-buy #msCurrencyResults {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+#money-storage-buy #msCurrencyResults > .result,
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults > .result,
+html[data-theme="light"] #money-storage-buy #msCurrencyResults > .result,
+#money-storage-buy #msCurrencyResults > .result:first-child {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 17px 18px !important;
+  border-radius: 18px !important;
+  box-shadow: 0 7px 18px rgba(0,0,0,.08) !important;
+}
+#money-storage-buy #msCurrencyResults > .result small,
+#money-storage-buy #msCurrencyResults > .result:first-child small {
+  display: block !important;
+  margin: 0 !important;
+  font-size: .91rem !important;
+  line-height: 1.4 !important;
+  font-weight: 700 !important;
+}
+#money-storage-buy #msCurrencyResults > .result strong,
+#money-storage-buy #msCurrencyResults > .result:first-child strong {
+  display: block !important;
+  margin: 5px 0 0 !important;
+  font-size: clamp(1.35rem, 3.8vw, 1.72rem) !important;
+  line-height: 1.25 !important;
+  font-weight: 850 !important;
+  font-variant-numeric: tabular-nums !important;
+  overflow-wrap: anywhere !important;
+}
+#money-storage-buy #msCurrencyResults .cascade-use-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 48px !important;
+  margin: 12px 0 0 !important;
+  padding: 11px 14px !important;
+  border-radius: 14px !important;
+  font: 750 .9rem/1.3 Inter, system-ui, sans-serif !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.10) !important;
+}
+
+/* Тёмная тема: все валютные карточки одинаковые */
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults > .result,
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults > .result:first-child {
+  background: linear-gradient(145deg,#142b3b,#102331) !important;
+  border: 1px solid #304958 !important;
+  box-shadow: 0 7px 18px rgba(0,0,0,.16) !important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults > .result small,
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults > .result:first-child small {
+  color: #bdcbd6 !important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults > .result strong,
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults > .result:first-child strong {
+  color: #f0f5f7 !important;
+}
+html[data-theme="dark"] #money-storage-buy #msCurrencyResults .cascade-use-btn {
+  background: linear-gradient(135deg,#57d3bf,#42bda9) !important;
+  border: 1px solid #79e0d0 !important;
+  color: #073c3a !important;
+}
+
+/* Светлая тема: все валютные карточки одинаковые */
+html[data-theme="light"] #money-storage-buy #msCurrencyResults > .result,
+html[data-theme="light"] #money-storage-buy #msCurrencyResults > .result:first-child {
+  background: linear-gradient(145deg,#f2f7fa,#eaf1f5) !important;
+  border: 1px solid #d2dfe7 !important;
+  box-shadow: 0 7px 18px rgba(35,64,82,.07) !important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults > .result small,
+html[data-theme="light"] #money-storage-buy #msCurrencyResults > .result:first-child small {
+  color: #5e7280 !important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults > .result strong,
+html[data-theme="light"] #money-storage-buy #msCurrencyResults > .result:first-child strong {
+  color: #294653 !important;
+}
+html[data-theme="light"] #money-storage-buy #msCurrencyResults .cascade-use-btn {
+  background: linear-gradient(135deg,#168f83,#08796f) !important;
+  border: 1px solid #08796f !important;
+  color: #ffffff !important;
+}
+@media(max-width:540px) {
+  #money-storage-buy #msCurrencyResults > .result,
+  #money-storage-buy #msCurrencyResults > .result:first-child {
+    padding: 15px 14px !important;
+    border-radius: 16px !important;
+  }
+  #money-storage-buy #msCurrencyResults > .result strong,
+  #money-storage-buy #msCurrencyResults > .result:first-child strong {
+    font-size: clamp(1.25rem,5vw,1.55rem) !important;
+  }
+}
+</style>
+
+
+
+
+<style id="cashflow-commission-one-style-final">
+/* Один и тот же шрифт, размер, насыщенность и цвет в обоих состояниях */
+html body #money-storage-buy details#msCommissionDetails > summary,
+html body #blackbit-withdrawal details.calc-details > summary,
+html body details.calc-details > summary,
+html body details.commission-details > summary {
+  font-family: Inter, "SF Pro Display", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #0F766E !important;
+}
+html body #money-storage-buy details#msCommissionDetails[open] > summary,
+html body #blackbit-withdrawal details.calc-details[open] > summary,
+html body details.calc-details[open] > summary,
+html body details.commission-details[open] > summary {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #0F766E !important;
+}
+html body #money-storage-buy details#msCommissionDetails > summary *,
+html body #blackbit-withdrawal details.calc-details > summary *,
+html body details.calc-details > summary *,
+html body details.commission-details > summary * {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+}
+html body #money-storage-buy details#msCommissionDetails > summary::after,
+html body #blackbit-withdrawal details.calc-details > summary::after,
+html body details.calc-details > summary::after,
+html body details.commission-details > summary::after {
+  color: #0F766E !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+html[data-theme="light"] body #money-storage-buy details#msCommissionDetails > summary,
+html[data-theme="light"] body #money-storage-buy details#msCommissionDetails[open] > summary,
+html[data-theme="light"] body #blackbit-withdrawal details.calc-details > summary,
+html[data-theme="light"] body #blackbit-withdrawal details.calc-details[open] > summary,
+html[data-theme="light"] body details.calc-details > summary,
+html[data-theme="light"] body details.calc-details[open] > summary,
+html[data-theme="light"] body details.commission-details > summary,
+html[data-theme="light"] body details.commission-details[open] > summary { color: #0F766E !important; }
+html[data-theme="light"] body #money-storage-buy details#msCommissionDetails > summary::after,
+html[data-theme="light"] body #blackbit-withdrawal details.calc-details > summary::after,
+html[data-theme="light"] body details.calc-details > summary::after,
+html[data-theme="light"] body details.commission-details > summary::after { color: #0F766E !important; }
+html[data-theme="dark"] body #money-storage-buy details#msCommissionDetails > summary,
+html[data-theme="dark"] body #money-storage-buy details#msCommissionDetails[open] > summary,
+html[data-theme="dark"] body #blackbit-withdrawal details.calc-details > summary,
+html[data-theme="dark"] body #blackbit-withdrawal details.calc-details[open] > summary,
+html[data-theme="dark"] body details.calc-details > summary,
+html[data-theme="dark"] body details.calc-details[open] > summary,
+html[data-theme="dark"] body details.commission-details > summary,
+html[data-theme="dark"] body details.commission-details[open] > summary { color: #5EEAD4 !important; }
+html[data-theme="dark"] body #money-storage-buy details#msCommissionDetails > summary::after,
+html[data-theme="dark"] body #blackbit-withdrawal details.calc-details > summary::after,
+html[data-theme="dark"] body details.calc-details > summary::after,
+html[data-theme="dark"] body details.commission-details > summary::after { color: #5EEAD4 !important; }
+</style>
+
+<style id="cashflow-commission-inner-typography-final">
+/* Компактная типографика содержимого обоих блоков комиссий */
+html body details.calc-details .subresult small,
+html body details.commission-details .commission-breakdown small {
+  font-family: Inter, "SF Pro Text", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0 !important;
+}
+html body details.calc-details .subresult strong,
+html body details.commission-details .commission-breakdown strong {
+  font-family: Inter, "SF Pro Text", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 650 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0 !important;
+}
+html body details.calc-details .subresult > .detail-heading {
+  font-family: Inter, "SF Pro Text", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  font-size: 12.5px !important;
+  font-weight: 650 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0 !important;
+}
+html body details.calc-details > .notice {
+  font-family: Inter, "SF Pro Text", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+}
+@media (max-width: 540px) {
+  html body details.calc-details .subresult small,
+  html body details.commission-details .commission-breakdown small { font-size: 11.5px !important; }
+  html body details.calc-details .subresult strong,
+  html body details.commission-details .commission-breakdown strong { font-size: 13px !important; }
+  html body details.calc-details .subresult > .detail-heading { font-size: 12px !important; }
+  html body details.calc-details > .notice { font-size: 11.5px !important; }
+}
+</style>
+
+
+<!-- Cascade visual design copied from the supplied reference file; logic unchanged -->
+<style id="cascade-color-system-final">
+/* Каскад использует ту же визуальную систему, что и основные блоки CashFlow */
+#cascade-calculator{
+  background:linear-gradient(155deg,#fff 0%,#f8fbfd 100%) !important;
+  border:1px solid #d6e3e9 !important;
+  box-shadow:0 12px 34px rgba(39,75,96,.08) !important;
+  color:#20384b !important;
+}
+#cascade-calculator h2{color:#193348 !important}
+#cascade-calculator .field label{color:#304b60 !important}
+#cascade-calculator .field input,
+#cascade-calculator .field select{
+  min-height:48px !important;
+  border:1px solid #cbd9e0 !important;
+  border-radius:13px !important;
+  background:#fff !important;
+  color:#263e50 !important;
+  box-shadow:none !important;
+}
+#cascade-calculator .field input:focus,
+#cascade-calculator .field select:focus{
+  border-color:#168f88 !important;
+  box-shadow:0 0 0 3px rgba(22,143,136,.14) !important;
+  outline:none !important;
+}
+#cascade-calculator .hint{color:#718493 !important}
+#cascade-calculator .result{
+  border:1px solid #a8d8d0 !important;
+  border-radius:17px !important;
+  background:linear-gradient(135deg,#e5f5f1,#edf8f6) !important;
+  color:#20384b !important;
+  box-shadow:none !important;
+}
+#cascade-calculator .result small{color:#52776f !important}
+#cascade-calculator .result>strong{color:#087f73 !important}
+#cascade-calculator .subresult>div{
+  border:1px solid #d6e3e9 !important;
+  border-radius:15px !important;
+  background:#f3f7fa !important;
+}
+#cascade-calculator .subresult small{color:#718493 !important}
+#cascade-calculator .subresult strong{color:#20384b !important}
+#cascade-calculator #cascadeSingleResults>.subresult,
+#cascade-calculator .cascade-comparison{
+  border:1px solid #d6e3e9 !important;
+  border-radius:15px !important;
+  background:#f3f7fa !important;
+}
+#cascade-calculator #cascadeSingleResults>.subresult>div,
+#cascade-calculator .cascade-comparison>div{
+  background:transparent !important;border:0 !important;
+}
+#cascade-calculator #cascadeSingleResults>.subresult small,
+#cascade-calculator .cascade-comparison small{color:#718493 !important}
+#cascade-calculator #cascadeSingleResults>.subresult strong,
+#cascade-calculator .cascade-comparison strong{color:#20384b !important}
+#cascade-calculator .notice{
+  border-color:#d6e3e9 !important;
+  background:#f3f7fa !important;
+  color:#526b7d !important;
+}
+#cascade-calculator #cascadeHybridControls{
+  border-color:#d6e3e9 !important;
+  background:#f3f7fa !important;
+}
+#cascade-calculator #cascadeSplit{accent-color:#168f88 !important}
+
+/* Явная светлая тема: перекрываем прежние локальные акценты каскада */
+html[data-theme="light"] #cascade-calculator{
+  border-color:#d6e3e9 !important;
+  background:linear-gradient(155deg,#fff 0%,#f8fbfd 100%) !important;
+  box-shadow:0 12px 34px rgba(39,75,96,.08) !important;
+  color:#20384b !important;
+}
+html[data-theme="light"] #cascade-calculator h2{color:#193348 !important}
+html[data-theme="light"] #cascade-calculator .result{
+  border-color:#a8d8d0 !important;
+  background:linear-gradient(135deg,#e5f5f1,#edf8f6) !important;
+}
+html[data-theme="light"] #cascade-calculator .result small{color:#52776f !important}
+html[data-theme="light"] #cascade-calculator .result>strong{color:#087f73 !important}
+html[data-theme="light"] #cascade-calculator .result .subresult>div{
+  border-color:#d6e3e9 !important;background:#f3f7fa !important;
+}
+html[data-theme="light"] #cascade-calculator .result .subresult small,
+html[data-theme="light"] #cascade-calculator .subresult small{color:#718493 !important}
+html[data-theme="light"] #cascade-calculator .result .subresult strong,
+html[data-theme="light"] #cascade-calculator .subresult strong{color:#20384b !important}
+
+/* Тёмная тема — те же цвета и контраст, что у остальных блоков сайта */
+html[data-theme="dark"] #cascade-calculator{
+  border-color:#263a52 !important;
+  background:linear-gradient(155deg,#111a28 0%,#0b1523 100%) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.18) !important;
+  color:#edf4ff !important;
+}
+html[data-theme="dark"] #cascade-calculator h2{color:#edf4ff !important}
+html[data-theme="dark"] #cascade-calculator .field label{color:#dbe5f6 !important}
+html[data-theme="dark"] #cascade-calculator .field input,
+html[data-theme="dark"] #cascade-calculator .field select{
+  border-color:#263a52 !important;background:#0b1523 !important;color:#edf4ff !important;
+}
+html[data-theme="dark"] #cascade-calculator .hint{color:#91a2ba !important}
+html[data-theme="dark"] #cascade-calculator .result{
+  border-color:#28554f !important;
+  background:linear-gradient(135deg,#142b31,#10252b) !important;
+  color:#edf4ff !important;
+}
+html[data-theme="dark"] #cascade-calculator .result small{color:#a9d9d0 !important}
+html[data-theme="dark"] #cascade-calculator .result>strong{color:#8be3d3 !important}
+html[data-theme="dark"] #cascade-calculator .subresult>div{
+  border-color:#263a52 !important;background:#0b1523 !important;
+}
+html[data-theme="dark"] #cascade-calculator .subresult small{color:#91a2ba !important}
+html[data-theme="dark"] #cascade-calculator .subresult strong{color:#edf4ff !important}
+html[data-theme="dark"] #cascade-calculator #cascadeSingleResults>.subresult,
+html[data-theme="dark"] #cascade-calculator .cascade-comparison,
+html[data-theme="dark"] #cascade-calculator .notice,
+html[data-theme="dark"] #cascade-calculator #cascadeHybridControls{
+  border-color:#304658 !important;background:#142333 !important;color:#bfd0dc !important;
+}
+html[data-theme="dark"] #cascade-calculator #cascadeSingleResults>.subresult small,
+html[data-theme="dark"] #cascade-calculator .cascade-comparison small{color:#91a2ba !important}
+html[data-theme="dark"] #cascade-calculator #cascadeSingleResults>.subresult strong,
+html[data-theme="dark"] #cascade-calculator .cascade-comparison strong{color:#edf4ff !important}
+@media(max-width:560px){#cascade-calculator .result .subresult>div{padding:11px 12px !important}}
+</style>
+
+<style id="cascade-results-card-layout">
+/* Компактный вывод результатов каскада: карточка потока + список параметров */
+#cascade-calculator .cascade-results-layout{display:grid;gap:14px;margin-top:12px}
+/* Respect the selected flow mode: hidden result groups must never be forced visible by grid layout. */
+#cascade-calculator [hidden]{display:none!important}
+#cascade-calculator .cascade-flow-card{min-width:0;padding:18px 18px 16px;border:1px solid #cbdedb;border-radius:20px;background:linear-gradient(145deg,#f0f8f6,#e8f4f1);box-shadow:0 4px 14px rgba(35,75,83,.045)}
+#cascade-calculator .cascade-flow-heading{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+#cascade-calculator .cascade-flow-kicker{font-size:.78rem;font-weight:850;letter-spacing:.075em;color:#087f73}
+#cascade-calculator .cascade-flow-caption{font-size:.86rem;font-weight:650;color:#607c78}
+#cascade-calculator .cascade-flow-nominal{display:block;margin:0 0 14px;color:#087f73;font-size:clamp(1.45rem,5vw,1.8rem);font-weight:850;line-height:1.2;overflow-wrap:anywhere}
+#cascade-calculator .cascade-metrics,#cascade-calculator .cascade-secondary-list{display:grid;gap:8px}
+#cascade-calculator .cascade-metric{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0;padding:11px 13px;border:1px solid #dbe5e9;border-radius:13px;background:#f7fafc}
+#cascade-calculator .cascade-metric small{display:block;flex:1;min-width:0;color:#718493;font-size:.82rem;font-weight:650;line-height:1.35}
+#cascade-calculator .cascade-metric strong{display:block;flex:0 0 auto;max-width:48%;color:#263e50;font-size:.96rem;font-weight:800;text-align:right;overflow-wrap:anywhere}
+#cascade-calculator .cascade-daily-card,#cascade-calculator .cascade-total-card{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;border:1px solid #cbdedb;border-radius:16px;background:#edf7f5}
+#cascade-calculator .cascade-daily-card small,#cascade-calculator .cascade-total-card small{color:#607c78;font-weight:700;line-height:1.35}
+#cascade-calculator .cascade-daily-card strong,#cascade-calculator .cascade-total-card strong{color:#087f73;font-size:1.2rem;font-weight:850;text-align:right;overflow-wrap:anywhere}
+#cascade-calculator .cascade-secondary-list{padding:10px;border:1px solid #dbe5e9;border-radius:16px;background:#f2f6f9}
+#cascade-calculator .cascade-secondary-list .cascade-metric{background:transparent;border:0;border-bottom:1px solid #dbe5e9;border-radius:0;padding:9px 5px}
+#cascade-calculator .cascade-secondary-list .cascade-metric:last-child{border-bottom:0}
+#cascade-calculator #cascadeHybridResults .notice{margin-top:2px}
+html[data-theme="dark"] #cascade-calculator .cascade-flow-card{border-color:#31545a;background:linear-gradient(145deg,#172d34,#142832);box-shadow:none}
+html[data-theme="dark"] #cascade-calculator .cascade-flow-kicker,html[data-theme="dark"] #cascade-calculator .cascade-flow-nominal{color:#80dfd0}
+html[data-theme="dark"] #cascade-calculator .cascade-flow-caption{color:#b0c9c9}
+html[data-theme="dark"] #cascade-calculator .cascade-metric{border-color:#304657;background:#172a3a}
+html[data-theme="dark"] #cascade-calculator .cascade-metric small{color:#a7b8c8}
+html[data-theme="dark"] #cascade-calculator .cascade-metric strong{color:#edf4ff}
+html[data-theme="dark"] #cascade-calculator .cascade-daily-card,html[data-theme="dark"] #cascade-calculator .cascade-total-card{border-color:#31545a;background:#19333a}
+html[data-theme="dark"] #cascade-calculator .cascade-daily-card small,html[data-theme="dark"] #cascade-calculator .cascade-total-card small{color:#b0c9c9}
+html[data-theme="dark"] #cascade-calculator .cascade-daily-card strong,html[data-theme="dark"] #cascade-calculator .cascade-total-card strong{color:#80dfd0}
+html[data-theme="dark"] #cascade-calculator .cascade-secondary-list{border-color:#304657;background:#142333}
+html[data-theme="dark"] #cascade-calculator .cascade-secondary-list .cascade-metric{border-color:#304657;background:transparent}
+@media(max-width:560px){
+ #cascade-calculator .cascade-flow-card{padding:15px 14px 13px;border-radius:17px}
+ #cascade-calculator .cascade-metric{align-items:flex-start;gap:9px;padding:10px 11px}
+ #cascade-calculator .cascade-metric small{font-size:.78rem}
+ #cascade-calculator .cascade-metric strong{font-size:.9rem;max-width:44%}
+ #cascade-calculator .cascade-daily-card,#cascade-calculator .cascade-total-card{align-items:flex-start;flex-direction:column;gap:5px}
+ #cascade-calculator .cascade-daily-card strong,#cascade-calculator .cascade-total-card strong{text-align:left}
+}
+</style>
+
+<style id="cascade-premium-results-design">
+/* Premium CashFlow cascade result cards */
+#cascade-calculator .cascade-flow-card{padding:20px 20px 18px;border:1px solid #a9ddd0;border-radius:24px;background:linear-gradient(145deg,#f2fbf8 0%,#eaf7f4 100%);box-shadow:0 10px 26px rgba(13,105,91,.075)}
+#cascade-calculator .cascade-flow-card-sff{border-color:#9de5e5;background:linear-gradient(145deg,#f1fcfc 0%,#e8f8f8 100%)}
+#cascade-calculator .cascade-flow-heading{display:flex;align-items:center;gap:12px;flex-wrap:nowrap;margin:0 0 16px}
+#cascade-calculator .cascade-flow-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(145deg,#24c77d,#078c78);color:#fff;font-size:25px;box-shadow:0 5px 12px rgba(8,145,111,.18)}
+#cascade-calculator .cascade-flow-card-sff .cascade-flow-icon{background:linear-gradient(145deg,#19c6b5,#087c9b)}
+#cascade-calculator .cascade-flow-title{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+#cascade-calculator .cascade-flow-title>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#cascade-calculator .cascade-flow-kicker{font-size:.88rem;letter-spacing:.045em;color:#087f68}
+#cascade-calculator .cascade-flow-badge{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:4px 9px;border-radius:999px;background:linear-gradient(135deg,#16ad83,#087f73);color:#fff;font-size:.75rem;font-weight:850;letter-spacing:.02em}
+#cascade-calculator .cascade-flow-caption{font-size:.88rem;color:#526f6c}
+#cascade-calculator .cascade-period{display:flex;flex:0 0 auto;flex-direction:column;gap:2px;padding:8px 11px;border:1px solid #c8ece8;border-radius:13px;background:#e1f6f5;text-align:left}
+#cascade-calculator .cascade-period small{color:#547a78;font-size:.68rem;font-weight:650;line-height:1.2}
+#cascade-calculator .cascade-period strong{color:#153d4b;font-size:.78rem;font-weight:850;white-space:nowrap}
+#cascade-calculator .cascade-nominal-hero{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;margin:0 0 14px;padding:15px 12px;border-radius:19px;background:linear-gradient(115deg,#12a97d 0%,#078b83 55%,#087e91 100%);box-shadow:0 8px 18px rgba(5,142,119,.16);text-align:center}
+#cascade-calculator .cascade-nominal-hero>small{color:rgba(255,255,255,.9);font-size:.82rem;font-weight:650}
+#cascade-calculator .cascade-flow-nominal{margin:0;color:#fff!important;font-size:clamp(1.65rem,6vw,2.1rem);font-weight:900;line-height:1.15;letter-spacing:.01em}
+#cascade-calculator .cascade-metrics{gap:0;overflow:hidden;border:1px solid #dce9e9;border-radius:17px;background:rgba(255,255,255,.72)}
+#cascade-calculator .cascade-metric{min-height:52px;padding:11px 13px;border:0;border-bottom:1px solid #e0ebed;border-radius:0;background:transparent}
+#cascade-calculator .cascade-metric:last-child{border-bottom:0}
+#cascade-calculator .cascade-metric small{color:#617581;font-size:.84rem;font-weight:650}
+#cascade-calculator .cascade-metric strong{color:#1c3547;font-size:.96rem;font-weight:850}
+#cascade-calculator .cascade-metric:nth-child(3) strong{color:#087f68}
+#cascade-calculator .cascade-metric:last-child strong{color:#07865d}
+#cascade-calculator .cascade-total-card{padding:17px 19px;border:0;border-radius:20px;background:linear-gradient(110deg,#079b78,#087e87);box-shadow:0 8px 20px rgba(6,125,112,.16)}
+#cascade-calculator .cascade-total-card small,#cascade-calculator .cascade-total-card strong{color:#fff!important}
+#cascade-calculator .cascade-total-card strong{font-size:clamp(1.2rem,5vw,1.65rem);font-weight:900}
+#cascade-calculator .cascade-secondary-list{border-color:#d7e5e8;background:#f5f9fb}
+#cascade-calculator .cascade-secondary-list .cascade-metric{border-color:#e0e9ed}
+#cascade-calculator .cascade-daily-card{border-color:#c8e8df;background:#eaf8f4}
+@media(max-width:560px){
+ #cascade-calculator .cascade-flow-card{padding:15px 13px 14px;border-radius:20px}
+ #cascade-calculator .cascade-flow-heading{gap:9px;margin-bottom:13px}
+ #cascade-calculator .cascade-flow-icon{width:40px;height:40px;flex-basis:40px;border-radius:13px;font-size:21px}
+ #cascade-calculator .cascade-flow-kicker{font-size:.76rem}
+ #cascade-calculator .cascade-flow-caption{font-size:.78rem}
+ #cascade-calculator .cascade-period{padding:6px 7px;border-radius:11px}
+ #cascade-calculator .cascade-period small{font-size:.61rem}
+ #cascade-calculator .cascade-period strong{font-size:.68rem}
+ #cascade-calculator .cascade-nominal-hero{padding:13px 9px;border-radius:16px}
+ #cascade-calculator .cascade-metric{align-items:center;gap:8px;padding:10px 10px}
+ #cascade-calculator .cascade-metric small{font-size:.76rem}
+ #cascade-calculator .cascade-metric strong{font-size:.86rem;max-width:47%}
+ #cascade-calculator .cascade-total-card{padding:14px 15px}
+}
+html[data-theme="dark"] #cascade-calculator .cascade-flow-card{border-color:#2c7168;background:linear-gradient(145deg,#152f32,#18363b);box-shadow:0 9px 24px rgba(0,0,0,.18)}
+html[data-theme="dark"] #cascade-calculator .cascade-flow-card-sff{border-color:#267d85;background:linear-gradient(145deg,#142e37,#173942)}
+html[data-theme="dark"] #cascade-calculator .cascade-flow-kicker{color:#8be3cc}
+html[data-theme="dark"] #cascade-calculator .cascade-flow-caption{color:#b4ccca}
+html[data-theme="dark"] #cascade-calculator .cascade-period{border-color:#315b62;background:#1d4148}
+html[data-theme="dark"] #cascade-calculator .cascade-period small{color:#a9c9c9}
+html[data-theme="dark"] #cascade-calculator .cascade-period strong{color:#efffff}
+html[data-theme="dark"] #cascade-calculator .cascade-metrics{border-color:#31505a;background:#172c38}
+html[data-theme="dark"] #cascade-calculator .cascade-metric{border-color:#304b57;background:transparent}
+html[data-theme="dark"] #cascade-calculator .cascade-metric small{color:#afc0cc}
+html[data-theme="dark"] #cascade-calculator .cascade-metric strong{color:#f0f6fb}
+html[data-theme="dark"] #cascade-calculator .cascade-metric:nth-child(3) strong,html[data-theme="dark"] #cascade-calculator .cascade-metric:last-child strong{color:#83e0c6}
+html[data-theme="dark"] #cascade-calculator .cascade-secondary-list{border-color:#304b57;background:#142633}
+html[data-theme="dark"] #cascade-calculator .cascade-daily-card{border-color:#315d5a;background:#193b3c}
+</style>
+
+<style id="cascade-hybrid-total-nominal-match">
+#cascade-calculator .cascade-hybrid-total-nominal{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;margin:0 0 14px;padding:15px 12px;border:0;border-radius:19px;
+  background:linear-gradient(115deg,#12a97d 0%,#078b83 55%,#087e91 100%);
+  box-shadow:0 8px 18px rgba(5,142,119,.16);text-align:center
+}
+#cascade-calculator .cascade-hybrid-total-nominal>small{
+  color:rgba(255,255,255,.9)!important;font-size:.82rem;font-weight:650;line-height:1.35
+}
+#cascade-calculator .cascade-hybrid-total-nominal>strong{
+  margin:0;color:#fff!important;font-size:clamp(1.65rem,6vw,2.1rem);
+  font-weight:900;line-height:1.15;letter-spacing:.01em;text-align:center;overflow-wrap:anywhere
+}
+@media(max-width:560px){
+  #cascade-calculator .cascade-hybrid-total-nominal{align-items:center;flex-direction:column;gap:3px;padding:13px 9px;border-radius:16px}
+  #cascade-calculator .cascade-hybrid-total-nominal>strong{text-align:center}
+}
+html[data-theme="dark"] #cascade-calculator .cascade-hybrid-total-nominal{
+  border:0;background:linear-gradient(115deg,#12a97d 0%,#078b83 55%,#087e91 100%);
+  box-shadow:0 8px 18px rgba(5,142,119,.16)
+}
+html[data-theme="dark"] #cascade-calculator .cascade-hybrid-total-nominal>small,
+html[data-theme="dark"] #cascade-calculator .cascade-hybrid-total-nominal>strong{color:#fff!important}
+</style>
+
+</html>
