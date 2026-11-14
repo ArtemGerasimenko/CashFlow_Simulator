@@ -1,11 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f3f7fa">
-<title>Калькулятор вывода · CashFlow</title>
-<style>
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <meta content="#f3f7fa" name="theme-color"/>
+  <title>
+   Калькулятор вывода · CashFlow
+  </title>
+  <style>
 :root{--bg:#f3f7fa;--card:#fff;--ink:#203448;--muted:#6d8090;--line:#dce6ec;--accent:#087f73;--accent-bg:#e8f6f2;--warn:#fff8e9;--shadow:0 8px 28px #24435b0d}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
 main{width:min(100% - 28px,960px);margin:24px auto 48px}.hero{padding:24px;border-radius:22px;background:linear-gradient(135deg,#fff,#edf7f6);border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:18px}
@@ -507,17 +509,13 @@ button:not(.theme-toggle),
 /* Keep the compact theme switch in its existing header position. */
 .theme-toggle { width:auto; }
 </style>
-
-
-<link rel="manifest" href="./manifest.webmanifest">
-<meta name="theme-color" content="#0f172a">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="CashFlow">
-<link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-
-
-<style id="withdrawal-copy-calculation-style">
+  <link href="./manifest.webmanifest" rel="manifest"/>
+  <meta content="#0f172a" name="theme-color"/>
+  <meta content="yes" name="mobile-web-app-capable"/>
+  <meta content="yes" name="apple-mobile-web-app-capable"/>
+  <meta content="CashFlow" name="apple-mobile-web-app-title"/>
+  <link href="./assets/icon.svg" rel="icon" type="image/svg+xml"/>
+  <style id="withdrawal-copy-calculation-style">
 .copy-calc-btn{
   display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:50px;
   margin-top:14px;padding:11px 18px;border:1px solid transparent;border-radius:14px;
@@ -1452,90 +1450,178 @@ html[data-theme="dark"] #money-storage-buy .commission-breakdown strong{color:#f
   #money-storage-buy .commission-breakdown strong{font-size:1.08rem!important}
 }
 </style>
-
-<body>
-<main>
-<input type="hidden" id="sberUsdtRubRate" value="83.4808">
-<header class="hero">
-<div class="eyebrow">CASHFLOW · НОВЫЙ ИНСТРУМЕНТ</div>
-<h1>Калькулятор вывода</h1>
-<p>Расчёт покупки ECR на Money Storage, перевода и продажи на BlackBIT, затем вывода USDT через TRC-20.</p>
-<button type="button" id="themeToggle" class="theme-toggle" aria-label="Переключить тему">☀ Светлая тема</button>
-</header>
-
-
-
-
-
-
-<section class="card" id="payout-target">
-<h2>🎯 Желаемая сумма к получению</h2>
-<p class="hint" style="margin-top:-8px">Выбери валюту и укажи желаемую сумму. Калькулятор автоматически пересчитает её в USDT по курсу, соответствующему валюте покупки ECR на Money Storage.</p>
-<div class="field">
-  <label for="payoutCurrency">Валюта получения</label>
-  <select id="payoutCurrency">
-    <option value="EUR">EUR · Евро</option>
-    <option value="USD">USD · Доллар США</option>
-    <option value="RUB">RUB · Российский рубль</option>
-    <option value="UAH">UAH · Украинская гривна</option>
-  </select>
-</div>
-<div class="row">
-  <div class="field">
-    <label for="targetAmount">Желаемая сумма к получению</label>
-    <input id="targetAmount" type="number" min="0" step="any" inputmode="decimal" placeholder="Введите желаемую сумму">
-  </div>
-  <div class="field">
-    <label for="payoutRate" id="payoutRateLabel">Курс Сберкассы (RUB за 1 USDT)</label>
-    <input id="payoutRate" type="number" min="0" step="any" value="83.4808" inputmode="decimal">
-  </div>
-</div>
-<div class="result">
-  <small id="targetUSDTTitle">Необходимая сумма вывода из BlackBIT</small>
-  <strong id="targetAmountUSDT">— USDT</strong>
-
-</div>
-<div class="hint" id="payoutFormulaHint">Сумма в выбранной валюте автоматически пересчитывается в USDT по курсу, зависящему от выбранной валюты покупки ECR на Money Storage. Комиссии и лимиты вывода учитываются далее.</div>
-</section>
-
-<section class="card" id="money-storage-buy">
-<h2>🛒 Money Storage · Покупка ECR</h2>
-<p class="hint" style="margin-top:-8px">Количество ECR автоматически берётся из расчёта BlackBIT: к объёму продажи добавляется 0,5% комиссии за перевод ECR на BlackBIT. Комиссия покупки Money Storage 0,5% рассчитывается в выбранной валюте оплаты (EUR или USDT) и не уменьшает количество купленных ECR.</p>
-<div class="row">
-  <div class="field">
-    <label for="msBuyCurrency">Валюта покупки ECR</label>
-    <select id="msBuyCurrency">
-      <option value="EUR">EUR · Евро</option>
-      <option value="USDT" selected>USDT · Tether</option>
-    </select>
-  </div>
-  <div class="field">
-    <label for="msEcrPrice" id="msEcrPriceLabel">Текущий курс покупки ECR (1 ECR = EUR)</label>
-    <input id="msEcrPrice" type="number" min="0" step="any" value="" placeholder="Введите текущий курс" inputmode="decimal">
-  </div>
-</div>
-<div class="subresult">
-  <div><small>Количество ECR для продажи на BlackBIT</small><strong id="msSellQty">— ECR</strong></div>
-  <div><small>Всего ECR нужно купить</small><strong id="msBuyQty">— ECR</strong></div>
-  <div><small>Стоимость покупки до комиссии</small><strong id="msBuyGross">— USDT</strong></div>
-</div>
-<details class="commission-details" id="msCommissionDetails">
-  <summary><span class="commission-label-closed">ⓘ Показать комиссии</span><span class="commission-label-open">ⓘ Скрыть комиссии</span></summary>
-  <div class="subresult commission-breakdown">
-    <div><small>Комиссия вывода ECR · 0,5%</small><strong id="msTransferFee">— ECR</strong></div>
-    <div><small>Комиссия покупки · 0,5% в выбранной валюте</small><strong id="msBuyFee">— USDT</strong></div>
-  </div>
-</details>
-<h3 style="font-size:.98rem;margin:18px 0 8px">💱 Итоговая сумма для закупки ECR в разных валютах</h3>
-<p class="hint" style="margin:0 0 10px">Курсы валют показывают стоимость 1 USDT в выбранной валюте оплаты. Все суммы рассчитаны по сохранённым курсам Money Storage; RUB — по курсу Сберкассы.</p>
-<div id="msCurrencyResults">
-  <div class="result"><small>Итого USDT для покупки всего необходимого ECR</small><strong>Ожидание расчёта…</strong></div>
-</div>
-<div class="notice">Пример: для продажи 1 000 ECR на BlackBIT нужно иметь 1 005 ECR после учёта комиссии перевода. При цене 1 USDT за 1 ECR потребуется 1 010,025 USDT с учётом комиссии покупки 0,5%.</div>
-</section>
-
-
-<style id="cascade-calculator-style">
+  <body>
+   <main>
+    <input id="sberUsdtRubRate" type="hidden" value="83.4808"/>
+    <header class="hero">
+     <div class="eyebrow">
+      CASHFLOW · НОВЫЙ ИНСТРУМЕНТ
+     </div>
+     <h1>
+      Калькулятор вывода
+     </h1>
+     <p>
+      Расчёт покупки ECR на Money Storage, перевода и продажи на BlackBIT, затем вывода USDT через TRC-20.
+     </p>
+     <button aria-label="Переключить тему" class="theme-toggle" id="themeToggle" type="button">
+      ☀ Светлая тема
+     </button>
+    </header>
+    <section class="card" id="payout-target">
+     <h2>
+      🎯 Желаемая сумма к получению
+     </h2>
+     <p class="hint" style="margin-top:-8px">
+      Выбери валюту и укажи желаемую сумму. Калькулятор автоматически пересчитает её в USDT по курсу, соответствующему валюте покупки ECR на Money Storage.
+     </p>
+     <div class="field">
+      <label for="payoutCurrency">
+       Валюта получения
+      </label>
+      <select id="payoutCurrency">
+       <option value="EUR">
+        EUR · Евро
+       </option>
+       <option value="USD">
+        USD · Доллар США
+       </option>
+       <option value="RUB">
+        RUB · Российский рубль
+       </option>
+       <option value="UAH">
+        UAH · Украинская гривна
+       </option>
+      </select>
+     </div>
+     <div class="row">
+      <div class="field">
+       <label for="targetAmount">
+        Желаемая сумма к получению
+       </label>
+       <input id="targetAmount" inputmode="decimal" min="0" placeholder="Введите желаемую сумму" step="any" type="number"/>
+      </div>
+      <div class="field">
+       <label for="payoutRate" id="payoutRateLabel">
+        Курс Сберкассы (RUB за 1 USDT)
+       </label>
+       <input id="payoutRate" inputmode="decimal" min="0" step="any" type="number" value="83.4808"/>
+      </div>
+     </div>
+     <div class="result">
+      <small id="targetUSDTTitle">
+       Необходимая сумма вывода из BlackBIT
+      </small>
+      <strong id="targetAmountUSDT">
+       — USDT
+      </strong>
+     </div>
+     <div class="hint" id="payoutFormulaHint">
+      Сумма в выбранной валюте автоматически пересчитывается в USDT по курсу, зависящему от выбранной валюты покупки ECR на Money Storage. Комиссии и лимиты вывода учитываются далее.
+     </div>
+    </section>
+    <section class="card" id="money-storage-buy">
+     <h2>
+      🛒 Money Storage · Покупка ECR
+     </h2>
+     <p class="hint" style="margin-top:-8px">
+      Количество ECR автоматически берётся из расчёта BlackBIT: к объёму продажи добавляется 0,5% комиссии за перевод ECR на BlackBIT. Комиссия покупки Money Storage 0,5% рассчитывается в выбранной валюте оплаты (EUR или USDT) и не уменьшает количество купленных ECR.
+     </p>
+     <div class="row">
+      <div class="field">
+       <label for="msBuyCurrency">
+        Валюта покупки ECR
+       </label>
+       <select id="msBuyCurrency">
+        <option value="EUR">
+         EUR · Евро
+        </option>
+        <option selected="" value="USDT">
+         USDT · Tether
+        </option>
+       </select>
+      </div>
+      <div class="field">
+       <label for="msEcrPrice" id="msEcrPriceLabel">
+        Текущий курс покупки ECR (1 ECR = EUR)
+       </label>
+       <input id="msEcrPrice" inputmode="decimal" min="0" placeholder="Введите текущий курс" step="any" type="number" value=""/>
+      </div>
+     </div>
+     <div class="subresult">
+      <div>
+       <small>
+        Количество ECR для продажи на BlackBIT
+       </small>
+       <strong id="msSellQty">
+        — ECR
+       </strong>
+      </div>
+      <div>
+       <small>
+        Всего ECR нужно купить
+       </small>
+       <strong id="msBuyQty">
+        — ECR
+       </strong>
+      </div>
+      <div>
+       <small>
+        Стоимость покупки до комиссии
+       </small>
+       <strong id="msBuyGross">
+        — USDT
+       </strong>
+      </div>
+     </div>
+     <details class="commission-details" id="msCommissionDetails">
+      <summary>
+       <span class="commission-label-closed">
+        ⓘ Показать комиссии
+       </span>
+       <span class="commission-label-open">
+        ⓘ Скрыть комиссии
+       </span>
+      </summary>
+      <div class="subresult commission-breakdown">
+       <div>
+        <small>
+         Комиссия вывода ECR · 0,5%
+        </small>
+        <strong id="msTransferFee">
+         — ECR
+        </strong>
+       </div>
+       <div>
+        <small>
+         Комиссия покупки · 0,5% в выбранной валюте
+        </small>
+        <strong id="msBuyFee">
+         — USDT
+        </strong>
+       </div>
+      </div>
+     </details>
+     <h3 style="font-size:.98rem;margin:18px 0 8px">
+      💱 Итоговая сумма для закупки ECR в разных валютах
+     </h3>
+     <p class="hint" style="margin:0 0 10px">
+      Курсы валют показывают стоимость 1 USDT в выбранной валюте оплаты. Все суммы рассчитаны по сохранённым курсам Money Storage; RUB — по курсу Сберкассы.
+     </p>
+     <div id="msCurrencyResults">
+      <div class="result">
+       <small>
+        Итого USDT для покупки всего необходимого ECR
+       </small>
+       <strong>
+        Ожидание расчёта…
+       </strong>
+      </div>
+     </div>
+     <div class="notice">
+      Пример: для продажи 1 000 ECR на BlackBIT нужно иметь 1 005 ECR после учёта комиссии перевода. При цене 1 USDT за 1 ECR потребуется 1 010,025 USDT с учётом комиссии покупки 0,5%.
+     </div>
+    </section>
+    <style id="cascade-calculator-style">
 #cascade-calculator .period-display strong{color:var(--text);font-weight:650}
 [data-theme=light] 
 :root:not([data-theme=light]) 
@@ -1566,197 +1652,680 @@ html[data-theme="dark"] #cascade-calculator .cascade-hybrid-summary small{color:
 html[data-theme="dark"] #cascade-calculator .cascade-hybrid-summary strong{color:#8be0cd}
 @media(max-width:560px){#cascade-calculator .cascade-hybrid-summary{grid-template-columns:1fr;gap:14px}}
 </style>
-<section class="card" id="cascade-calculator">
-  <h2>🧮 Каскад Fast Flow / Super Fast Flow</h2>
-  <p class="hint" id="cascadeIntroHint" style="margin-top:-8px">Укажи общую сумму покупки ECR за выбранный период. Калькулятор подберёт номинал по фактической тарифной таблице выбранной площадки.</p>
-  <div class="row">
-    <div class="field">
-      <label for="cascadeMarket">Площадка</label>
-      <select id="cascadeMarket">
-        <option value="EU">🇪🇺 Европа</option><option value="ES">🇪🇸 Испания</option>
-        <option value="UK">🇬🇧 Британия</option><option value="PL">🇵🇱 Польша</option>
-        <option value="CN">🇨🇳 Китай</option><option value="KG">🇰🇬 Кыргызстан</option>
-        
-      </select>
-    </div>
-    <div class="field">
-      <label for="cascadeType">Тип потока</label>
-      <select id="cascadeType"><option value="FF">Fast Flow · 30 начислений</option><option value="SFF">Super Fast Flow · 15 начислений</option><option value="HYBRID">Гибрид · FF + SFF</option></select>
-    </div>
-  </div>
-  <div class="row">
-    <div class="field">
-      <label for="cascadeTarget">Общая сумма для покупки ECR за выбранный период</label>
-      <input id="cascadeTarget" type="number" min="0" step="any" placeholder="Введите сумму">
-    </div>
-    <div class="field">
-      <label for="cascadeAccruals" id="cascadeAccrualsLabel">За сколько начислений собрать сумму</label>
-      <select id="cascadeAccruals">
-        <option value="1">1 начисление</option>
-        <option value="15">15 начислений</option>
-        <option value="26" selected>26 начислений · 30 календарных дней*</option>
-        <option value="30">30 начислений</option>
-        <option value="calendar15">15 календарных дней</option>
-      </select>
-    </div>
-  </div>
-  <div class="row">
-    <div class="field">
-      <label for="cascadeStart">Дата запуска каскада</label>
-      <input id="cascadeStart" type="date">
-    </div>
-    
-  </div>
-  <p class="hint">* Для каждого количества начислений календарный период рассчитывается автоматически от выбранной даты запуска. Воскресенья пропускаются; число календарных дней показано прямо в каждом варианте списка.</p>
-  <div id="cascadeHybridControls" class="result" hidden>
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-      <small style="font-weight:700">Распределение суммы между потоками</small>
-      <strong id="cascadeSplitLabel">50% FF / 50% SFF</strong>
-    </div>
-    <input id="cascadeSplit" type="range" min="0" max="100" step="5" value="50" aria-label="Доля суммы для Fast Flow" style="width:100%;accent-color:var(--cyan);margin:12px 0">
-    <div style="display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:var(--muted)">
-      <span>Fast Flow: <strong id="cascadeFFShare">50%</strong></span>
-      <span>Super Fast Flow: <strong id="cascadeSFFShare">50%</strong></span>
-    </div>
-    <div class="subresult" style="margin-top:12px">
-      <div><small id="cascadeFFTargetLabel">Прибыль FF за 26 начислений</small><strong id="cascadeFFTarget">—</strong></div>
-      <div><small id="cascadeSFFTargetLabel">Прибыль SFF за 26 начислений</small><strong id="cascadeSFFTarget">—</strong></div>
-    </div>
-  </div>
-  <div id="cascadeHybridResults" class="cascade-results-layout" hidden>
-    <article class="cascade-flow-card cascade-flow-card-ff">
-      <div class="cascade-flow-heading">
-        <span class="cascade-flow-icon" aria-hidden="true">⚡</span>
-        <div class="cascade-flow-title"><div><span class="cascade-flow-kicker">FAST FLOW</span><span class="cascade-flow-badge">FF</span></div><span class="cascade-flow-caption">Номинал и тариф</span></div>
-        <span class="cascade-period"><small>Период работы</small><strong>30 начислений</strong></span>
+    <section class="card" id="cascade-calculator">
+     <h2>
+      🧮 Каскад Fast Flow / Super Fast Flow
+     </h2>
+     <p class="hint" id="cascadeIntroHint" style="margin-top:-8px">
+      Укажи общую сумму покупки ECR за выбранный период. Калькулятор подберёт номинал по фактической тарифной таблице выбранной площадки.
+     </p>
+     <div class="row">
+      <div class="field">
+       <label for="cascadeMarket">
+        Площадка
+       </label>
+       <select id="cascadeMarket">
+        <option value="EU">
+         🇪🇺 Европа
+        </option>
+        <option value="ES">
+         🇪🇸 Испания
+        </option>
+        <option value="UK">
+         🇬🇧 Британия
+        </option>
+        <option value="PL">
+         🇵🇱 Польша
+        </option>
+        <option value="CN">
+         🇨🇳 Китай
+        </option>
+        <option value="KG">
+         🇰🇬 Кыргызстан
+        </option>
+       </select>
       </div>
-      <div class="cascade-nominal-hero"><small>Номинал потока</small><strong class="cascade-flow-nominal" id="cascadeHybridFFNominal">—</strong></div>
-      <div class="cascade-metrics">
-        <div class="cascade-metric"><small>Сумма FF за выбранный период</small><strong id="cascadeHybridFFPeriodTotal">—</strong></div>
-        <div class="cascade-metric"><small>Необходимая выплата за начисление</small><strong id="cascadeHybridFFRequired">—</strong></div>
-        <div class="cascade-metric"><small>Тариф FF</small><strong id="cascadeHybridFFRate">—</strong></div>
-        <div class="cascade-metric"><small>Фактическая выплата за начисление</small><strong id="cascadeHybridFFPayout">—</strong></div>
-        <div class="cascade-metric"><small>Прибыль за 30 начислений</small><strong id="cascadeHybridFFProfit">—</strong></div>
+      <div class="field">
+       <label for="cascadeType">
+        Тип потока
+       </label>
+       <select id="cascadeType">
+        <option value="FF">
+         Fast Flow · 30 начислений
+        </option>
+        <option value="SFF">
+         Super Fast Flow · 15 начислений
+        </option>
+        <option value="HYBRID">
+         Гибрид · FF + SFF
+        </option>
+       </select>
       </div>
-    </article>
-    <article class="cascade-flow-card cascade-flow-card-sff">
-      <div class="cascade-flow-heading">
-        <span class="cascade-flow-icon" aria-hidden="true">🚀</span>
-        <div class="cascade-flow-title"><div><span class="cascade-flow-kicker">SUPER FAST FLOW</span><span class="cascade-flow-badge">SFF</span></div><span class="cascade-flow-caption">Номинал и тариф</span></div>
-        <span class="cascade-period"><small>Период работы</small><strong>15 начислений</strong></span>
+     </div>
+     <div class="row">
+      <div class="field">
+       <label for="cascadeTarget">
+        Общая сумма для покупки ECR за выбранный период
+       </label>
+       <input id="cascadeTarget" min="0" placeholder="Введите сумму" step="any" type="number"/>
       </div>
-      <div class="cascade-nominal-hero"><small>Номинал потока</small><strong class="cascade-flow-nominal" id="cascadeHybridSFFNominal">—</strong></div>
-      <div class="cascade-metrics">
-        <div class="cascade-metric"><small>Тариф SFF</small><strong id="cascadeHybridSFFRate">—</strong></div>
-        <div class="cascade-metric"><small>Требуемая подтяжка ECR за 15 начислений</small><strong id="cascadeHybridSFFRequired">—</strong></div>
-        <div class="cascade-metric"><small>Фактическая подтяжка ECR за 15 начислений</small><strong id="cascadeHybridSFFProfit">—</strong></div>
-        <div class="cascade-metric"><small>Превышение из-за тарифного порога</small><strong id="cascadeHybridSFFExcess">—</strong></div>
+      <div class="field">
+       <label for="cascadeAccruals" id="cascadeAccrualsLabel">
+        За сколько начислений собрать сумму
+       </label>
+       <select id="cascadeAccruals">
+        <option value="1">
+         1 начисление
+        </option>
+        <option value="15">
+         15 начислений
+        </option>
+        <option selected="" value="26">
+         26 начислений · 30 календарных дней*
+        </option>
+        <option value="30">
+         30 начислений
+        </option>
+        <option value="calendar15">
+         15 календарных дней
+        </option>
+       </select>
       </div>
-    </article>
-    <div class="cascade-total-card cascade-hybrid-total-nominal"><small>Общий номинал гибридного каскада</small><strong id="cascadeHybridTotalNominal">—</strong></div>
-    <div class="cascade-total-card cascade-hybrid-summary" id="cascadeHybridSummary" hidden>
-      <div><small id="cascadeHybridTotalProfitLabel">Прибыль FF за выбранный период</small><strong id="cascadeHybridTotalProfit">—</strong></div>
-      <div><small id="cascadeHybridGrandTotalLabel">Прибыль SFF за выбранный период</small><strong id="cascadeHybridGrandTotal">—</strong></div>
+     </div>
+     <div class="row">
+      <div class="field">
+       <label for="cascadeStart">
+        Дата запуска каскада
+       </label>
+       <input id="cascadeStart" type="date"/>
+      </div>
+     </div>
+     <p class="hint">
+      * Для каждого количества начислений календарный период рассчитывается автоматически от выбранной даты запуска. Воскресенья пропускаются; число календарных дней показано прямо в каждом варианте списка.
+     </p>
+     <div class="result" hidden="" id="cascadeHybridControls">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+       <small style="font-weight:700">
+        Распределение суммы между потоками
+       </small>
+       <strong id="cascadeSplitLabel">
+        50% FF / 50% SFF
+       </strong>
+      </div>
+      <input aria-label="Доля суммы для Fast Flow" id="cascadeSplit" max="100" min="0" step="5" style="width:100%;accent-color:var(--cyan);margin:12px 0" type="range" value="50"/>
+      <div style="display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:var(--muted)">
+       <span>
+        Fast Flow:
+        <strong id="cascadeFFShare">
+         50%
+        </strong>
+       </span>
+       <span>
+        Super Fast Flow:
+        <strong id="cascadeSFFShare">
+         50%
+        </strong>
+       </span>
+      </div>
+      <div class="subresult" style="margin-top:12px">
+       <div>
+        <small id="cascadeFFTargetLabel">
+         Прибыль FF за 26 начислений
+        </small>
+        <strong id="cascadeFFTarget">
+         —
+        </strong>
+       </div>
+       <div>
+        <small id="cascadeSFFTargetLabel">
+         Прибыль SFF за 26 начислений
+        </small>
+        <strong id="cascadeSFFTarget">
+         —
+        </strong>
+       </div>
+      </div>
+     </div>
+     <div class="cascade-results-layout" hidden="" id="cascadeHybridResults">
+      <article class="cascade-flow-card cascade-flow-card-ff">
+       <div class="cascade-flow-heading">
+        <span aria-hidden="true" class="cascade-flow-icon">
+         ⚡
+        </span>
+        <div class="cascade-flow-title">
+         <div>
+          <span class="cascade-flow-kicker">
+           FAST FLOW
+          </span>
+          <span class="cascade-flow-badge">
+           FF
+          </span>
+         </div>
+         <span class="cascade-flow-caption">
+          Номинал и тариф
+         </span>
+        </div>
+        <span class="cascade-period">
+         <small>
+          Период работы
+         </small>
+         <strong>
+          30 начислений
+         </strong>
+        </span>
+       </div>
+       <div class="cascade-nominal-hero">
+        <small>
+         Номинал потока
+        </small>
+        <strong class="cascade-flow-nominal" id="cascadeHybridFFNominal">
+         —
+        </strong>
+       </div>
+       <div class="cascade-metrics">
+        <div class="cascade-metric">
+         <small>
+          Сумма FF за выбранный период
+         </small>
+         <strong id="cascadeHybridFFPeriodTotal">
+          —
+         </strong>
+        </div>
+        <div class="cascade-metric">
+         <small>
+          Необходимая выплата за начисление
+         </small>
+         <strong id="cascadeHybridFFRequired">
+          —
+         </strong>
+        </div>
+        <div class="cascade-metric">
+         <small>
+          Тариф FF
+         </small>
+         <strong id="cascadeHybridFFRate">
+          —
+         </strong>
+        </div>
+        <div class="cascade-metric">
+         <small>
+          Фактическая выплата за начисление
+         </small>
+         <strong id="cascadeHybridFFPayout">
+          —
+         </strong>
+        </div>
+        <div class="cascade-metric">
+         <small>
+          Прибыль за 30 начислений
+         </small>
+         <strong id="cascadeHybridFFProfit">
+          —
+         </strong>
+        </div>
+       </div>
+      </article>
+      <article class="cascade-flow-card cascade-flow-card-sff">
+       <div class="cascade-flow-heading">
+        <span aria-hidden="true" class="cascade-flow-icon">
+         🚀
+        </span>
+        <div class="cascade-flow-title">
+         <div>
+          <span class="cascade-flow-kicker">
+           SUPER FAST FLOW
+          </span>
+          <span class="cascade-flow-badge">
+           SFF
+          </span>
+         </div>
+         <span class="cascade-flow-caption">
+          Номинал и тариф
+         </span>
+        </div>
+        <span class="cascade-period">
+         <small>
+          Период работы
+         </small>
+         <strong>
+          15 начислений
+         </strong>
+        </span>
+       </div>
+       <div class="cascade-nominal-hero">
+        <small>
+         Номинал потока
+        </small>
+        <strong class="cascade-flow-nominal" id="cascadeHybridSFFNominal">
+         —
+        </strong>
+       </div>
+       <div class="cascade-metrics">
+        <div class="cascade-metric">
+         <small>
+          Тариф SFF
+         </small>
+         <strong id="cascadeHybridSFFRate">
+          —
+         </strong>
+        </div>
+        <div class="cascade-metric">
+         <small>
+          Требуемая подтяжка ECR за 15 начислений
+         </small>
+         <strong id="cascadeHybridSFFRequired">
+          —
+         </strong>
+        </div>
+        <div class="cascade-metric">
+         <small>
+          Фактическая подтяжка ECR за 15 начислений
+         </small>
+         <strong id="cascadeHybridSFFProfit">
+          —
+         </strong>
+        </div>
+        <div class="cascade-metric">
+         <small>
+          Превышение из-за тарифного порога
+         </small>
+         <strong id="cascadeHybridSFFExcess">
+          —
+         </strong>
+        </div>
+       </div>
+      </article>
+      <div class="cascade-total-card cascade-hybrid-total-nominal">
+       <small>
+        Общий номинал гибридного каскада
+       </small>
+       <strong id="cascadeHybridTotalNominal">
+        —
+       </strong>
+      </div>
+      <div class="cascade-total-card cascade-hybrid-summary" hidden="" id="cascadeHybridSummary">
+       <div>
+        <small id="cascadeHybridTotalProfitLabel">
+         Прибыль FF за выбранный период
+        </small>
+        <strong id="cascadeHybridTotalProfit">
+         —
+        </strong>
+       </div>
+       <div>
+        <small id="cascadeHybridGrandTotalLabel">
+         Прибыль SFF за выбранный период
+        </small>
+        <strong id="cascadeHybridGrandTotal">
+         —
+        </strong>
+       </div>
+      </div>
+      <div class="notice">
+       Введённая сумма — общий объём покупки ECR за выбранный период. Ползунок делит её на две части. Fast Flow: доля FF распределяется на выбранное количество начислений; необходимая выплата за начисление равна доле FF / выбранное количество начислений, а цикл потока — 30 начислений. Super Fast Flow: доля SFF также делится на выбранное количество начислений. Полученная сумма — целевая подтяжка ECR одного номинала за полный цикл SFF из 15 начислений. При изменении периода или ползунка оба номинала пересчитываются автоматически. Тарифы подбираются отдельно по фактической таблице площадки. Для SFF отдельно показаны требуемая подтяжка, фактическая подтяжка по выбранному тарифному порогу и разница между ними.
+      </div>
+     </div>
+     <div class="cascade-results-layout" id="cascadeSingleResults">
+      <div class="cascade-daily-card">
+       <small>
+        Необходимая ежедневная выплата
+       </small>
+       <strong id="cascadeDailyNeed">
+        —
+       </strong>
+      </div>
+      <article class="cascade-flow-card cascade-flow-card-single">
+       <div class="cascade-flow-heading">
+        <span aria-hidden="true" class="cascade-flow-icon" id="cascadeSingleIcon">
+         ⚡
+        </span>
+        <div class="cascade-flow-title">
+         <div>
+          <span class="cascade-flow-kicker" id="cascadeSingleFlowType">
+           FAST FLOW
+          </span>
+          <span class="cascade-flow-badge" id="cascadeSingleBadge">
+           FF
+          </span>
+         </div>
+         <span class="cascade-flow-caption" id="cascadeNominalCaption">
+          Минимальный номинал Fast Flow по тарифу
+         </span>
+        </div>
+        <span class="cascade-period">
+         <small>
+          Период работы
+         </small>
+         <strong id="cascadeSinglePeriod">
+          30 начислений
+         </strong>
+        </span>
+       </div>
+       <div class="cascade-nominal-hero">
+        <small>
+         Номинал потока
+        </small>
+        <strong class="cascade-flow-nominal" id="cascadeNominal">
+         —
+        </strong>
+       </div>
+       <div class="cascade-metrics">
+        <div class="cascade-metric">
+         <small>
+          Применённый тариф
+         </small>
+         <strong id="cascadeTariff">
+          —
+         </strong>
+        </div>
+        <div class="cascade-metric">
+         <small id="cascadeActualCaption">
+          Фактическая выплата
+         </small>
+         <strong id="cascadeDailyActual">
+          —
+         </strong>
+        </div>
+       </div>
+      </article>
+      <div class="cascade-secondary-list">
+       <div class="cascade-metric">
+        <small>
+         Расчётный номинал без минимального порога тарифа
+        </small>
+        <strong id="cascadeRawNominal">
+         —
+        </strong>
+       </div>
+       <div class="cascade-metric">
+        <small>
+         Доплата сверх необходимой суммы за выбранный период
+        </small>
+        <strong id="cascadeSurplus">
+         —
+        </strong>
+       </div>
+       <div class="cascade-metric">
+        <small>
+         Прибыль за полный цикл потока
+        </small>
+        <strong id="cascadeProfit">
+         —
+        </strong>
+       </div>
+       <div class="cascade-metric">
+        <small>
+         Всего номинал + прибыль за цикл
+        </small>
+        <strong id="cascadeTotal">
+         —
+        </strong>
+       </div>
+       <div class="cascade-metric">
+        <small>
+         Начислений для сбора суммы
+        </small>
+        <strong id="cascadeAccrualCount">
+         —
+        </strong>
+       </div>
+       <div class="cascade-metric">
+        <small>
+         Дата последнего нужного начисления
+        </small>
+        <strong id="cascadeEndDate">
+         —
+        </strong>
+       </div>
+      </div>
+      <div class="notice" id="cascadeFormulaNote">
+       Нужная сумма распределяется на выбранное количество начислений. Fast Flow: номинал подбирается по ежедневной выплате за 30 начислений. Super Fast Flow: целевая сумма — это подтяжка ECR за полный цикл из 15 начислений. Для SFF выбранные 1, 15, 26 или 30 начислений не изменяют длительность цикла и не умножают прибыль; номинал не прибавляется к прибыли.
+      </div>
+     </div>
+    </section>
+    <section class="card" id="blackbit-withdrawal">
+     <h2>
+      🚀 BlackBIT · Продажа ECR и вывод USDT TRC-20
+     </h2>
+     <p class="hint" style="margin-top:-8px">
+      Укажите рыночную цену ECR. Сумма вывода USDT автоматически рассчитывается выше из выбранной площадки, валюты, желаемой суммы и актуального курса. Комиссия спотовой продажи BlackBIT 0,1% удерживается в USDT; комиссия перевода ECR на BlackBIT 0,5% удерживается отдельно в ECR.
+     </p>
+     <div class="row">
+      <div class="field">
+       <label for="ecrPrice">
+        Текущая цена ECR на BlackBIT (USDT)
+       </label>
+       <input id="ecrPrice" inputmode="decimal" min="0" placeholder="Введите рыночную цену" step="any" type="number" value="0.24"/>
+      </div>
+      <div class="field">
+       <label for="withdrawAmount">
+        Сумма вывода USDT (автоматический расчёт)
+       </label>
+       <input id="withdrawAmount" min="0" readonly="" step="any" type="number" value="1197.88023115"/>
+      </div>
+     </div>
+     <div class="result">
+      <small>
+       Количество ECR для продажи на споте
+      </small>
+      <strong id="ecrToSell">
+       Введите цену ECR
+      </strong>
+      <div class="subresult">
+       <div class="payout-summary-single">
+        <small>
+         К получению после всех комиссий
+        </small>
+        <strong id="finalPayout">
+         — USDT
+        </strong>
+       </div>
+      </div>
+     </div>
+     <details class="calc-details">
+      <summary>
+       <span class="when-closed">
+        ⓘ Показать комиссии
+       </span>
+       <span class="when-open">
+        ⓘ Скрыть комиссии
+       </span>
+      </summary>
+      <div class="subresult">
+       <div class="detail-heading">
+        1. Покупка и продажа ECR
+       </div>
+       <div>
+        <small>
+         Сколько ECR нужно продать на BlackBIT до комиссии ордера
+        </small>
+        <strong id="grossProceeds">
+         — USDT
+        </strong>
+       </div>
+       <div>
+        <small>
+         Комиссия BlackBIT за исполнение ордера · 0,1%
+        </small>
+        <strong id="spotFee">
+         — USDT
+        </strong>
+       </div>
+       <div>
+        <small>
+         USDT, которые останутся после комиссии ордера
+        </small>
+        <strong id="netProceeds">
+         — USDT
+        </strong>
+       </div>
+       <div>
+        <small>
+         Сколько ECR удерживается за перевод на BlackBIT · 0,5%
+        </small>
+        <strong id="ecrTransferFee">
+         — ECR
+        </strong>
+       </div>
+       <div>
+        <small>
+         Общее количество ECR для продажи и оплаты перевода
+        </small>
+        <strong id="ecrRequired">
+         — ECR
+        </strong>
+       </div>
+       <div class="detail-heading">
+        2. Вывод USDT через TRC-20
+       </div>
+       <div>
+        <small>
+         Фиксированная комиссия сети · 3 USDT за каждый вывод
+        </small>
+        <strong id="networkFixedFee">
+         — USDT
+        </strong>
+       </div>
+       <div>
+        <small>
+         Комиссия сети · 1% от суммы вывода
+        </small>
+        <strong id="networkPercentFee">
+         — USDT
+        </strong>
+       </div>
+       <div>
+        <small>
+         Все комиссии сети вместе
+        </small>
+        <strong id="networkFee">
+         — USDT
+        </strong>
+       </div>
+       <div>
+        <small>
+         Сколько USDT должно быть на BlackBIT перед выводом
+        </small>
+        <strong id="requiredBalance">
+         — USDT
+        </strong>
+       </div>
+       <div>
+        <small>
+         Как сумма будет разделена между днями
+        </small>
+        <strong id="withdrawalSchedule">
+         —
+        </strong>
+       </div>
+       <div>
+        <small>
+         Объём сделки на BlackBIT до удержания комиссии ордера
+        </small>
+        <strong id="tradeGross">
+         — USDT
+        </strong>
+       </div>
+      </div>
+      <div class="notice" id="limitNotice">
+       Лимит одного вывода — 502,795543 USDT без учёта комиссии.
+      </div>
+     </details>
+     <button class="copy-calc-btn" id="copyCalculationButton" type="button">
+      ⧉ Скопировать расчёт
+     </button>
+     <p aria-live="polite" class="copy-feedback" id="copyCalculationFeedback">
+     </p>
+    </section>
+    <div class="grid">
+     <section class="card rates-card">
+      <div class="rates-heading">
+       <h2>
+        💱 Курсы обмена валют
+       </h2>
+       <span class="rates-saved" id="ratesSavedStatus" role="status">
+        ✓ Курсы сохранены на устройстве
+       </span>
+      </div>
+      <p class="rates-intro">
+       Стартовые курсы уже заполнены. Каждый участник может изменить их под свои актуальные условия — значения сохраняются отдельно в его браузере на устройстве.
+      </p>
+      <div class="tablewrap rates-table-wrap">
+       <table class="rates-table">
+        <thead>
+         <tr>
+          <th>
+           Валюта
+          </th>
+          <th>
+           Курс в USDT за 1 единицу валюты
+          </th>
+         </tr>
+        </thead>
+        <tbody id="baseTable">
+        </tbody>
+       </table>
+      </div>
+      <div class="rates-info">
+       <span class="rates-info-icon">
+        ⓘ
+       </span>
+       <p>
+        Введи актуальный курс каждой валюты в USDT за 1 единицу валюты. Например, для EUR — сколько USDT соответствует 1 EUR. Для USDT курс фиксирован: 1 USDT = 1 USDT.
+       </p>
+      </div>
+      <div class="rates-actions">
+       <button class="secondary" id="resetRates" type="button">
+        ↶  Восстановить базовые курсы
+       </button>
+      </div>
+     </section>
     </div>
-    <div class="notice">Введённая сумма — общий объём покупки ECR за выбранный период. Ползунок делит её на две части. Fast Flow: доля FF распределяется на выбранное количество начислений; необходимая выплата за начисление равна доле FF / выбранное количество начислений, а цикл потока — 30 начислений. Super Fast Flow: доля SFF также делится на выбранное количество начислений. Полученная сумма — целевая подтяжка ECR одного номинала за полный цикл SFF из 15 начислений. При изменении периода или ползунка оба номинала пересчитываются автоматически. Тарифы подбираются отдельно по фактической таблице площадки. Для SFF отдельно показаны требуемая подтяжка, фактическая подтяжка по выбранному тарифному порогу и разница между ними.</div>
-  </div>
-  <div id="cascadeSingleResults" class="cascade-results-layout">
-  <div class="cascade-daily-card"><small>Необходимая ежедневная выплата</small><strong id="cascadeDailyNeed">—</strong></div>
-  <article class="cascade-flow-card cascade-flow-card-single">
-    <div class="cascade-flow-heading">
-      <span class="cascade-flow-icon" id="cascadeSingleIcon" aria-hidden="true">⚡</span>
-      <div class="cascade-flow-title"><div><span class="cascade-flow-kicker" id="cascadeSingleFlowType">FAST FLOW</span><span class="cascade-flow-badge" id="cascadeSingleBadge">FF</span></div><span class="cascade-flow-caption" id="cascadeNominalCaption">Минимальный номинал Fast Flow по тарифу</span></div>
-      <span class="cascade-period"><small>Период работы</small><strong id="cascadeSinglePeriod">30 начислений</strong></span>
-    </div>
-    <div class="cascade-nominal-hero"><small>Номинал потока</small><strong class="cascade-flow-nominal" id="cascadeNominal">—</strong></div>
-    <div class="cascade-metrics">
-      <div class="cascade-metric"><small>Применённый тариф</small><strong id="cascadeTariff">—</strong></div>
-      <div class="cascade-metric"><small id="cascadeActualCaption">Фактическая выплата</small><strong id="cascadeDailyActual">—</strong></div>
-    </div>
-  </article>
-  <div class="cascade-secondary-list">
-    <div class="cascade-metric"><small>Расчётный номинал без минимального порога тарифа</small><strong id="cascadeRawNominal">—</strong></div>
-    <div class="cascade-metric"><small>Доплата сверх необходимой суммы за выбранный период</small><strong id="cascadeSurplus">—</strong></div>
-    <div class="cascade-metric"><small>Прибыль за полный цикл потока</small><strong id="cascadeProfit">—</strong></div>
-    <div class="cascade-metric"><small>Всего номинал + прибыль за цикл</small><strong id="cascadeTotal">—</strong></div>
-    <div class="cascade-metric"><small>Начислений для сбора суммы</small><strong id="cascadeAccrualCount">—</strong></div>
-    <div class="cascade-metric"><small>Дата последнего нужного начисления</small><strong id="cascadeEndDate">—</strong></div>
-  </div>
-  <div class="notice" id="cascadeFormulaNote">Нужная сумма распределяется на выбранное количество начислений. Fast Flow: номинал подбирается по ежедневной выплате за 30 начислений. Super Fast Flow: целевая сумма — это подтяжка ECR за полный цикл из 15 начислений. Для SFF выбранные 1, 15, 26 или 30 начислений не изменяют длительность цикла и не умножают прибыль; номинал не прибавляется к прибыли.</div>
-  </div>
-</div>
-</section>
-
-<section class="card" id="blackbit-withdrawal">
-<h2>🚀 BlackBIT · Продажа ECR и вывод USDT TRC-20</h2>
-<p class="hint" style="margin-top:-8px">Укажите рыночную цену ECR. Сумма вывода USDT автоматически рассчитывается выше из выбранной площадки, валюты, желаемой суммы и актуального курса. Комиссия спотовой продажи BlackBIT 0,1% удерживается в USDT; комиссия перевода ECR на BlackBIT 0,5% удерживается отдельно в ECR.</p>
-<div class="row">
-  <div class="field"><label for="ecrPrice">Текущая цена ECR на BlackBIT (USDT)</label><input id="ecrPrice" type="number" min="0" step="any" placeholder="Введите рыночную цену" inputmode="decimal" value="0.24"></div>
-  <div class="field"><label for="withdrawAmount">Сумма вывода USDT (автоматический расчёт)</label><input id="withdrawAmount" type="number" min="0" step="any" value="1197.88023115" readonly></div>
-</div>
-<div class="result">
-  <small>Количество ECR для продажи на споте</small>
-  <strong id="ecrToSell">Введите цену ECR</strong>
-  <div class="subresult">
-    <div class="payout-summary-single"><small>К получению после всех комиссий</small><strong id="finalPayout">— USDT</strong></div>
-  </div>
-</div>
-<details class="calc-details">
-  <summary><span class="when-closed">ⓘ Показать комиссии</span><span class="when-open">ⓘ Скрыть комиссии</span></summary>
-  <div class="subresult">
-    <div class="detail-heading">1. Покупка и продажа ECR</div>
-    <div><small>Сколько ECR нужно продать на BlackBIT до комиссии ордера</small><strong id="grossProceeds">— USDT</strong></div>
-    <div><small>Комиссия BlackBIT за исполнение ордера · 0,1%</small><strong id="spotFee">— USDT</strong></div>
-    <div><small>USDT, которые останутся после комиссии ордера</small><strong id="netProceeds">— USDT</strong></div>
-    <div><small>Сколько ECR удерживается за перевод на BlackBIT · 0,5%</small><strong id="ecrTransferFee">— ECR</strong></div>
-    <div><small>Общее количество ECR для продажи и оплаты перевода</small><strong id="ecrRequired">— ECR</strong></div>
-    <div class="detail-heading">2. Вывод USDT через TRC-20</div>
-    <div><small>Фиксированная комиссия сети · 3 USDT за каждый вывод</small><strong id="networkFixedFee">— USDT</strong></div>
-    <div><small>Комиссия сети · 1% от суммы вывода</small><strong id="networkPercentFee">— USDT</strong></div>
-    <div><small>Все комиссии сети вместе</small><strong id="networkFee">— USDT</strong></div>
-    <div><small>Сколько USDT должно быть на BlackBIT перед выводом</small><strong id="requiredBalance">— USDT</strong></div>
-    <div><small>Как сумма будет разделена между днями</small><strong id="withdrawalSchedule">—</strong></div>
-    <div><small>Объём сделки на BlackBIT до удержания комиссии ордера</small><strong id="tradeGross">— USDT</strong></div>
-  </div>
-  <div class="notice" id="limitNotice">Лимит одного вывода — 502,795543 USDT без учёта комиссии.</div>
-</details>
-<button type="button" class="copy-calc-btn" id="copyCalculationButton">⧉ Скопировать расчёт</button>
-<p class="copy-feedback" id="copyCalculationFeedback" aria-live="polite"></p>
-</section>
-
-<div class="grid">
-
-
-<section class="card rates-card">
-  <div class="rates-heading">
-    <h2>💱 Курсы обмена валют</h2>
-    <span class="rates-saved" id="ratesSavedStatus" role="status">✓ Курсы сохранены на устройстве</span>
-  </div>
-  <p class="rates-intro">Стартовые курсы уже заполнены. Каждый участник может изменить их под свои актуальные условия — значения сохраняются отдельно в его браузере на устройстве.</p>
-  <div class="tablewrap rates-table-wrap"><table class="rates-table"><thead><tr><th>Валюта</th><th>Курс в USDT за 1 единицу валюты</th></tr></thead><tbody id="baseTable"></tbody></table></div>
-  <div class="rates-info"><span class="rates-info-icon">ⓘ</span><p>Введи актуальный курс каждой валюты в USDT за 1 единицу валюты. Например, для EUR — сколько USDT соответствует 1 EUR. Для USDT курс фиксирован: 1 USDT = 1 USDT.</p></div>
-  <div class="rates-actions"><button type="button" class="secondary" id="resetRates">↶ &nbsp;Восстановить базовые курсы</button></div>
-</section>
-</div>
-
-
-
-
-
-<section class="card usage-guide" id="usage">
-  <h2>ℹ️ Как пользоваться калькулятором</h2>
-  <ol class="usage-steps">
-    <li><strong>Укажи желаемую сумму получения.</strong> Выбери валюту, введи сумму, которую хочешь получить, и проверь курс Сберкассы. Калькулятор пересчитает цель в USDT.</li>
-    <li><strong>Заполни курс покупки ECR на Money Storage.</strong> Выбери валюту оплаты и введи актуальную цену ECR. Калькулятор рассчитает необходимое количество ECR и стоимость покупки с учётом комиссии Money Storage.</li>
-    <li><strong>Настрой каскад.</strong> Выбери площадку, тип потока — Fast Flow или Super Fast Flow, укажи целевую сумму, количество начислений и дату запуска. Расчёт номинала будет выполнен по тарифам выбранной площадки.</li>
-    <li><strong>Проверь продажу и вывод на BlackBIT.</strong> Введи актуальную спотовую цену ECR и проверь рассчитанное количество ECR для продажи, сумму USDT и комиссии. При необходимости раскрой блок «Показать комиссии».</li>
-    <li><strong>Сверь итоговые значения.</strong> Проверь необходимую сумму вывода, количество транзакций и итоговые расходы. Если сумма превышает дневной лимит, калькулятор учитывает разделение вывода и фиксированную комиссию за каждую транзакцию.</li>
-  </ol>
-  <div class="usage-note"><strong>Важно:</strong> перед расчётом обнови актуальные курсы Money Storage, BlackBIT и Сберкассы. Калькулятор использует введённые значения — результат зависит от их точности. Кнопка восстановления курсов возвращает сохранённые значения по умолчанию.</div>
-</section>
-
-</main>
-<script>
+    <section class="card usage-guide" id="usage">
+     <h2>
+      ℹ️ Как пользоваться калькулятором
+     </h2>
+     <ol class="usage-steps">
+      <li>
+       <strong>
+        Укажи желаемую сумму получения.
+       </strong>
+       Выбери валюту, введи сумму, которую хочешь получить, и проверь курс Сберкассы. Калькулятор пересчитает цель в USDT.
+      </li>
+      <li>
+       <strong>
+        Заполни курс покупки ECR на Money Storage.
+       </strong>
+       Выбери валюту оплаты и введи актуальную цену ECR. Калькулятор рассчитает необходимое количество ECR и стоимость покупки с учётом комиссии Money Storage.
+      </li>
+      <li>
+       <strong>
+        Настрой каскад.
+       </strong>
+       Выбери площадку, тип потока — Fast Flow или Super Fast Flow, укажи целевую сумму, количество начислений и дату запуска. Расчёт номинала будет выполнен по тарифам выбранной площадки.
+      </li>
+      <li>
+       <strong>
+        Проверь продажу и вывод на BlackBIT.
+       </strong>
+       Введи актуальную спотовую цену ECR и проверь рассчитанное количество ECR для продажи, сумму USDT и комиссии. При необходимости раскрой блок «Показать комиссии».
+      </li>
+      <li>
+       <strong>
+        Сверь итоговые значения.
+       </strong>
+       Проверь необходимую сумму вывода, количество транзакций и итоговые расходы. Если сумма превышает дневной лимит, калькулятор учитывает разделение вывода и фиксированную комиссию за каждую транзакцию.
+      </li>
+     </ol>
+     <div class="usage-note">
+      <strong>
+       Важно:
+      </strong>
+      перед расчётом обнови актуальные курсы Money Storage, BlackBIT и Сберкассы. Калькулятор использует введённые значения — результат зависит от их точности. Кнопка восстановления курсов возвращает сохранённые значения по умолчанию.
+     </div>
+    </section>
+   </main>
+   <script>
 
 const SPOT_FEE_RATE=0.001;
 const WITHDRAW_FIXED_FEE=3;
@@ -3059,10 +3628,8 @@ html body details.calc-details > .notice {
   html body details.calc-details > .notice { font-size: 11.5px !important; }
 }
 </style>
-
-
-<!-- Cascade visual design copied from the supplied reference file; logic unchanged -->
-<style id="cascade-color-system-final">
+   <!-- Cascade visual design copied from the supplied reference file; logic unchanged -->
+   <style id="cascade-color-system-final">
 /* Каскад использует ту же визуальную систему, что и основные блоки CashFlow */
 #cascade-calculator{
   background:linear-gradient(155deg,#fff 0%,#f8fbfd 100%) !important;
@@ -3319,5 +3886,6 @@ html[data-theme="dark"] #cascade-calculator .cascade-hybrid-total-nominal{
 html[data-theme="dark"] #cascade-calculator .cascade-hybrid-total-nominal>small,
 html[data-theme="dark"] #cascade-calculator .cascade-hybrid-total-nominal>strong{color:#fff!important}
 </style>
-
+  </body>
+ </head>
 </html>

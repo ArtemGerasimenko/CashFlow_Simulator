@@ -570,7 +570,7 @@ html[data-theme="dark"] .hero .theme-toggle{border-color:#40586a!important;backg
 <div class="period"><input type="radio" name="period" id="p25" value="25"><label for="p25">25 лет</label></div>
 </div></div>
 <div class="field-grid"><div class="field"><label for="amount">Сумма начального взноса и ежемесячного пополнения</label><div class="inputline"><input id="amount" type="number" min="0.01" step="0.01" value="100"><span class="unit" id="amountUnit">EUR</span></div><p class="hint">Одна и та же фиксированная сумма для взноса и ежемесячного пополнения.</p><p id="minimumDepositHint" role="status" aria-live="polite" hidden style="margin:8px 0 0;color:#d32f2f;font-weight:700;font-size:.92rem"></p></div>
-<div class="field"><label for="ecrRate" id="rateLabel">Курс подтяжки · EUR за 1 ECR</label><div class="inputline"><input id="ecrRate" type="number" min="0.00000001" step="any" value="250" inputmode="none" readonly aria-readonly="true" tabindex="-1" class="fixed-rate-field"><span class="unit" id="rateUnit">EUR / ECR</span></div><p class="hint" id="rateHint">Курс ECR фиксированный, устанавливается автоматически и доступен только для просмотра. Для России используется динамический курс ERUB.</p></div></div>
+<div class="field"><label for="ecrRate" id="rateLabel">Курс подтяжки · EUR за 1 ECR</label><div class="inputline"><input id="ecrRate" type="number" min="0.00000001" step="any" value="25" inputmode="none" readonly aria-readonly="true" tabindex="-1" class="fixed-rate-field"><span class="unit" id="rateUnit">EUR / ECR</span></div><p class="hint" id="rateHint">Курс ECR фиксированный, устанавливается автоматически и доступен только для просмотра. Для России используется динамический курс ERUB.</p></div></div>
 
 </section>
 <section class="card" aria-labelledby="resultTitle"><h2 id="resultTitle">📊 Результат расчёта</h2><div class="results">
@@ -634,7 +634,7 @@ const markets={
  RU:{name:'RUB',label:'Россия',rows:scaleRows([1000,2500,5000,10000,25000,50000,100000])}
 };
 const $=id=>document.getElementById(id),fmt=(n,d=2)=>new Intl.NumberFormat('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n);
-const rateValues={VIP:'275',EU:'250',ES:'250',UK:'225',PL:'1010',CN:'1800',KG:'25000'};
+const rateValues={VIP:'25',EU:'25',ES:'25',UK:'25',PL:'100',CN:'180',KG:'2500'};
 const minimumDeposits={VIP:100,EU:10,ES:10,UK:10,PL:50,CN:100,KG:1000,RU:1000};
 let market=$('market').value||'VIP';
 const BASE_DATE='2026-11-08',BASE_RATE=34,STEP=0.5,TZ='Europe/Moscow';

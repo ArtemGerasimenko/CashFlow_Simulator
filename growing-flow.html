@@ -751,8 +751,8 @@ html[data-theme="dark"] .tablewrap table tbody tr.active-row td {
 <div class="field"><label for="market">Площадка</label><select id="market"><option value="EU" selected>🇪🇺 Европа</option><option value="ES">🇪🇸 Испания</option><option value="GB">🇬🇧 Британия</option><option value="PL">🇵🇱 Польша</option><option value="CN">🇨🇳 Китай</option><option value="KG">🇰🇬 Кыргызстан</option><option value="RU">🇷🇺 Россия</option></select></div>
   <div class="field"><label for="amount">Сумма пополнения</label><input id="amount" type="number" min="1" step="any" value="1" inputmode="decimal"><p class="min-warning" id="minWarning" role="alert" aria-live="polite" hidden></p></div>
 <div class="field"><label for="currency">Валюта площадки</label><input id="currency" type="text" value="EUR" maxlength="12" autocomplete="off" readonly aria-readonly="true"></div>
-<div class="field"><label for="rate" id="rateLabel">Курс подтяжки · EUR за 1 ECR</label><input id="rate" type="number" min="0.00000001" step="any" value="250" inputmode="none" readonly aria-readonly="true"></div>
-<p class="note" id="thresholdHint">Курс ECR фиксированный — 250 EUR за 1 ECR. Он устанавливается автоматически и доступен только для просмотра.</p></section>
+<div class="field"><label for="rate" id="rateLabel">Курс подтяжки · EUR за 1 ECR</label><input id="rate" type="number" min="0.00000001" step="any" value="25" inputmode="none" readonly aria-readonly="true"></div>
+<p class="note" id="thresholdHint">Курс ECR фиксированный — 25 EUR за 1 ECR. Он устанавливается автоматически и доступен только для просмотра.</p></section>
 <section class="card"><h2>📊 Результат расчёта</h2><div class="metrics">
 <div class="metric"><span>Сумма пополнения</span><strong id="outAmount">250,00 EUR</strong></div><div class="metric"><span>Процент подтяжки</span><strong id="outPct">+70%</strong></div>
 <div class="metric"><span>Сумма подтяжки</span><strong id="outBonus">175,00 EUR</strong></div><div class="metric primary"><span>Сумма после подтяжки</span><strong id="outTotal">425,00 EUR</strong></div>
@@ -774,7 +774,7 @@ const tiersByMarket = {
 function getTiers(){ return tiersByMarket[document.querySelector('#market').value] || tiersByMarket.ES; }
 const marketNames = {ES:'🇪🇸 Испания',EU:'🇪🇺 Европа',GB:'🇬🇧 Британия',PL:'🇵🇱 Польша',CN:'🇨🇳 Китай',KG:'🇰🇬 Кыргызстан',RU:'🇷🇺 Россия'};
 const marketCurrency = {ES:'EUR',EU:'EUR',GB:'GBP',PL:'PLN',CN:'CNY',KG:'KGS',RU:'RUB'};
-const marketRate = {ES:250,EU:250,GB:225,PL:1010,CN:1800,KG:25000,RU:34};
+const marketRate = {ES:25,EU:25,GB:25,PL:100,CN:180,KG:2500,RU:34};
 // Российский курс ERUB: 34 RUB на 08.11.2026, затем +0,5 RUB за каждый новый день по Москве.
 function getRussiaErubRate(){
  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
